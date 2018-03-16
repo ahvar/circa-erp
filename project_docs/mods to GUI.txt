@@ -1,0 +1,22 @@
+			try {
+				if (meetingDays.equals("A")){
+					if (catalog.addCourseToCatalog(name, title, section, credits, instructorId, meetingDays, 0, 0)) {
+						txtName.setText("");
+						txtTitle.setText("");
+						txtSection.setText("");
+						txtInstructorId.setText("");
+					} else {
+						JOptionPane.showMessageDialog(this, "Course already in system.");
+					}
+				}
+				else{
+					if (catalog.addCourseToCatalog(name, title, section, credits, instructorId, meetingDays, startTime, endTime)) {
+						txtName.setText("");
+						txtTitle.setText("");
+						txtSection.setText("");
+						txtInstructorId.setText("");
+					}
+				 else {
+					JOptionPane.showMessageDialog(this, "Course already in system.");
+				}
+				}
