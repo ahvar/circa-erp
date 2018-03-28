@@ -7,6 +7,9 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import com.circa.mrv.grs_manager.user.Sweden;
+import com.circa.mrv.grs_manager.user.User;
+
 /**
  * Provides tests for Faculty class.
  * @author Arthur Vargas
@@ -21,7 +24,7 @@ public class FacultyTest {
 		//test valid Faculty creation
 		User s = null;
 		try{
-		Faculty fValid = new Faculty("first", "last", "id", "email@ncsu.edu", "hashpassword", 2);
+		Sweden fValid = new Sweden("first", "last", "id", "email@ncsu.edu", "hashpassword", 2);
 		assertEquals("first", fValid.getFirstName());
 		assertEquals("last", fValid.getLastName());
 		assertEquals("id", fValid.getId());
@@ -33,7 +36,7 @@ public class FacultyTest {
 		}
 		//test invalid first name
 		try {
-		    s = new Faculty(null, "last", "id", "email@ncsu.edu", "hashedpassword", 2);
+		    s = new Sweden(null, "last", "id", "email@ncsu.edu", "hashedpassword", 2);
 		    //Note that for testing purposes, the password doesn't need to be hashedpassword
 		    fail(); //If we reach this point a Faculty was constructed when it shouldn't have been!
 		} catch (IllegalArgumentException e) {
@@ -44,49 +47,49 @@ public class FacultyTest {
 		
 		//test invalid last name
 		try{
-			s = new Faculty("first", null, "id", "email@ncsu.edu", "hashedpassword", 2);
+			s = new Sweden("first", null, "id", "email@ncsu.edu", "hashedpassword", 2);
 		} catch (IllegalArgumentException e) {
 			assertNull(s);
 		}
 
 		//test invalid last name
 		try{
-			s = new Faculty("first", null, "id", "email@ncsu.edu", "hashedpassword", 2);
+			s = new Sweden("first", null, "id", "email@ncsu.edu", "hashedpassword", 2);
 		} catch (IllegalArgumentException e) {
 			assertNull(s);
 		}	
 		
 		//test invalid id
 		try{
-			s = new Faculty("first", "last", null, "email@ncsu.edu", "hashedpassword", 2);
+			s = new Sweden("first", "last", null, "email@ncsu.edu", "hashedpassword", 2);
 		} catch (IllegalArgumentException e) {
 			assertNull(s);
 		}
 		
 		//test invalid id
 		try{
-			s = new Faculty("first", "last", "", "email@ncsu.edu", "hashedpassword", 2);
+			s = new Sweden("first", "last", "", "email@ncsu.edu", "hashedpassword", 2);
 		} catch (IllegalArgumentException e) {
 			assertNull(s);
 		}
 
 		//test invalid email
 		try{
-			s = new Faculty("first", "last", "id", null, "hashedpassword", 2);
+			s = new Sweden("first", "last", "id", null, "hashedpassword", 2);
 		} catch (IllegalArgumentException e) {
 			assertNull(s);
 		}
 
 		//test invalid password
 		try{
-			s = new Faculty("first", "last", "id", "email@ncsu.edu", null, 2);
+			s = new Sweden("first", "last", "id", "email@ncsu.edu", null, 2);
 		} catch (IllegalArgumentException e) {
 			assertNull(s);
 		}
 
 		//test invalid maxCourses
 		try{
-			s = new Faculty("first", "last", "id", "email@ncsu.edu", "hashedpassword", 5);
+			s = new Sweden("first", "last", "id", "email@ncsu.edu", "hashedpassword", 5);
 		} catch (IllegalArgumentException e) {
 			assertNull(s);
 		}	
@@ -100,7 +103,7 @@ public class FacultyTest {
 		//test valid Faculty creation
 		User s = null;
 		try{
-		Faculty fValid = new Faculty("first", "last", "id", "email@ncsu.edu", "hashpassword");
+		Sweden fValid = new Sweden("first", "last", "id", "email@ncsu.edu", "hashpassword");
 		assertEquals("first", fValid.getFirstName());
 		assertEquals("last", fValid.getLastName());
 		assertEquals("id", fValid.getId());
@@ -112,7 +115,7 @@ public class FacultyTest {
 		}
 		//test invalid first name
 		try {
-		    s = new Faculty(null, "last", "id", "email@ncsu.edu", "hashedpassword");
+		    s = new Sweden(null, "last", "id", "email@ncsu.edu", "hashedpassword");
 		    //Note that for testing purposes, the password doesn't need to be hashedpassword
 		    fail(); //If we reach this point a Faculty was constructed when it shouldn't have been!
 		} catch (IllegalArgumentException e) {
@@ -123,35 +126,35 @@ public class FacultyTest {
 		
 		//test invalid last name
 		try{
-			s = new Faculty("first", null, "id", "email@ncsu.edu", "hashedpassword");
+			s = new Sweden("first", null, "id", "email@ncsu.edu", "hashedpassword");
 		} catch (IllegalArgumentException e) {
 			assertNull(s);
 		}
 
 		//test invalid last name
 		try{
-			s = new Faculty("first", null, "id", "email@ncsu.edu", "hashedpassword");
+			s = new Sweden("first", null, "id", "email@ncsu.edu", "hashedpassword");
 		} catch (IllegalArgumentException e) {
 			assertNull(s);
 		}	
 		
 		//test invalid id
 		try{
-			s = new Faculty("first", "last", null, "email@ncsu.edu", "hashedpassword");
+			s = new Sweden("first", "last", null, "email@ncsu.edu", "hashedpassword");
 		} catch (IllegalArgumentException e) {
 			assertNull(s);
 		}
 
 		//test invalid email
 		try{
-			s = new Faculty("first", "last", "id", null, "hashedpassword");
+			s = new Sweden("first", "last", "id", null, "hashedpassword");
 		} catch (IllegalArgumentException e) {
 			assertNull(s);
 		}
 
 		//test invalid password
 		try{
-			s = new Faculty("first", "last", "id", "email@ncsu.edu", null);
+			s = new Sweden("first", "last", "id", "email@ncsu.edu", null);
 		} catch (IllegalArgumentException e) {
 			assertNull(s);
 		}
@@ -164,7 +167,7 @@ public class FacultyTest {
 	@Test
 	public void testSetFirstName() {
 		//Construct a valid Faculty
-		Faculty s = new Faculty("first", "last", "id", "email@ncsu.edu", "hashedpassword", 2);
+		Sweden s = new Sweden("first", "last", "id", "email@ncsu.edu", "hashedpassword", 2);
 		
 		//test invalid set to null
 		try {
@@ -200,7 +203,7 @@ public class FacultyTest {
 	@Test
 	public void testSetLastName() {
 		//Construct a valid Faculty
-		Faculty s = new Faculty("first", "last", "id", "email@ncsu.edu", "hashedpassword", 2);
+		Sweden s = new Sweden("first", "last", "id", "email@ncsu.edu", "hashedpassword", 2);
 		
 		//test invalid set to null
 		try {
@@ -237,7 +240,7 @@ public class FacultyTest {
 	@Test
 	public void testSetEmail() {
 		//Construct a valid Faculty
-		Faculty s = new Faculty("first", "last", "id", "email@ncsu.edu", "hashedpassword", 2);
+		Sweden s = new Sweden("first", "last", "id", "email@ncsu.edu", "hashedpassword", 2);
 		
 		//test invalid set to null
 		try {
@@ -312,7 +315,7 @@ public class FacultyTest {
 	@Test
 	public void testSetPassword() {
 		//Construct a valid Faculty
-		Faculty s = new Faculty("first", "last", "id", "email@ncsu.edu", "hashedpassword", 2);
+		Sweden s = new Sweden("first", "last", "id", "email@ncsu.edu", "hashedpassword", 2);
 		
 		//test invalid set to null
 		try {
@@ -348,7 +351,7 @@ public class FacultyTest {
 	@Test
 	public void testSetMaxCourses() {
 		//Construct a valid Faculty
-		Faculty s = new Faculty("first", "last", "id", "email@ncsu.edu", "hashedpassword", 2);
+		Sweden s = new Sweden("first", "last", "id", "email@ncsu.edu", "hashedpassword", 2);
 		
 		//test invalid set to below 1
 		try {
@@ -385,9 +388,9 @@ public class FacultyTest {
 	@Test
 	public void testCompareTo() {
 		//Construct valid Faculty 
-		Faculty f1 = new Faculty("first", "last", "id", "email@ncsu.edu", "hashedpassword", 2);
-		Faculty f2 = new Faculty("first", "last", "id", "email@ncsu.edu", "hashedpassword", 2);
-		Faculty f3 = new Faculty("a", "last", "id", "email@ncsu.edu", "hashedpassword", 2);		
+		Sweden f1 = new Sweden("first", "last", "id", "email@ncsu.edu", "hashedpassword", 2);
+		Sweden f2 = new Sweden("first", "last", "id", "email@ncsu.edu", "hashedpassword", 2);
+		Sweden f3 = new Sweden("a", "last", "id", "email@ncsu.edu", "hashedpassword", 2);		
 		
 		assertEquals(0, f1.compareTo(f2));
 		assertEquals(0, f2.compareTo(f1));
@@ -402,14 +405,14 @@ public class FacultyTest {
 	@Test
 	public void testEqualsObject() {
 		//Construct valid Students
-		User s1 = new Faculty("first", "last", "id", "email@ncsu.edu", "hashedpassword", 2);
-		User s2 = new Faculty("first", "last", "id", "email@ncsu.edu", "hashedpassword", 2);
-		User s3 = new Faculty("a", "last", "id", "email@ncsu.edu", "hashedpassword", 2);
-		User s4 = new Faculty("first", "b", "id", "email@ncsu.edu", "hashedpassword", 2);
-		User s5 = new Faculty("first", "last", "c", "email@ncsu.edu", "hashedpassword", 2);
-		User s6 = new Faculty("first", "last", "id", "d@ncsu.edu", "hashedpassword", 2);
-		User s7 = new Faculty("first", "last", "id", "email@ncsu.edu", "e", 2);
-		User s8 = new Faculty("first", "last", "id", "email@ncsu.edu", "hashedpassword", 3);
+		User s1 = new Sweden("first", "last", "id", "email@ncsu.edu", "hashedpassword", 2);
+		User s2 = new Sweden("first", "last", "id", "email@ncsu.edu", "hashedpassword", 2);
+		User s3 = new Sweden("a", "last", "id", "email@ncsu.edu", "hashedpassword", 2);
+		User s4 = new Sweden("first", "b", "id", "email@ncsu.edu", "hashedpassword", 2);
+		User s5 = new Sweden("first", "last", "c", "email@ncsu.edu", "hashedpassword", 2);
+		User s6 = new Sweden("first", "last", "id", "d@ncsu.edu", "hashedpassword", 2);
+		User s7 = new Sweden("first", "last", "id", "email@ncsu.edu", "e", 2);
+		User s8 = new Sweden("first", "last", "id", "email@ncsu.edu", "hashedpassword", 3);
 		
 		//Test s1 is equal to s2
 		assertTrue(s1.equals(s2));
@@ -436,14 +439,14 @@ public class FacultyTest {
 	@Test
 	public void testHashCode() {
 		//Construct valid Students
-		User s1 = new Faculty("first", "last", "id", "email@ncsu.edu", "hashedpassword", 2);
-		User s2 = new Faculty("first", "last", "id", "email@ncsu.edu", "hashedpassword", 2);
-		User s3 = new Faculty("a", "last", "id", "email@ncsu.edu", "hashedpassword", 2);
-		User s4 = new Faculty("first", "b", "id", "email@ncsu.edu", "hashedpassword", 2);
-		User s5 = new Faculty("first", "last", "c", "email@ncsu.edu", "hashedpassword", 2);
-		User s6 = new Faculty("first", "last", "id", "d@ncsu.edu", "hashedpassword", 2);
-		User s7 = new Faculty("first", "last", "id", "email@ncsu.edu", "e", 2);
-		User s8 = new Faculty("first", "last", "id", "email@ncsu.edu", "hashedpassword", 3);
+		User s1 = new Sweden("first", "last", "id", "email@ncsu.edu", "hashedpassword", 2);
+		User s2 = new Sweden("first", "last", "id", "email@ncsu.edu", "hashedpassword", 2);
+		User s3 = new Sweden("a", "last", "id", "email@ncsu.edu", "hashedpassword", 2);
+		User s4 = new Sweden("first", "b", "id", "email@ncsu.edu", "hashedpassword", 2);
+		User s5 = new Sweden("first", "last", "c", "email@ncsu.edu", "hashedpassword", 2);
+		User s6 = new Sweden("first", "last", "id", "d@ncsu.edu", "hashedpassword", 2);
+		User s7 = new Sweden("first", "last", "id", "email@ncsu.edu", "e", 2);
+		User s8 = new Sweden("first", "last", "id", "email@ncsu.edu", "hashedpassword", 3);
 		
 		//Test s1 is equal to s2
 		assertEquals(s1.hashCode(), s2.hashCode());
@@ -463,8 +466,8 @@ public class FacultyTest {
 	@Test
 	public void testToString() {
 		//Construct a valid Students
-		User s1 = new Faculty("first", "last", "id", "email@ncsu.edu", "hashedpassword", 2);
-		User s2 = new Faculty("first", "last", "id", "email@ncsu.edu", "hashedpassword");		
+		User s1 = new Sweden("first", "last", "id", "email@ncsu.edu", "hashedpassword", 2);
+		User s2 = new Sweden("first", "last", "id", "email@ncsu.edu", "hashedpassword");		
 		//Expected strings
 		String str1 = "first,last,id,email@ncsu.edu,hashedpassword,2";
 		String str2 = "first,last,id,email@ncsu.edu,hashedpassword,3";	

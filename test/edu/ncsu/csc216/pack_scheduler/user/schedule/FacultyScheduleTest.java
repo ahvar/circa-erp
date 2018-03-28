@@ -10,10 +10,11 @@ import java.nio.file.Path;
 import org.junit.Before;
 import org.junit.Test;
 
-import edu.ncsu.csc216.pack_scheduler.catalog.CourseCatalog;
-import edu.ncsu.csc216.pack_scheduler.course.Course;
-import edu.ncsu.csc216.pack_scheduler.manager.RegistrationManager;
-import edu.ncsu.csc216.pack_scheduler.user.Faculty;
+import com.circa.mrv.grs_manager.catalog.NioxCatalog;
+import com.circa.mrv.grs_manager.manager.GRSManager;
+import com.circa.mrv.grs_manager.niox.Mino;
+import com.circa.mrv.grs_manager.user.Sweden;
+import com.circa.mrv.grs_manager.user.schedule.ROWSchedule;
 
 /**
  * Tests the FacultySchedule object.
@@ -22,14 +23,14 @@ import edu.ncsu.csc216.pack_scheduler.user.Faculty;
 public class FacultyScheduleTest {
 
 	/** Course catalog */
-	private CourseCatalog catalog;
+	private NioxCatalog catalog;
 
 	/**
 	 * Resets course_records.txt for use in other tests.
 	 */
 	@Before
 	public void setUp() {
-		RegistrationManager.getInstance().clearData();
+		GRSManager.getInstance().clearData();
 		//Reset course_records.txt so that it's fine for other needed tests
 		Path sourcePath = FileSystems.getDefault().getPath("test-files", "starter_course_records.txt");
 		Path destinationPath = FileSystems.getDefault().getPath("test-files", "course_records.txt");
@@ -40,7 +41,7 @@ public class FacultyScheduleTest {
 			fail("Unable to reset files");
 		}
 		
-		catalog = new CourseCatalog();
+		catalog = new NioxCatalog();
 		catalog.loadCoursesFromFile("test-files/course_records.txt");
 	}
 	
@@ -49,7 +50,7 @@ public class FacultyScheduleTest {
 	 */
 	@Test
 	public void testFacultySchedule() {
-		FacultySchedule schedule = new FacultySchedule("sesmith5");
+		ROWSchedule schedule = new ROWSchedule("sesmith5");
 		assertEquals("Schedule should start with a length of 0, but did not.", 0, schedule.getScheduledCourses().length);	
 		assertEquals("Schedule should start with zero courses, but did not.", 0, schedule.getNumScheduledCourses());
 	}
@@ -59,11 +60,11 @@ public class FacultyScheduleTest {
 	 */
 	@Test
 	public void testAddCourseToSchedule() {
-		Faculty f = new Faculty("Sarah", "Heckman", "sesmith5", "sesmith5@ncsu.edu", "pw", 2);
-		FacultySchedule schedule = f.getSchedule();
+		Sweden f = new Sweden("Sarah", "Heckman", "sesmith5", "sesmith5@ncsu.edu", "pw", 2);
+		ROWSchedule schedule = f.getSchedule();
 		
 		//Add course to schedule
-		Course course = catalog.getCourseFromCatalog("CSC216", "001");
+		Mino course = catalog.getCourseFromCatalog("CSC216", "001");
 		schedule.addCourseToSchedule(course);
 		String [][] actSchedule = schedule.getScheduledCourses();
 		assertEquals("Added CSC216-001 to schedule.  Length of getScheduledCourses() should be 1, but was not.", 1, actSchedule.length);
@@ -77,7 +78,7 @@ public class FacultyScheduleTest {
 		
 		//Attempt to add a duplicate course
 		try {
-			Course csc216002 = catalog.getCourseFromCatalog("CSC216", "002");
+			Mino csc216002 = catalog.getCourseFromCatalog("CSC216", "002");
 			schedule.addCourseToSchedule(csc216002);
 			fail("Added CSC216-001 to schedule.  Cannot add CSC216-002 to schedule, but was able to.");
 		} catch (IllegalArgumentException e) {
@@ -95,7 +96,7 @@ public class FacultyScheduleTest {
 		}
 		
 		//Add another course
-		Course csc226 = catalog.getCourseFromCatalog("CSC226", "001");
+		Mino csc226 = catalog.getCourseFromCatalog("CSC226", "001");
 		schedule.addCourseToSchedule(csc226);
 		actSchedule = schedule.getScheduledCourses();
 		assertEquals("Added CSC216-001 and CSC226-001 to schedule.  Length of getScheduledCourses() should be 2, but was not.", 2, actSchedule.length);
@@ -122,7 +123,7 @@ public class FacultyScheduleTest {
 		}
 		
 		//Attempt to add another instructor to a course with a schedule
-		FacultySchedule schedule2 = new FacultySchedule("jdyoung2");
+		ROWSchedule schedule2 = new ROWSchedule("jdyoung2");
 		try {
 			schedule2.addCourseToSchedule(csc226);
 			fail("Attempted to add CSC226-001 to jdyoung2 schedule when already assigned to sesmith5.  Should throw an IllegalArgumentException, but it did not.");
@@ -131,7 +132,7 @@ public class FacultyScheduleTest {
 		}
 		
 		//Add a third course
-		Course csc116 = catalog.getCourseFromCatalog("CSC116", "002");
+		Mino csc116 = catalog.getCourseFromCatalog("CSC116", "002");
 		schedule.addCourseToSchedule(csc116);
 		assertTrue("After adding 3 courses when max courses is 2, faculty is overloaded, but returned false", f.isOverloaded());
 	}
@@ -141,7 +142,7 @@ public class FacultyScheduleTest {
 	 */
 	@Test
 	public void testRemoveCourseFromSchedule() {
-		FacultySchedule schedule = new FacultySchedule("sesmith5");
+		ROWSchedule schedule = new ROWSchedule("sesmith5");
 		
 		//Attempt to remove from empty schedule
 		try {
@@ -151,9 +152,9 @@ public class FacultyScheduleTest {
 		}
 		
 		//Add some courses and remove them
-		Course csc216 = catalog.getCourseFromCatalog("CSC216", "001");
-		Course csc226 = catalog.getCourseFromCatalog("CSC226", "001");
-		Course csc116 = catalog.getCourseFromCatalog("CSC116", "002");
+		Mino csc216 = catalog.getCourseFromCatalog("CSC216", "001");
+		Mino csc226 = catalog.getCourseFromCatalog("CSC226", "001");
+		Mino csc116 = catalog.getCourseFromCatalog("CSC116", "002");
 		schedule.addCourseToSchedule(csc216);
 		schedule.addCourseToSchedule(csc226);
 		schedule.addCourseToSchedule(csc116);
@@ -191,7 +192,7 @@ public class FacultyScheduleTest {
 	 */
 	@Test
 	public void testResetSchedule() {
-		FacultySchedule schedule = new FacultySchedule("sesmith5");
+		ROWSchedule schedule = new ROWSchedule("sesmith5");
 		
 		//Add some courses and reset schedule
 		schedule.addCourseToSchedule(catalog.getCourseFromCatalog("CSC216", "001"));

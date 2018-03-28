@@ -7,6 +7,10 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import com.circa.mrv.grs_manager.niox.Product;
+import com.circa.mrv.grs_manager.niox.ConflictException;
+import com.circa.mrv.grs_manager.niox.Mino;
+
 /**
  * Tests for the Activity Class checkConflict method
  * @author Ben
@@ -14,11 +18,11 @@ import org.junit.Test;
  */
 public class ActivityTest {
 
-	Activity a1 = new Course("CSC216", "Programming Concepts - Java", "001", 4, "sesmith5", 25, "MW", 1330, 1445);
-	Activity a2 = new Course("CSC216", "Programming Concepts - Java", "001", 4, "sesmith5", 25, "TH", 1330, 1445);
+	Product a1 = new Mino("CSC216", "Programming Concepts - Java", "001", 4, "sesmith5", 25, "MW", 1330, 1445);
+	Product a2 = new Mino("CSC216", "Programming Concepts - Java", "001", 4, "sesmith5", 25, "TH", 1330, 1445);
 
 	/**
-	 * Test method for {@link edu.ncsu.csc216.pack_scheduler.course.Activity#checkConflict(edu.ncsu.csc216.pack_scheduler.course.Activity)}.
+	 * Test method for {@link com.circa.mrv.grs_manager.niox.Product#checkConflict(com.circa.mrv.grs_manager.niox.Product)}.
 	 */
 	@Test
 	public void testCheckConflict() {

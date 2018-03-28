@@ -8,6 +8,8 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.circa.mrv.grs_manager.util.ArrayQueue;
+
 /**
  * Provides suite of tests for the ArrayQueue Class
  * @author Ben W Ioppolo
@@ -33,7 +35,7 @@ public class ArrayQueueTest {
 //	}
 
 	/**
-	 * Test method for {@link edu.ncsu.csc216.pack_scheduler.util.ArrayQueue#enqueue(java.lang.Object)}.
+	 * Test method for {@link com.circa.mrv.grs_manager.util.ArrayQueue#enqueue(java.lang.Object)}.
 	 */
 	@Test
 	public void testEnqueue() {
@@ -84,7 +86,7 @@ public class ArrayQueueTest {
 	}
 
 	/**
-	 * Test method for {@link edu.ncsu.csc216.pack_scheduler.util.ArrayQueue#dequeue()}.
+	 * Test method for {@link com.circa.mrv.grs_manager.util.ArrayQueue#dequeue()}.
 	 */
 	@Test
 	public void testDequeue() {
@@ -135,7 +137,7 @@ public class ArrayQueueTest {
 	}
 
 	/**
-	 * Test method for {@link edu.ncsu.csc216.pack_scheduler.util.ArrayQueue#isEmpty()}.
+	 * Test method for {@link com.circa.mrv.grs_manager.util.ArrayQueue#isEmpty()}.
 	 */
 	@Test
 	public void testIsEmpty() {
@@ -145,7 +147,7 @@ public class ArrayQueueTest {
 	}
 
 	/**
-	 * Test method for {@link edu.ncsu.csc216.pack_scheduler.util.ArrayQueue#size()}.
+	 * Test method for {@link com.circa.mrv.grs_manager.util.ArrayQueue#size()}.
 	 */
 	@Test
 	public void testSize() {
@@ -155,7 +157,7 @@ public class ArrayQueueTest {
 	}
 
 	/**
-	 * Test method for {@link edu.ncsu.csc216.pack_scheduler.util.ArrayQueue#setCapacity(int)}.
+	 * Test method for {@link com.circa.mrv.grs_manager.util.ArrayQueue#setCapacity(int)}.
 	 */
 	@Test
 	public void testSetCapacity() {

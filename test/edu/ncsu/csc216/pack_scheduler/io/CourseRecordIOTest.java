@@ -13,9 +13,10 @@ import java.util.Scanner;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.circa.mrv.grs_manager.io.ProductRecordIO;
+import com.circa.mrv.grs_manager.niox.Mino;
+
 import edu.ncsu.csc216.collections.list.SortedList;
-import edu.ncsu.csc216.pack_scheduler.course.Course;
-import edu.ncsu.csc216.pack_scheduler.io.CourseRecordIO;
 
 /**
  * Tests CouresRecordIO.
@@ -65,7 +66,7 @@ public class CourseRecordIOTest {
 	@Test
 	public void testReadValidCourseRecords() {
 		try {
-			SortedList<Course> courses = CourseRecordIO.readCourseRecords(validTestFile);
+			SortedList<Mino> courses = ProductRecordIO.readCourseRecords(validTestFile);
 			assertEquals(8, courses.size());
 			
 			for (int i = 0; i < validCourses.length; i++) {
@@ -81,9 +82,9 @@ public class CourseRecordIOTest {
 	 */
 	@Test
 	public void testReadInvalidCourseRecords() {
-		SortedList<Course> courses;
+		SortedList<Mino> courses;
 		try {
-			courses = CourseRecordIO.readCourseRecords(invalidTestFile);
+			courses = ProductRecordIO.readCourseRecords(invalidTestFile);
 			assertEquals(0, courses.size());
 		} catch (FileNotFoundException e) {
 			fail("Unexpected FileNotFoundException");
@@ -95,13 +96,13 @@ public class CourseRecordIOTest {
 	 */
 	@Test
 	public void testWriteCourseRecords() {
-		SortedList<Course> courses = new SortedList<Course>();
-		courses.add(new Course("CSC116", "Intro to Programming - Java", "003", 3, "spbalik", 10, "MW", 1250, 1440));
-		courses.add(new Course("CSC216", "Programming Concepts - Java", "001", 4, "sesmith5", 10, "MW", 1330, 1445));
-		courses.add(new Course("CSC216", "Programming Concepts - Java", "601", 4, "jep", 10, "A"));
+		SortedList<Mino> courses = new SortedList<Mino>();
+		courses.add(new Mino("CSC116", "Intro to Programming - Java", "003", 3, "spbalik", 10, "MW", 1250, 1440));
+		courses.add(new Mino("CSC216", "Programming Concepts - Java", "001", 4, "sesmith5", 10, "MW", 1330, 1445));
+		courses.add(new Mino("CSC216", "Programming Concepts - Java", "601", 4, "jep", 10, "A"));
 		
 		try {
-			CourseRecordIO.writeCourseRecords("test-files/actual_course_records.txt", courses);
+			ProductRecordIO.writeCourseRecords("test-files/actual_course_records.txt", courses);
 		} catch (IOException e) {
 			fail("Cannot write to course records file");
 		}

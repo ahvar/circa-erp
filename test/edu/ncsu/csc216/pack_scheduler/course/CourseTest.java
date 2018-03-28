@@ -4,6 +4,9 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import com.circa.mrv.grs_manager.niox.Product;
+import com.circa.mrv.grs_manager.niox.Mino;
+
 
 
 /**
@@ -43,9 +46,9 @@ public class CourseTest {
 		//Setting name can only be tested through the constructor
 		
 		//Testing for null name
-		Course c = null;
+		Mino c = null;
 		try {
-			c = new Course(null, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
+			c = new Mino(null, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
 			fail();
 		} catch (IllegalArgumentException e) {
 			assertNull(c);
@@ -54,7 +57,7 @@ public class CourseTest {
 		//Testing for empty string name
 		c = null;
 		try {
-			c = new Course("", TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
+			c = new Mino("", TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
 			fail();
 		} catch (IllegalArgumentException e) {
 			assertNull(c);
@@ -63,7 +66,7 @@ public class CourseTest {
 		//Testing for name with length less than 4
 		c = null;
 		try {
-			c = new Course("E11", TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
+			c = new Mino("E11", TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
 			fail();
 		} catch (IllegalArgumentException e) {
 			assertNull(c);
@@ -72,7 +75,7 @@ public class CourseTest {
 		//Testing for name with length greater than 6
 		c = null;
 		try {
-			c = new Course("CSC2167", TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
+			c = new Mino("CSC2167", TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
 			fail();
 		} catch (IllegalArgumentException e) {
 			assertNull(c);
@@ -81,9 +84,9 @@ public class CourseTest {
 		//Test a valid construction
 		c = null;
 		try {
-			c = new Course(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
+			c = new Mino(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
 			assertEquals(NAME, c.getName());
-			assertEquals(TITLE, c.getTitle());
+			assertEquals(TITLE, c.getDescription());
 			assertEquals(SECTION, c.getSection());
 			assertEquals(CREDITS, c.getCredits());
 			assertEquals(INSTRUCTOR_ID, c.getInstructorId());
@@ -101,11 +104,11 @@ public class CourseTest {
 	@Test
 	public void testCourseStringStringStringIntStringString() {
 		//Test a valid construction and make sure values are correct
-		Course c = null;
+		Mino c = null;
 		try {
-			c = new Course(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, "A");
+			c = new Mino(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, "A");
 			assertEquals(NAME, c.getName());
-			assertEquals(TITLE, c.getTitle());
+			assertEquals(TITLE, c.getDescription());
 			assertEquals(SECTION, c.getSection());
 			assertEquals(CREDITS, c.getCredits());
 			assertEquals(INSTRUCTOR_ID, c.getInstructorId());
@@ -122,9 +125,9 @@ public class CourseTest {
 	 */
 	@Test
 	public void testSetTitle() {
-		Course c = new Course(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
+		Mino c = new Mino(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
 		assertEquals(NAME, c.getName());
-		assertEquals(TITLE, c.getTitle());
+		assertEquals(TITLE, c.getDescription());
 		assertEquals(SECTION, c.getSection());
 		assertEquals(CREDITS, c.getCredits());
 		assertEquals(INSTRUCTOR_ID, c.getInstructorId());
@@ -138,7 +141,7 @@ public class CourseTest {
 			fail();
 		} catch (IllegalArgumentException e) {
 			assertEquals(NAME, c.getName());
-			assertEquals(TITLE, c.getTitle());
+			assertEquals(TITLE, c.getDescription());
 			assertEquals(SECTION, c.getSection());
 			assertEquals(CREDITS, c.getCredits());
 			assertEquals(INSTRUCTOR_ID, c.getInstructorId());
@@ -153,7 +156,7 @@ public class CourseTest {
 			fail();
 		} catch (IllegalArgumentException e) {
 			assertEquals(NAME, c.getName());
-			assertEquals(TITLE, c.getTitle());
+			assertEquals(TITLE, c.getDescription());
 			assertEquals(SECTION, c.getSection());
 			assertEquals(CREDITS, c.getCredits());
 			assertEquals(INSTRUCTOR_ID, c.getInstructorId());
@@ -165,7 +168,7 @@ public class CourseTest {
 		//Valid set
 		c.setTitle("A new title");
 		assertEquals(NAME, c.getName());
-		assertEquals("A new title", c.getTitle());
+		assertEquals("A new title", c.getDescription());
 		assertEquals(SECTION, c.getSection());
 		assertEquals(CREDITS, c.getCredits());
 		assertEquals(INSTRUCTOR_ID, c.getInstructorId());
@@ -179,9 +182,9 @@ public class CourseTest {
 	 */
 	@Test
 	public void testSetSection() {
-		Course c = new Course(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
+		Mino c = new Mino(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
 		assertEquals(NAME, c.getName());
-		assertEquals(TITLE, c.getTitle());
+		assertEquals(TITLE, c.getDescription());
 		assertEquals(SECTION, c.getSection());
 		assertEquals(CREDITS, c.getCredits());
 		assertEquals(INSTRUCTOR_ID, c.getInstructorId());
@@ -195,7 +198,7 @@ public class CourseTest {
 			fail();
 		} catch (IllegalArgumentException e) {
 			assertEquals(NAME, c.getName());
-			assertEquals(TITLE, c.getTitle());
+			assertEquals(TITLE, c.getDescription());
 			assertEquals(SECTION, c.getSection());
 			assertEquals(CREDITS, c.getCredits());
 			assertEquals(INSTRUCTOR_ID, c.getInstructorId());
@@ -210,7 +213,7 @@ public class CourseTest {
 			fail();
 		} catch (IllegalArgumentException e) {
 			assertEquals(NAME, c.getName());
-			assertEquals(TITLE, c.getTitle());
+			assertEquals(TITLE, c.getDescription());
 			assertEquals(SECTION, c.getSection());
 			assertEquals(CREDITS, c.getCredits());
 			assertEquals(INSTRUCTOR_ID, c.getInstructorId());
@@ -225,7 +228,7 @@ public class CourseTest {
 			fail();
 		} catch (IllegalArgumentException e) {
 			assertEquals(NAME, c.getName());
-			assertEquals(TITLE, c.getTitle());
+			assertEquals(TITLE, c.getDescription());
 			assertEquals(SECTION, c.getSection());
 			assertEquals(CREDITS, c.getCredits());
 			assertEquals(INSTRUCTOR_ID, c.getInstructorId());
@@ -240,7 +243,7 @@ public class CourseTest {
 			fail();
 		} catch (IllegalArgumentException e) {
 			assertEquals(NAME, c.getName());
-			assertEquals(TITLE, c.getTitle());
+			assertEquals(TITLE, c.getDescription());
 			assertEquals(SECTION, c.getSection());
 			assertEquals(CREDITS, c.getCredits());
 			assertEquals(INSTRUCTOR_ID, c.getInstructorId());
@@ -255,7 +258,7 @@ public class CourseTest {
 			fail();
 		} catch (IllegalArgumentException e) {
 			assertEquals(NAME, c.getName());
-			assertEquals(TITLE, c.getTitle());
+			assertEquals(TITLE, c.getDescription());
 			assertEquals(SECTION, c.getSection());
 			assertEquals(CREDITS, c.getCredits());
 			assertEquals(INSTRUCTOR_ID, c.getInstructorId());
@@ -267,7 +270,7 @@ public class CourseTest {
 		//Test valid section
 		c.setSection("002");
 		assertEquals(NAME, c.getName());
-		assertEquals(TITLE, c.getTitle());
+		assertEquals(TITLE, c.getDescription());
 		assertEquals("002", c.getSection());
 		assertEquals(CREDITS, c.getCredits());
 		assertEquals(INSTRUCTOR_ID, c.getInstructorId());
@@ -283,9 +286,9 @@ public class CourseTest {
 	 */
 	@Test
 	public void testSetCredits() {
-		Course c = new Course(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
+		Mino c = new Mino(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
 		assertEquals(NAME, c.getName());
-		assertEquals(TITLE, c.getTitle());
+		assertEquals(TITLE, c.getDescription());
 		assertEquals(SECTION, c.getSection());
 		assertEquals(CREDITS, c.getCredits());
 		assertEquals(INSTRUCTOR_ID, c.getInstructorId());
@@ -299,7 +302,7 @@ public class CourseTest {
 			fail();
 		} catch (IllegalArgumentException e) {
 			assertEquals(NAME, c.getName());
-			assertEquals(TITLE, c.getTitle());
+			assertEquals(TITLE, c.getDescription());
 			assertEquals(SECTION, c.getSection());
 			assertEquals(CREDITS, c.getCredits());
 			assertEquals(INSTRUCTOR_ID, c.getInstructorId());
@@ -314,7 +317,7 @@ public class CourseTest {
 			fail();
 		} catch (IllegalArgumentException e) {
 			assertEquals(NAME, c.getName());
-			assertEquals(TITLE, c.getTitle());
+			assertEquals(TITLE, c.getDescription());
 			assertEquals(SECTION, c.getSection());
 			assertEquals(CREDITS, c.getCredits());
 			assertEquals(INSTRUCTOR_ID, c.getInstructorId());
@@ -326,7 +329,7 @@ public class CourseTest {
 		//Test valid credits
 		c.setCredits(3);
 		assertEquals(NAME, c.getName());
-		assertEquals(TITLE, c.getTitle());
+		assertEquals(TITLE, c.getDescription());
 		assertEquals(SECTION, c.getSection());
 		assertEquals(3, c.getCredits());
 		assertEquals(INSTRUCTOR_ID, c.getInstructorId());
@@ -340,9 +343,9 @@ public class CourseTest {
 	 */
 	@Test
 	public void testSetInstructorId() {
-		Course c = new Course(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
+		Mino c = new Mino(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
 		assertEquals(NAME, c.getName());
-		assertEquals(TITLE, c.getTitle());
+		assertEquals(TITLE, c.getDescription());
 		assertEquals(SECTION, c.getSection());
 		assertEquals(CREDITS, c.getCredits());
 		assertEquals(INSTRUCTOR_ID, c.getInstructorId());
@@ -383,7 +386,7 @@ public class CourseTest {
 		//Valid set
 		c.setInstructorId("jtking");
 		assertEquals(NAME, c.getName());
-		assertEquals(TITLE, c.getTitle());
+		assertEquals(TITLE, c.getDescription());
 		assertEquals(SECTION, c.getSection());
 		assertEquals(CREDITS, c.getCredits());
 		assertEquals("jtking", c.getInstructorId());
@@ -397,9 +400,9 @@ public class CourseTest {
 	 */
 	@Test
 	public void testSetMeetingDays() {
-		Course c = new Course(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
+		Mino c = new Mino(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
 		assertEquals(NAME, c.getName());
-		assertEquals(TITLE, c.getTitle());
+		assertEquals(TITLE, c.getDescription());
 		assertEquals(SECTION, c.getSection());
 		assertEquals(CREDITS, c.getCredits());
 		assertEquals(INSTRUCTOR_ID, c.getInstructorId());
@@ -413,7 +416,7 @@ public class CourseTest {
 			fail();
 		} catch (IllegalArgumentException e) {
 			assertEquals(NAME, c.getName());
-			assertEquals(TITLE, c.getTitle());
+			assertEquals(TITLE, c.getDescription());
 			assertEquals(SECTION, c.getSection());
 			assertEquals(CREDITS, c.getCredits());
 			assertEquals(INSTRUCTOR_ID, c.getInstructorId());
@@ -428,7 +431,7 @@ public class CourseTest {
 			fail();
 		} catch (IllegalArgumentException e) {
 			assertEquals(NAME, c.getName());
-			assertEquals(TITLE, c.getTitle());
+			assertEquals(TITLE, c.getDescription());
 			assertEquals(SECTION, c.getSection());
 			assertEquals(CREDITS, c.getCredits());
 			assertEquals(INSTRUCTOR_ID, c.getInstructorId());
@@ -443,7 +446,7 @@ public class CourseTest {
 			fail();
 		} catch (IllegalArgumentException e) {
 			assertEquals(NAME, c.getName());
-			assertEquals(TITLE, c.getTitle());
+			assertEquals(TITLE, c.getDescription());
 			assertEquals(SECTION, c.getSection());
 			assertEquals(CREDITS, c.getCredits());
 			assertEquals(INSTRUCTOR_ID, c.getInstructorId());
@@ -458,7 +461,7 @@ public class CourseTest {
 			fail();
 		} catch (IllegalArgumentException e) {
 			assertEquals(NAME, c.getName());
-			assertEquals(TITLE, c.getTitle());
+			assertEquals(TITLE, c.getDescription());
 			assertEquals(SECTION, c.getSection());
 			assertEquals(CREDITS, c.getCredits());
 			assertEquals(INSTRUCTOR_ID, c.getInstructorId());
@@ -473,7 +476,7 @@ public class CourseTest {
 			fail();
 		} catch (IllegalArgumentException e) {
 			assertEquals(NAME, c.getName());
-			assertEquals(TITLE, c.getTitle());
+			assertEquals(TITLE, c.getDescription());
 			assertEquals(SECTION, c.getSection());
 			assertEquals(CREDITS, c.getCredits());
 			assertEquals(INSTRUCTOR_ID, c.getInstructorId());
@@ -485,7 +488,7 @@ public class CourseTest {
 		//Valid set
 		c.setMeetingDays("TH");
 		assertEquals(NAME, c.getName());
-		assertEquals(TITLE, c.getTitle());
+		assertEquals(TITLE, c.getDescription());
 		assertEquals(SECTION, c.getSection());
 		assertEquals(CREDITS, c.getCredits());
 		assertEquals(INSTRUCTOR_ID, c.getInstructorId());
@@ -503,9 +506,9 @@ public class CourseTest {
 		//Once those are made, remove the line of code fail() and uncomment the provided tests.
 		//fail();
 		
-		Course c = new Course(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
+		Mino c = new Mino(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
 		assertEquals(NAME, c.getName());
-		assertEquals(TITLE, c.getTitle());
+		assertEquals(TITLE, c.getDescription());
 		assertEquals(SECTION, c.getSection());
 		assertEquals(CREDITS, c.getCredits());
 		assertEquals(INSTRUCTOR_ID, c.getInstructorId());
@@ -519,7 +522,7 @@ public class CourseTest {
 			fail();
 		} catch (IllegalArgumentException e) {
 			assertEquals(NAME, c.getName());
-			assertEquals(TITLE, c.getTitle());
+			assertEquals(TITLE, c.getDescription());
 			assertEquals(SECTION, c.getSection());
 			assertEquals(CREDITS, c.getCredits());
 			assertEquals(INSTRUCTOR_ID, c.getInstructorId());
@@ -534,7 +537,7 @@ public class CourseTest {
 			fail();
 		} catch (IllegalArgumentException e) {
 			assertEquals(NAME, c.getName());
-			assertEquals(TITLE, c.getTitle());
+			assertEquals(TITLE, c.getDescription());
 			assertEquals(SECTION, c.getSection());
 			assertEquals(CREDITS, c.getCredits());
 			assertEquals(INSTRUCTOR_ID, c.getInstructorId());
@@ -549,7 +552,7 @@ public class CourseTest {
 			fail();
 		} catch (IllegalArgumentException e) {
 			assertEquals(NAME, c.getName());
-			assertEquals(TITLE, c.getTitle());
+			assertEquals(TITLE, c.getDescription());
 			assertEquals(SECTION, c.getSection());
 			assertEquals(CREDITS, c.getCredits());
 			assertEquals(INSTRUCTOR_ID, c.getInstructorId());
@@ -564,7 +567,7 @@ public class CourseTest {
 			fail();
 		} catch (IllegalArgumentException e) {
 			assertEquals(NAME, c.getName());
-			assertEquals(TITLE, c.getTitle());
+			assertEquals(TITLE, c.getDescription());
 			assertEquals(SECTION, c.getSection());
 			assertEquals(CREDITS, c.getCredits());
 			assertEquals(INSTRUCTOR_ID, c.getInstructorId());
@@ -579,7 +582,7 @@ public class CourseTest {
 			fail();
 		} catch (IllegalArgumentException e) {
 			assertEquals(NAME, c.getName());
-			assertEquals(TITLE, c.getTitle());
+			assertEquals(TITLE, c.getDescription());
 			assertEquals(SECTION, c.getSection());
 			assertEquals(CREDITS, c.getCredits());
 			assertEquals(INSTRUCTOR_ID, c.getInstructorId());
@@ -594,7 +597,7 @@ public class CourseTest {
 			fail();
 		} catch (IllegalArgumentException e) {
 			assertEquals(NAME, c.getName());
-			assertEquals(TITLE, c.getTitle());
+			assertEquals(TITLE, c.getDescription());
 			assertEquals(SECTION, c.getSection());
 			assertEquals(CREDITS, c.getCredits());
 			assertEquals(INSTRUCTOR_ID, c.getInstructorId());
@@ -609,7 +612,7 @@ public class CourseTest {
 			fail();
 		} catch (IllegalArgumentException e) {
 			assertEquals(NAME, c.getName());
-			assertEquals(TITLE, c.getTitle());
+			assertEquals(TITLE, c.getDescription());
 			assertEquals(SECTION, c.getSection());
 			assertEquals(CREDITS, c.getCredits());
 			assertEquals(INSTRUCTOR_ID, c.getInstructorId());
@@ -621,7 +624,7 @@ public class CourseTest {
 		//Valid set of start time
 		c.setCourseTime(1350, 1445);
 		assertEquals(NAME, c.getName());
-		assertEquals(TITLE, c.getTitle());
+		assertEquals(TITLE, c.getDescription());
 		assertEquals(SECTION, c.getSection());
 		assertEquals(CREDITS, c.getCredits());
 		assertEquals(INSTRUCTOR_ID, c.getInstructorId());
@@ -632,7 +635,7 @@ public class CourseTest {
 		//Valid set of end time
 		c.setCourseTime(1350, 1526);
 		assertEquals(NAME, c.getName());
-		assertEquals(TITLE, c.getTitle());
+		assertEquals(TITLE, c.getDescription());
 		assertEquals(SECTION, c.getSection());
 		assertEquals(CREDITS, c.getCredits());
 		assertEquals(INSTRUCTOR_ID, c.getInstructorId());
@@ -650,17 +653,17 @@ public class CourseTest {
 		//Once those are made, remove the line of code fail() and uncomment the provided tests.
 		//fail();
 		
-		Activity c1 = new Course(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
+		Product c1 = new Mino(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
 		assertEquals("MW 1:30PM-2:45PM", c1.getMeetingString());
-		Activity c2 = new Course(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, 900, 1035);
+		Product c2 = new Mino(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, 900, 1035);
 		assertEquals("MW 9:00AM-10:35AM", c2.getMeetingString());
-		Activity c3 = new Course(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, "A");
+		Product c3 = new Mino(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, "A");
 		assertEquals("Arranged", c3.getMeetingString());
-		Activity c4 = new Course(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, "TH", 1145, 1425);
+		Product c4 = new Mino(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, "TH", 1145, 1425);
 		assertEquals("TH 11:45AM-2:25PM", c4.getMeetingString());
 		
 		
-		c1 = new Course(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
+		c1 = new Mino(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
 		assertEquals("MW 1:30PM-2:45PM", c1.getLongDisplayArray()[5]);
 	}
 
@@ -669,15 +672,15 @@ public class CourseTest {
 	 */
 	@Test
 	public void testEqualsObject() {
-		Activity c1 = new Course(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
-		Activity c2 = new Course(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
-		Activity c3 = new Course(NAME, "Different", SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
-		Activity c4 = new Course(NAME, TITLE, "002", CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
-		Activity c5 = new Course(NAME, TITLE, SECTION, 5, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
-		Activity c6 = new Course(NAME, TITLE, SECTION, CREDITS, "Different", ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
-		Activity c7 = new Course(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, "TH", START_TIME, END_TIME);
-		Activity c8 = new Course(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, 830, END_TIME);
-		Activity c9 = new Course(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, 1400);
+		Product c1 = new Mino(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
+		Product c2 = new Mino(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
+		Product c3 = new Mino(NAME, "Different", SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
+		Product c4 = new Mino(NAME, TITLE, "002", CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
+		Product c5 = new Mino(NAME, TITLE, SECTION, 5, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
+		Product c6 = new Mino(NAME, TITLE, SECTION, CREDITS, "Different", ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
+		Product c7 = new Mino(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, "TH", START_TIME, END_TIME);
+		Product c8 = new Mino(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, 830, END_TIME);
+		Product c9 = new Mino(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, 1400);
 		
 		//Test for equality in both directions
 		assertTrue(c1.equals(c2));
@@ -698,15 +701,15 @@ public class CourseTest {
 	 */
 	@Test
 	public void testHashCode() {
-		Activity c1 = new Course(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
-		Activity c2 = new Course(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
-		Activity c3 = new Course(NAME, "Different", SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
-		Activity c4 = new Course(NAME, TITLE, "002", CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
-		Activity c5 = new Course(NAME, TITLE, SECTION, 5, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
-		Activity c6 = new Course(NAME, TITLE, SECTION, CREDITS, "Different", ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
-		Activity c7 = new Course(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, "TH", START_TIME, END_TIME);
-		Activity c8 = new Course(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, 830, END_TIME);
-		Activity c9 = new Course(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, 1400);
+		Product c1 = new Mino(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
+		Product c2 = new Mino(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
+		Product c3 = new Mino(NAME, "Different", SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
+		Product c4 = new Mino(NAME, TITLE, "002", CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
+		Product c5 = new Mino(NAME, TITLE, SECTION, 5, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
+		Product c6 = new Mino(NAME, TITLE, SECTION, CREDITS, "Different", ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
+		Product c7 = new Mino(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, "TH", START_TIME, END_TIME);
+		Product c8 = new Mino(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, 830, END_TIME);
+		Product c9 = new Mino(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, 1400);
 		
 		//Test for the same hash code for the same values
 		assertEquals(c1.hashCode(), c2.hashCode());
@@ -726,11 +729,11 @@ public class CourseTest {
 	 */
 	@Test
 	public void testToString() {
-		Activity c1 = new Course(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
+		Product c1 = new Mino(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
 		String s1 = "CSC216,Programming Concepts - Java,001,4,sesmith5,25,MW,1330,1445";
 		assertEquals(s1, c1.toString());
 		
-		Activity c2 = new Course(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, "A");
+		Product c2 = new Mino(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, "A");
 		String s2 = "CSC216,Programming Concepts - Java,001,4,sesmith5,25,A";
 		assertEquals(s2, c2.toString());
 	}
@@ -742,10 +745,10 @@ public class CourseTest {
 	@Test
 	public void testCompareTo() {
 		//Construct valid courses 
-		Course c1 = new Course("ABC216", TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
-		Course c2 = new Course(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
-		Course c3 = new Course(NAME, TITLE, "002", CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);		
-		Course c4 = new Course(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
+		Mino c1 = new Mino("ABC216", TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
+		Mino c2 = new Mino(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
+		Mino c3 = new Mino(NAME, TITLE, "002", CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);		
+		Mino c4 = new Mino(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
 		
 		assertEquals(0, c2.compareTo(c4));
 		assertEquals(0, c4.compareTo(c2));
@@ -757,9 +760,9 @@ public class CourseTest {
 	 */
 	@Test
 	public void testIsDuplicate() {
-		Course c3 = new Course(NAME, TITLE, "002", CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);		
-		Activity c4 = new Course(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);		
-		Course c1 = new Course("ABC216", TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
+		Mino c3 = new Mino(NAME, TITLE, "002", CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);		
+		Product c4 = new Mino(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);		
+		Mino c1 = new Mino("ABC216", TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLL_CAP, MEETING_DAYS, START_TIME, END_TIME);
 		assertTrue(c3.isDuplicate(c4));
 		assertFalse(c1.isDuplicate(c4));
 	}

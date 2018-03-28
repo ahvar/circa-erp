@@ -5,15 +5,16 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import edu.ncsu.csc216.pack_scheduler.catalog.CourseCatalog;
-import edu.ncsu.csc216.pack_scheduler.course.Course;
-import edu.ncsu.csc216.pack_scheduler.directory.FacultyDirectory;
-import edu.ncsu.csc216.pack_scheduler.directory.StudentDirectory;
-import edu.ncsu.csc216.pack_scheduler.user.Faculty;
-import edu.ncsu.csc216.pack_scheduler.user.Student;
-import edu.ncsu.csc216.pack_scheduler.user.User;
-import edu.ncsu.csc216.pack_scheduler.user.schedule.FacultySchedule;
-import edu.ncsu.csc216.pack_scheduler.user.schedule.Schedule;
+import com.circa.mrv.grs_manager.catalog.NioxCatalog;
+import com.circa.mrv.grs_manager.directory.SwedenDirectory;
+import com.circa.mrv.grs_manager.manager.GRSManager;
+import com.circa.mrv.grs_manager.niox.Mino;
+import com.circa.mrv.grs_manager.directory.MorrisvilleDirectory;
+import com.circa.mrv.grs_manager.user.Sweden;
+import com.circa.mrv.grs_manager.user.Morrisville;
+import com.circa.mrv.grs_manager.user.User;
+import com.circa.mrv.grs_manager.user.schedule.ROWSchedule;
+import com.circa.mrv.grs_manager.user.schedule.MorrisvilleSchedule;
 
 /**
  * the registration manager test class provides a number of tests of the functionallity of the registration manager class.
@@ -21,10 +22,10 @@ import edu.ncsu.csc216.pack_scheduler.user.schedule.Schedule;
  */
 public class RegistrationManagerTest {
 	
-	private RegistrationManager manager;
-	private CourseCatalog catalog;
-	private StudentDirectory directory;
-	private FacultyDirectory fDirectory;
+	private GRSManager manager;
+	private NioxCatalog catalog;
+	private MorrisvilleDirectory directory;
+	private SwedenDirectory fDirectory;
 	private String validCourseRecordsFile = "test-files/course_records.txt";
 	private String validStudentRecordsFile = "test-files/student_records.txt";
 	/**
@@ -33,7 +34,7 @@ public class RegistrationManagerTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		manager = RegistrationManager.getInstance();
+		manager = GRSManager.getInstance();
 		manager.clearData();
 	}
 
@@ -161,8 +162,8 @@ public class RegistrationManagerTest {
 	    assertFalse("Action: enroll\nUser: efrost\nCourse: CSC226-001, CSC230-001\nResults: False - cannot exceed max student credits.", manager.enrollStudentInCourse(catalog.getCourseFromCatalog("CSC230", "001")));
 	    
 	    //Check Student Schedule
-	    Student efrost = directory.getStudentById("efrost");
-	    Schedule scheduleFrost = efrost.getSchedule();
+	    Morrisville efrost = directory.getStudentById("efrost");
+	    MorrisvilleSchedule scheduleFrost = efrost.getSchedule();
 	    assertEquals(3, scheduleFrost.getScheduleCredits());
 	    String[][] scheduleFrostArray = scheduleFrost.getScheduledCourses();
 	    assertEquals(1, scheduleFrostArray.length);
@@ -184,8 +185,8 @@ public class RegistrationManagerTest {
 	    assertFalse("Action: enroll\nUser: ahicks\nCourse: CSC216-001, CSC226-001, CSC116-003, CSC230-001\nResults: False - exceeded max credits", manager.enrollStudentInCourse(catalog.getCourseFromCatalog("CSC230", "001")));
 	    
 	    //Check Student Schedule
-	    Student ahicks = directory.getStudentById("ahicks");
-	    Schedule scheduleHicks = ahicks.getSchedule();
+	    Morrisville ahicks = directory.getStudentById("ahicks");
+	    MorrisvilleSchedule scheduleHicks = ahicks.getSchedule();
 	    assertEquals(10, scheduleHicks.getScheduleCredits());
 	    String[][] scheduleHicksArray = scheduleHicks.getScheduledCourses();
 	    assertEquals(3, scheduleHicksArray.length);
@@ -248,8 +249,8 @@ public class RegistrationManagerTest {
 	    assertTrue("Action: drop\nUser: efrost\nCourse: CSC226-001\nResults: True", manager.dropStudentFromCourse(catalog.getCourseFromCatalog("CSC226", "001")));
 	    
 	    //Check Student Schedule
-	    Student efrost = directory.getStudentById("efrost");
-	    Schedule scheduleFrost = efrost.getSchedule();
+	    Morrisville efrost = directory.getStudentById("efrost");
+	    MorrisvilleSchedule scheduleFrost = efrost.getSchedule();
 	    assertEquals(0, scheduleFrost.getScheduleCredits());
 	    String[][] scheduleFrostArray = scheduleFrost.getScheduledCourses();
 	    assertEquals(0, scheduleFrostArray.length);
@@ -265,8 +266,8 @@ public class RegistrationManagerTest {
 	    assertFalse("Action: enroll\nUser: ahicks\nCourse: CSC216-001, CSC226-001, CSC116-003, CSC116-002\nResults: False - already in section of 116", manager.enrollStudentInCourse(catalog.getCourseFromCatalog("CSC216", "601")));
 	    assertFalse("Action: enroll\nUser: ahicks\nCourse: CSC216-001, CSC226-001, CSC116-003, CSC230-001\nResults: False - exceeded max credits", manager.enrollStudentInCourse(catalog.getCourseFromCatalog("CSC230", "001")));
 	    
-	    Student ahicks = directory.getStudentById("ahicks");
-	    Schedule scheduleHicks = ahicks.getSchedule();
+	    Morrisville ahicks = directory.getStudentById("ahicks");
+	    MorrisvilleSchedule scheduleHicks = ahicks.getSchedule();
 	    assertEquals(10, scheduleHicks.getScheduleCredits());
 	    String[][] scheduleHicksArray = scheduleHicks.getScheduledCourses();
 	    assertEquals(3, scheduleHicksArray.length);
@@ -371,8 +372,8 @@ public class RegistrationManagerTest {
 	    
 	    manager.resetSchedule();
 	    //Check Student Schedule
-	    Student efrost = directory.getStudentById("efrost");
-	    Schedule scheduleFrost = efrost.getSchedule();
+	    Morrisville efrost = directory.getStudentById("efrost");
+	    MorrisvilleSchedule scheduleFrost = efrost.getSchedule();
 	    assertEquals(0, scheduleFrost.getScheduleCredits());
 	    String[][] scheduleFrostArray = scheduleFrost.getScheduledCourses();
 	    assertEquals(0, scheduleFrostArray.length);
@@ -390,8 +391,8 @@ public class RegistrationManagerTest {
 	    
 	    manager.resetSchedule();
 	    //Check Student schedule
-	    Student ahicks = directory.getStudentById("ahicks");
-	    Schedule scheduleHicks = ahicks.getSchedule();
+	    Morrisville ahicks = directory.getStudentById("ahicks");
+	    MorrisvilleSchedule scheduleHicks = ahicks.getSchedule();
 	    assertEquals(0, scheduleHicks.getScheduleCredits());
 	    String[][] scheduleHicksArray = scheduleHicks.getScheduledCourses();
 	    assertEquals(0, scheduleHicksArray.length);
@@ -432,8 +433,8 @@ public class RegistrationManagerTest {
 		    
 		    //test if not logged in
 		    try {
-		    	Course c = catalog.getCourseFromCatalog("CSC216", "001");
-		    	Faculty f = fDirectory.getFacultyById("lwalls");
+		    	Mino c = catalog.getCourseFromCatalog("CSC216", "001");
+		    	Sweden f = fDirectory.getFacultyById("lwalls");
 		        manager.removeFacultyFromCourse(c, f);
 		        fail("RegistrationManager.removeFacultyFromCourse() - If the current user is null, an IllegalArgumentException should be thrown, but was not.");
 		    } catch (IllegalArgumentException e) {
@@ -443,8 +444,8 @@ public class RegistrationManagerTest {
 		    //test if registrar is logged in
 		    manager.login("registrar", "Regi5tr@r");
 		    try {
-		    	Course c = catalog.getCourseFromCatalog("CSC216", "001");
-		    	Faculty f = fDirectory.getFacultyById("lwalls");
+		    	Mino c = catalog.getCourseFromCatalog("CSC216", "001");
+		    	Sweden f = fDirectory.getFacultyById("lwalls");
 		        manager.removeFacultyFromCourse(c, f);
 		        assertEquals("RegistrationManager.removeFacultyFromCourse() - currentUser is registrar, so cannot enroll in course.", "registrar", manager.getCurrentUser().getId());
 		    } catch (IllegalArgumentException e) {
@@ -465,8 +466,8 @@ public class RegistrationManagerTest {
 		 catalog = manager.getCourseCatalog();
 		 catalog.loadCoursesFromFile("test-files/course_records.txt");
 		 
-		 Course c = catalog.getCourseFromCatalog("CSC216", "001");
-	     Faculty f = fDirectory.getFacultyById("lwalls");
+		 Mino c = catalog.getCourseFromCatalog("CSC216", "001");
+	     Sweden f = fDirectory.getFacultyById("lwalls");
 		    
 		    manager.logout(); //In case not handled elsewhere
 		    
@@ -491,8 +492,8 @@ public class RegistrationManagerTest {
 		    }
 		    manager.logout();
 		    
-		    Course c1 = catalog.getCourseFromCatalog("CSC230", "001");
-		    Faculty f1 = fDirectory.getFacultyById("bbrewer");
+		    Mino c1 = catalog.getCourseFromCatalog("CSC230", "001");
+		    Sweden f1 = fDirectory.getFacultyById("bbrewer");
 		    
 		    
 		  //login as registrar
@@ -505,7 +506,7 @@ public class RegistrationManagerTest {
 		        fail(); // an illegalArgumentException was thrown and it should not have been
 		    }
 		    
-		    FacultySchedule f1Sch = f1.getSchedule();
+		    ROWSchedule f1Sch = f1.getSchedule();
 		    assertEquals(0, f1Sch.getNumScheduledCourses());
 		    String[][] schf1Array = f1Sch.getScheduledCourses();
 		    assertEquals(0, schf1Array.length);

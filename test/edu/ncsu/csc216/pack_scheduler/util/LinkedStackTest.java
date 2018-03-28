@@ -8,6 +8,9 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.circa.mrv.grs_manager.util.ArrayStack;
+import com.circa.mrv.grs_manager.util.LinkedStack;
+
 /**
  * Provides suite of tests for the linkedStack
  * @author Arthur Vargas
@@ -70,7 +73,7 @@ public class LinkedStackTest {
 	}
 
 	/**
-	 * Test method for {@link edu.ncsu.csc216.pack_scheduler.util.LinkedStack#pop()}.
+	 * Test method for {@link com.circa.mrv.grs_manager.util.LinkedStack#pop()}.
 	 */
 	@Test
 	public void testPop() {
@@ -103,7 +106,7 @@ public class LinkedStackTest {
 	}
 
 	/**
-	 * Test method for {@link edu.ncsu.csc216.pack_scheduler.util.LinkedStack#isEmpty()}.
+	 * Test method for {@link com.circa.mrv.grs_manager.util.LinkedStack#isEmpty()}.
 	 */
 	@Test
 	public void testIsEmpty() {
@@ -118,7 +121,7 @@ public class LinkedStackTest {
 	}
 
 	/**
-	 * Test method for {@link edu.ncsu.csc216.pack_scheduler.util.LinkedStack#size()}.
+	 * Test method for {@link com.circa.mrv.grs_manager.util.LinkedStack#size()}.
 	 */
 	@Test
 	public void testSize() {
@@ -136,7 +139,7 @@ public class LinkedStackTest {
 	}
 
 	/**
-	 * Test method for {@link edu.ncsu.csc216.pack_scheduler.util.LinkedStack#setCapacity(int)}.
+	 * Test method for {@link com.circa.mrv.grs_manager.util.LinkedStack#setCapacity(int)}.
 	 */
 	@Test
 	public void testSetCapacity() {

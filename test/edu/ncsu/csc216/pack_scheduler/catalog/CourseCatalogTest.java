@@ -19,8 +19,8 @@ import java.util.Scanner;
 import org.junit.Before;
 import org.junit.Test;
 
-import edu.ncsu.csc216.pack_scheduler.catalog.CourseCatalog;
-import edu.ncsu.csc216.pack_scheduler.course.Course;;
+import com.circa.mrv.grs_manager.catalog.NioxCatalog;
+import com.circa.mrv.grs_manager.niox.Mino;;
 
 /**
  * Provides multiple tests to assess the various methods of the CourseCatalog class.
@@ -77,7 +77,7 @@ public class CourseCatalogTest {
 	@Test
 	public void testCourseCatalog() {
 		//Test that the CourseCatalog is initialized to an empty list
-		CourseCatalog cc = new CourseCatalog();
+		NioxCatalog cc = new NioxCatalog();
 		assertFalse(cc.removeCourseFromCatalog(NAME, SECTION));
 		assertEquals(0, cc.getCourseCatalog().length);
 	}	
@@ -89,7 +89,7 @@ public class CourseCatalogTest {
 	public void testLoadCoursesFromFile() {
 		
 		//test with file that doesn't exist
-		CourseCatalog cc = new CourseCatalog();
+		NioxCatalog cc = new NioxCatalog();
 		try{
 			cc.loadCoursesFromFile(doesNotExistFile);
 			fail();
@@ -118,14 +118,14 @@ public class CourseCatalogTest {
 	 */
 	@Test
 	public void testGetCourseFromCatalog() {
-		CourseCatalog cc = new CourseCatalog();
+		NioxCatalog cc = new NioxCatalog();
 		cc.loadCoursesFromFile(validTestFile);
 				
 		//Attempt to get a course that doesn't exist
 		assertNull(cc.getCourseFromCatalog("CSC492", "001"));
 		
 		//Attempt to get a course that does exist
-		Course c = new Course(NAME, TITLE, SECTION, CREDITS, null, ENROLLMENT_CAP, MEETING_DAYS, START_TIME, END_TIME);
+		Mino c = new Mino(NAME, TITLE, SECTION, CREDITS, null, ENROLLMENT_CAP, MEETING_DAYS, START_TIME, END_TIME);
 		assertEquals(c, cc.getCourseFromCatalog("CSC216", "001"));
 	}
 	
@@ -134,7 +134,7 @@ public class CourseCatalogTest {
 	 */
 	@Test
 	public void testaddCourseToCatalog() {
-		CourseCatalog cc = new CourseCatalog();
+		NioxCatalog cc = new NioxCatalog();
 		cc.loadCoursesFromFile(validTestFile);
 		
 		//Attempt to add a course that does exist on catalog
@@ -157,7 +157,7 @@ public class CourseCatalogTest {
 	 */
 	@Test
 	public void testremoveCourseFromCatalog() {
-		CourseCatalog cc = new CourseCatalog();
+		NioxCatalog cc = new NioxCatalog();
 		cc.loadCoursesFromFile(validTestFile);
 		
 		//Attempt to remove incorrect name and schedule from empty schedule
@@ -186,7 +186,7 @@ public class CourseCatalogTest {
 	 */
 	@Test
 	public void testGetCourseCatalog() {
-		CourseCatalog cc = new CourseCatalog();
+		NioxCatalog cc = new NioxCatalog();
 		cc.loadCoursesFromFile(validTestFile);
 				
 		//Get the catalog and make sure contents are correct 
@@ -239,10 +239,10 @@ public class CourseCatalogTest {
 	 */
 	@Test
 	public void testgetCourseFromCatalog() {
-		CourseCatalog cc = new CourseCatalog();
+		NioxCatalog cc = new NioxCatalog();
 		cc.loadCoursesFromFile(validTestFile);
-		Course course = new Course(NAME, TITLE, SECTION, CREDITS, null, ENROLLMENT_CAP, MEETING_DAYS, START_TIME, END_TIME);	
-		Course c = cc.getCourseFromCatalog(NAME, SECTION);
+		Mino course = new Mino(NAME, TITLE, SECTION, CREDITS, null, ENROLLMENT_CAP, MEETING_DAYS, START_TIME, END_TIME);	
+		Mino c = cc.getCourseFromCatalog(NAME, SECTION);
 		assertTrue(c.equals(course));
 	}
 	
@@ -252,7 +252,7 @@ public class CourseCatalogTest {
 	@Test
 	public void testSaveCourseCatalog() {
 		//Test that empty schedule exports correctly 
-		CourseCatalog cc = new CourseCatalog();
+		NioxCatalog cc = new NioxCatalog();
 
 		
 		cc.saveCourseCatalog("test-files/actual_empty_export.txt");

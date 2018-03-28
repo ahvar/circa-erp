@@ -3,8 +3,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import edu.ncsu.csc216.pack_scheduler.course.validator.CourseNameValidatorFSM;
-import edu.ncsu.csc216.pack_scheduler.course.validator.InvalidTransitionException;
+import com.circa.mrv.grs_manager.product.validator.InvalidTransitionException;
+import com.circa.mrv.grs_manager.product.validator.ProductNameValidatorFSM;
 
 /**
  * Provides a number of tests to asses the integrity and accuracy of the CourseNameValidatorFSM class.
@@ -17,7 +17,7 @@ public class CourseNameValidatorFSMTest {
 	 */
 	@Test
 	public void testIsValid(){
-		CourseNameValidatorFSM validator = new CourseNameValidatorFSM();
+		ProductNameValidatorFSM validator = new ProductNameValidatorFSM();
 		
 		//Test invalid Initial state
 		try {

@@ -9,6 +9,8 @@ import org.junit.Before;
 
 import org.junit.Test;
 
+import com.circa.mrv.grs_manager.util.LinkedAbstractList;
+
 /**
  * Tests functionality of LinkedAbstractList class
  * @author Ben Ioppolo and Arthur Vargas

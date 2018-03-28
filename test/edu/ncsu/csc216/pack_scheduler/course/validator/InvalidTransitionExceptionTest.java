@@ -4,6 +4,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import com.circa.mrv.grs_manager.product.validator.InvalidTransitionException;
+
 /**
  * Tests for verifying that InvalidTransitionException is working properly.
  * @author Ben Ioppolo

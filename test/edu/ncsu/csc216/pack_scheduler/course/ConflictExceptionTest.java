@@ -7,6 +7,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import com.circa.mrv.grs_manager.niox.ConflictException;
+
 /**
  * Tests for verifying that ConflictException is working properly.
  * @author Ben Ioppolo
@@ -15,7 +17,7 @@ import org.junit.Test;
 public class ConflictExceptionTest {
 
 	/**
-	 * Test method for {@link edu.ncsu.csc216.pack_scheduler.course.ConflictException#ConflictException(java.lang.String)}.
+	 * Test method for {@link com.circa.mrv.grs_manager.niox.ConflictException#ConflictException(java.lang.String)}.
 	 */
 	@Test
 	public void testConflictExceptionString() {
@@ -24,7 +26,7 @@ public class ConflictExceptionTest {
 	}
 
 	/**
-	 * Test method for {@link edu.ncsu.csc216.pack_scheduler.course.ConflictException#ConflictException()}.
+	 * Test method for {@link com.circa.mrv.grs_manager.niox.ConflictException#ConflictException()}.
 	 */
 	@Test
 	public void testConflictException() {

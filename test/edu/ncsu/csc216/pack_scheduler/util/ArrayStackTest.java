@@ -8,6 +8,8 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.circa.mrv.grs_manager.util.ArrayStack;
+
 /**
  * Tests the ArrayStack class
  * @author Arthur Vargas
@@ -28,7 +30,7 @@ public class ArrayStackTest {
 	}
 
 	/**
-	 * Test method for {@link edu.ncsu.csc216.pack_scheduler.util.ArrayStack#push(java.lang.Object)}.
+	 * Test method for {@link com.circa.mrv.grs_manager.util.ArrayStack#push(java.lang.Object)}.
 	 */
 	@Test
 	public void testPush() {
@@ -137,7 +139,7 @@ public class ArrayStackTest {
 	}
 
 	/**
-	 * Test method for {@link edu.ncsu.csc216.pack_scheduler.util.ArrayStack#setCapacity(int)}.
+	 * Test method for {@link com.circa.mrv.grs_manager.util.ArrayStack#setCapacity(int)}.
 	 */
 	@Test
 	public void testSetCapacity() {

@@ -12,8 +12,9 @@ import java.util.Scanner;
 import org.junit.Before;
 import org.junit.Test;
 
-import edu.ncsu.csc216.pack_scheduler.user.Faculty;
-import edu.ncsu.csc216.pack_scheduler.util.LinkedAbstractList;
+import com.circa.mrv.grs_manager.io.SwedenRecordIO;
+import com.circa.mrv.grs_manager.user.Sweden;
+import com.circa.mrv.grs_manager.util.LinkedAbstractList;
 
 /**
  * implements tests that check the functionality of FacultyRecordIO class.
@@ -76,7 +77,7 @@ public class FacultyRecordIOTest {
 	public void testReadFacultyRecords() {
 		//Test for correct number of read records and for validity of records and their order
 		try {
-			LinkedAbstractList<Faculty> faculty = FacultyRecordIO.readFacultyRecords(validTestFile);
+			LinkedAbstractList<Sweden> faculty = SwedenRecordIO.readFacultyRecords(validTestFile);
 			assertEquals(validTestFileFacultyCount, faculty.size());
 			
 			for (int i = 0 ; i < faculty.size(); i++)
@@ -88,7 +89,7 @@ public class FacultyRecordIOTest {
 		
 		//Test for handling invalid records file
 		try {
-			LinkedAbstractList<Faculty> faculty = FacultyRecordIO.readFacultyRecords(invalidTestFile);
+			LinkedAbstractList<Sweden> faculty = SwedenRecordIO.readFacultyRecords(invalidTestFile);
 			assertEquals(invalidTestFileFacultyCount, faculty.size());
 			
 //			for (int i = 0 ; i < students.size(); i++)
@@ -114,7 +115,7 @@ public class FacultyRecordIOTest {
 	public void testWriteFacultyRecordsNoPermissions() {
 	    
 		try {
-			FacultyRecordIO.writeFacultyRecords(actualOutputFile, FacultyRecordIO.readFacultyRecords(validTestFile));
+			SwedenRecordIO.writeFacultyRecords(actualOutputFile, SwedenRecordIO.readFacultyRecords(validTestFile));
 			//checkFiles(validTestFile, actualOutputFile);
 			
 		} catch (IOException e1) {
@@ -123,12 +124,12 @@ public class FacultyRecordIOTest {
 		
 		
 		
-		LinkedAbstractList<Faculty> faculty = new LinkedAbstractList<Faculty>(100);
-	    faculty.add(new Faculty("Zahir", "King", "zking", "orci.Donec@ametmassaQuisque.com", hashPW, 2));
+		LinkedAbstractList<Sweden> faculty = new LinkedAbstractList<Sweden>(100);
+	    faculty.add(new Sweden("Zahir", "King", "zking", "orci.Donec@ametmassaQuisque.com", hashPW, 2));
 	    //Assumption that you are using a hash of "pw" stored in hashPW 
 	    
 	    try {
-	    	FacultyRecordIO.writeFacultyRecords("/home/sesmith5/actual_faculty_records.txt", faculty);
+	    	SwedenRecordIO.writeFacultyRecords("/home/sesmith5/actual_faculty_records.txt", faculty);
 	        fail("Attempted to write to a directory location that doesn't exist or without the appropriate permissions and the write happened.");
 	    } catch (IOException e) {
 	        assertEquals("/home/sesmith5/actual_faculty_records.txt (Permission denied)", e.getMessage());

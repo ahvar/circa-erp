@@ -10,6 +10,8 @@ import java.nio.file.Path;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.circa.mrv.grs_manager.directory.SwedenDirectory;
+
 /**
  * Tests StudentDirectory. 
  * @author Sarah Heckman
@@ -54,7 +56,7 @@ public class FacultyDirectoryTest {
 	@Test
 	public void testFacultyDirectory() {
 		//Test that the FacultyDirectory is initialized to an empty list
-		FacultyDirectory sd = new FacultyDirectory();
+		SwedenDirectory sd = new SwedenDirectory();
 		assertFalse(sd.removeFaculty("sesmith5"));
 		assertEquals(0, sd.getFacultyDirectory().length);
 	}
@@ -66,7 +68,7 @@ public class FacultyDirectoryTest {
 	public void testNewFacultyDirectory() {
 		//Test that if there are Faculty in the directory, they 
 		//are removed after calling newFacultyDirectory().
-		FacultyDirectory sd = new FacultyDirectory();
+		SwedenDirectory sd = new SwedenDirectory();
 		
 		sd.loadFacultyFromFile(validTestFile);
 		assertEquals(8, sd.getFacultyDirectory().length);
@@ -80,14 +82,14 @@ public class FacultyDirectoryTest {
 	 */
 	@Test
 	public void testLoadFacultyFromFile() {
-		FacultyDirectory sd = new FacultyDirectory();
+		SwedenDirectory sd = new SwedenDirectory();
 				
 		//Test valid file
 		sd.loadFacultyFromFile(validTestFile);
 		assertEquals(8, sd.getFacultyDirectory().length);
 		//Test invalid file
 		try {
-			sd = new FacultyDirectory();
+			sd = new SwedenDirectory();
 			sd.loadFacultyFromFile("invalidFile.txt");
 		} catch (IllegalArgumentException e) {
 			assertEquals(0, sd.getFacultyDirectory().length);	
@@ -99,7 +101,7 @@ public class FacultyDirectoryTest {
 	 */
 	@Test
 	public void testAddFaculty() {
-		FacultyDirectory sd = new FacultyDirectory();
+		SwedenDirectory sd = new SwedenDirectory();
 		
 		//Test valid Student
 		sd.addFaculty(FIRST_NAME, LAST_NAME, ID, EMAIL, PASSWORD, PASSWORD, MAX_COURSES);
@@ -162,7 +164,7 @@ public class FacultyDirectoryTest {
 	 */
 	@Test
 	public void testRemoveFaculty() {
-		FacultyDirectory sd = new FacultyDirectory();
+		SwedenDirectory sd = new SwedenDirectory();
 				
 		//Add students and remove
 		sd.loadFacultyFromFile(validTestFile);
@@ -180,7 +182,7 @@ public class FacultyDirectoryTest {
 	 */
 	@Test
 	public void testSaveFacultyDirectory() {
-		FacultyDirectory sd = new FacultyDirectory();
+		SwedenDirectory sd = new SwedenDirectory();
 		
 		//Add a Faculty
 		sd.addFaculty("Zahir", "King", "zking", "orci.Donec@ametmassaQuisque.com", "pw", "pw", 3);
@@ -217,7 +219,7 @@ public class FacultyDirectoryTest {
 	@Test
 	public void testgetFacultyById(){
 		
-		FacultyDirectory sd = new FacultyDirectory();
+		SwedenDirectory sd = new SwedenDirectory();
 		
 		sd.addFaculty("Zahir", "King", "zking", "orci.Donec@ametmassaQuisque.com", "pw", "pw", 3);
 		assertEquals("Zahir", sd.getFacultyById("zking").getFirstName());

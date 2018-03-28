@@ -5,9 +5,10 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import edu.ncsu.csc216.pack_scheduler.catalog.CourseCatalog;
-import edu.ncsu.csc216.pack_scheduler.course.ConflictException;
-import edu.ncsu.csc216.pack_scheduler.course.Course;
+import com.circa.mrv.grs_manager.catalog.NioxCatalog;
+import com.circa.mrv.grs_manager.niox.ConflictException;
+import com.circa.mrv.grs_manager.niox.Mino;
+import com.circa.mrv.grs_manager.user.schedule.MorrisvilleSchedule;
 
 
 /**
@@ -27,9 +28,9 @@ public class ScheduleTest {
 	private static final String SECTION = "001";
 	
 	/** Course catalog object to help load in courses */
-	private CourseCatalog catalog;
+	private NioxCatalog catalog;
 	/** Schedule */
-	private Schedule schedule;
+	private MorrisvilleSchedule schedule;
 	
 	/**
 	 * Creates new schedule for subsequent tests.
@@ -37,8 +38,8 @@ public class ScheduleTest {
 	@Before
 	public void setup(){
 		//catalog.loadCoursesFromFile(validTestFile);
-		schedule = new Schedule();
-		catalog = new CourseCatalog();
+		schedule = new MorrisvilleSchedule();
+		catalog = new NioxCatalog();
 		catalog.loadCoursesFromFile(validTestFile);
 		
 	}
@@ -178,10 +179,10 @@ public class ScheduleTest {
 		schedule.addCourseToSchedule(catalog.getCourseFromCatalog(NAME116, SECTION));
 		assertFalse(schedule.canAdd(catalog.getCourseFromCatalog(NAME116, SECTION)));
 		//test adding a conflicting course
-		Course c  = new Course("CSC226", "computer stuff", "002", 4, "joe", 30, "M", 910, 1100);
+		Mino c  = new Mino("CSC226", "computer stuff", "002", 4, "joe", 30, "M", 910, 1100);
 		assertFalse(schedule.canAdd(c));
 		//test adding a good course
-		Course d = new Course("CSC226", "computer stuff", "002", 4, "joe", 30, "M", 1200, 1300);
+		Mino d = new Mino("CSC226", "computer stuff", "002", 4, "joe", 30, "M", 1200, 1300);
 		assertTrue(schedule.canAdd(d));
 	}
 	

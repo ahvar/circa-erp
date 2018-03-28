@@ -9,15 +9,16 @@ import org.junit.Before;
 
 import org.junit.Test;
 
-import edu.ncsu.csc216.pack_scheduler.course.Course;
-import edu.ncsu.csc216.pack_scheduler.user.Student;
+import com.circa.mrv.grs_manager.niox.Mino;
+import com.circa.mrv.grs_manager.product.list.ProductList;
+import com.circa.mrv.grs_manager.user.Morrisville;
 
 /**
  * Tests the CourseRoll class
  * @author Arthur Vargas
  */
 public class CourseRollTest {
-	CourseRoll cr;
+	ProductList cr;
 	//CourseRoll otherCr;
 	/** Above the max enrollment by 1 */
 	private final static int ONE_OVER_MAX = 251;
@@ -26,33 +27,33 @@ public class CourseRollTest {
 	/** Valid enrollment cap value */
 	private final static int VALID_ENROLLMENT_CAP = 100;
 	/** A student to be added to the roll */
-	private Student s1;
+	private Morrisville s1;
 	/** A student to be added to the roll */
-	private Student s2;
+	private Morrisville s2;
 	/** A student to be added to the roll */
-	private Student s3;
-	Student s4 = new Student("first", "last", "flast", "flast@email.edu", "pw");
-	Student s5 = new Student("first", "blast", "fblast", "fblast@email.edu", "pw");
-	Student s6 = new Student("first", "clast", "fclast", "fclast@email.edu", "pw");
-	Student s7 = new Student("first", "dlast", "fdlast", "fdlast@email.edu", "pw");
-	Student s8 = new Student("first", "elast", "felast", "felast@email.edu", "pw");
-	Student s9 = new Student("first", "flast", "fflast", "fflast@email.edu", "pw");
-	Student s10 = new Student("first", "glast", "fglast", "fglast@email.edu", "pw");
-	Student s11 = new Student("Ben", "Ioppolo", "bioppolo", "bioppolo@email.edu", "pw");
-	Student s12 = new Student("John", "Doe", "jdoe", "jdoe@email.edu", "pw");
+	private Morrisville s3;
+	Morrisville s4 = new Morrisville("first", "last", "flast", "flast@email.edu", "pw");
+	Morrisville s5 = new Morrisville("first", "blast", "fblast", "fblast@email.edu", "pw");
+	Morrisville s6 = new Morrisville("first", "clast", "fclast", "fclast@email.edu", "pw");
+	Morrisville s7 = new Morrisville("first", "dlast", "fdlast", "fdlast@email.edu", "pw");
+	Morrisville s8 = new Morrisville("first", "elast", "felast", "felast@email.edu", "pw");
+	Morrisville s9 = new Morrisville("first", "flast", "fflast", "fflast@email.edu", "pw");
+	Morrisville s10 = new Morrisville("first", "glast", "fglast", "fglast@email.edu", "pw");
+	Morrisville s11 = new Morrisville("Ben", "Ioppolo", "bioppolo", "bioppolo@email.edu", "pw");
+	Morrisville s12 = new Morrisville("John", "Doe", "jdoe", "jdoe@email.edu", "pw");
 	
 	/**
 	 * Sets up a CourseRoll to be used for later tests.
 	 */
 	@Before
 	public void setUpBeforeClass() {
-		Course c = new Course("CSC216", "Programming Concepts - Java", "001", 4, "sesmith5", 20, "A");
+		Mino c = new Mino("CSC216", "Programming Concepts - Java", "001", 4, "sesmith5", 20, "A");
 		//cr = new CourseRoll(c, 20); //  new roll with enrollment cap of 20
 		cr = c.getCourseRoll(); //to test waitlists
 		
-		s1 = new Student("Arthur", "Vargas", "ahvargas", "ahvargas@ncsu.edu", "pw");
-		s2 = new Student("Holly", "Harrington", "hharring", "hharring@ncsu.edu", "pw");
-		s3 = new Student("Carlo", "Vargas", "cavargas", "cavargas@ncsu.edu", "pw");
+		s1 = new Morrisville("Arthur", "Vargas", "ahvargas", "ahvargas@ncsu.edu", "pw");
+		s2 = new Morrisville("Holly", "Harrington", "hharring", "hharring@ncsu.edu", "pw");
+		s3 = new Morrisville("Carlo", "Vargas", "cavargas", "cavargas@ncsu.edu", "pw");
 		
 	}
 
@@ -95,7 +96,7 @@ public class CourseRollTest {
 	}
 
 	/**
-	 * Test method for {@link edu.ncsu.csc216.pack_scheduler.course.roll.CourseRoll#enroll(edu.ncsu.csc216.pack_scheduler.user.Student)}.
+	 * Test method for {@link com.circa.mrv.grs_manager.product.list.ProductList#enroll(com.circa.mrv.grs_manager.user.Morrisville)}.
 	 */
 	@Test
 	public void testEnroll() {
@@ -220,7 +221,7 @@ public class CourseRollTest {
 		assertEquals(12, cr.getOpenSeats());
 		//Student s11 = new Student("Alex", "Alejandro", "avalejandro", "avalejandro@email.edu", "pw");
 		//Student s12 = new Student("Emily", "Peters", "epeters", "epeters@email.edu", "pw");
-		Student s13 = new Student("Robert", "Wiggins", "rwiggins", "rwiggins@email.edu", "pw");
+		Morrisville s13 = new Morrisville("Robert", "Wiggins", "rwiggins", "rwiggins@email.edu", "pw");
 		try {
 			cr.enroll(s11);
 			cr.enroll(s12);

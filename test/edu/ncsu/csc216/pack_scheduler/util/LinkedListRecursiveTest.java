@@ -8,6 +8,8 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.circa.mrv.grs_manager.util.LinkedListRecursive;
+
 /**
  * Tests the LinkedListRecursive class
  * @author Arthur Vargas
@@ -51,7 +53,7 @@ public class LinkedListRecursiveTest {
 	}
 
 	/**
-	 * Test method for {@link edu.ncsu.csc216.pack_scheduler.util.LinkedListRecursive#size()}.
+	 * Test method for {@link com.circa.mrv.grs_manager.util.LinkedListRecursive#size()}.
 	 */
 	@Test
 	public void testSize() {
@@ -404,7 +406,7 @@ public class LinkedListRecursiveTest {
 	}
 
 	/**
-	 * Test method for {@link edu.ncsu.csc216.pack_scheduler.util.LinkedListRecursive#contains(java.lang.Object)}.
+	 * Test method for {@link com.circa.mrv.grs_manager.util.LinkedListRecursive#contains(java.lang.Object)}.
 	 */
 	@Test
 	public void testContains() {

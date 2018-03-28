@@ -9,6 +9,8 @@ import org.junit.Before;
 
 import org.junit.Test;
 
+import com.circa.mrv.grs_manager.util.ArrayList;
+
 /**
  * Tests functionality of ArrayList class
  * @author Arthur Vargas

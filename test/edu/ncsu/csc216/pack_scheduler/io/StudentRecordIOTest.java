@@ -13,9 +13,10 @@ import java.util.Scanner;
 import org.junit.Before;
 import org.junit.Test;
 
-import edu.ncsu.csc216.pack_scheduler.user.Student;
+import com.circa.mrv.grs_manager.io.MorrisvilleRecordIO;
+import com.circa.mrv.grs_manager.user.Morrisville;
+
 import edu.ncsu.csc216.collections.list.SortedList;
-import edu.ncsu.csc216.pack_scheduler.io.StudentRecordIO;
 
 /**
  * implements tests that check the functionality of StudentRecordIO class.
@@ -80,7 +81,7 @@ public class StudentRecordIOTest {
 	public void testReadStudentRecords() {
 		//Test for correct number of read records and for validity of records and their order
 		try {
-			SortedList<Student> students = StudentRecordIO.readStudentRecords(validTestFile);
+			SortedList<Morrisville> students = MorrisvilleRecordIO.readStudentRecords(validTestFile);
 			assertEquals(validTestFileStudentCount, students.size());
 			
 			for (int i = 0 ; i < students.size(); i++)
@@ -92,7 +93,7 @@ public class StudentRecordIOTest {
 		
 		//Test for handling invalid records file
 		try {
-			SortedList<Student> students = StudentRecordIO.readStudentRecords(invalidTestFile);
+			SortedList<Morrisville> students = MorrisvilleRecordIO.readStudentRecords(invalidTestFile);
 			assertEquals(invalidTestFileStudentCount, students.size());
 			
 //			for (int i = 0 ; i < students.size(); i++)
@@ -103,7 +104,7 @@ public class StudentRecordIOTest {
 		}
 		
 		try{
-		SortedList<Student> students = StudentRecordIO.readStudentRecords("test-files/test_StudentRecordIO.txt");
+		SortedList<Morrisville> students = MorrisvilleRecordIO.readStudentRecords("test-files/test_StudentRecordIO.txt");
 		assertEquals(1, students.size());
 		} catch(FileNotFoundException e) {
 			fail();
@@ -118,7 +119,7 @@ public class StudentRecordIOTest {
 	public void testWriteStudentRecordsNoPermissions() {
 	    
 		try {
-			StudentRecordIO.writeStudentRecords(actualOutputFile, StudentRecordIO.readStudentRecords(validTestFile));
+			MorrisvilleRecordIO.writeStudentRecords(actualOutputFile, MorrisvilleRecordIO.readStudentRecords(validTestFile));
 			//checkFiles(validTestFile, actualOutputFile);
 			
 		} catch (IOException e1) {
@@ -127,12 +128,12 @@ public class StudentRecordIOTest {
 		
 		
 		
-		SortedList<Student> students = new SortedList<Student>();
-	    students.add(new Student("Zahir", "King", "zking", "orci.Donec@ametmassaQuisque.com", hashPW, 15));
+		SortedList<Morrisville> students = new SortedList<Morrisville>();
+	    students.add(new Morrisville("Zahir", "King", "zking", "orci.Donec@ametmassaQuisque.com", hashPW, 15));
 	    //Assumption that you are using a hash of "pw" stored in hashPW 
 	    
 	    try {
-	        StudentRecordIO.writeStudentRecords("/home/sesmith5/actual_student_records.txt", students);
+	        MorrisvilleRecordIO.writeStudentRecords("/home/sesmith5/actual_student_records.txt", students);
 	        fail("Attempted to write to a directory location that doesn't exist or without the appropriate permissions and the write happened.");
 	    } catch (IOException e) {
 	        assertEquals("/home/sesmith5/actual_student_records.txt (Permission denied)", e.getMessage());

@@ -4,6 +4,9 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import com.circa.mrv.grs_manager.user.Morrisville;
+import com.circa.mrv.grs_manager.user.User;
+
 /**
  * the StudentTest class provides test coverage for the Student class.
  * @author Ben Ioppolo
@@ -19,7 +22,7 @@ public class StudentTest {
 		//test valid student creation
 		User s = null;
 		try{
-		Student sValid = new Student("first", "last", "id", "email@ncsu.edu", "hashpassword", 6);
+		Morrisville sValid = new Morrisville("first", "last", "id", "email@ncsu.edu", "hashpassword", 6);
 		assertEquals("first", sValid.getFirstName());
 		assertEquals("last", sValid.getLastName());
 		assertEquals("id", sValid.getId());
@@ -31,7 +34,7 @@ public class StudentTest {
 		}
 		//test invalid first name
 		try {
-		    s = new Student(null, "last", "id", "email@ncsu.edu", "hashedpassword", 6);
+		    s = new Morrisville(null, "last", "id", "email@ncsu.edu", "hashedpassword", 6);
 		    //Note that for testing purposes, the password doesn't need to be hashedpassword
 		    fail(); //If we reach this point a Student was constructed when it shouldn't have been!
 		} catch (IllegalArgumentException e) {
@@ -42,49 +45,49 @@ public class StudentTest {
 		
 		//test invalid last name
 		try{
-			s = new Student("first", null, "id", "email@ncsu.edu", "hashedpassword", 6);
+			s = new Morrisville("first", null, "id", "email@ncsu.edu", "hashedpassword", 6);
 		} catch (IllegalArgumentException e) {
 			assertNull(s);
 		}
 
 		//test invalid last name
 		try{
-			s = new Student("first", null, "id", "email@ncsu.edu", "hashedpassword", 6);
+			s = new Morrisville("first", null, "id", "email@ncsu.edu", "hashedpassword", 6);
 		} catch (IllegalArgumentException e) {
 			assertNull(s);
 		}	
 		
 		//test invalid id
 		try{
-			s = new Student("first", "last", null, "email@ncsu.edu", "hashedpassword", 6);
+			s = new Morrisville("first", "last", null, "email@ncsu.edu", "hashedpassword", 6);
 		} catch (IllegalArgumentException e) {
 			assertNull(s);
 		}
 		
 		//test invalid id
 		try{
-			s = new Student("first", "last", "", "email@ncsu.edu", "hashedpassword", 6);
+			s = new Morrisville("first", "last", "", "email@ncsu.edu", "hashedpassword", 6);
 		} catch (IllegalArgumentException e) {
 			assertNull(s);
 		}
 
 		//test invalid email
 		try{
-			s = new Student("first", "last", "id", null, "hashedpassword", 6);
+			s = new Morrisville("first", "last", "id", null, "hashedpassword", 6);
 		} catch (IllegalArgumentException e) {
 			assertNull(s);
 		}
 
 		//test invalid password
 		try{
-			s = new Student("first", "last", "id", "email@ncsu.edu", null, 6);
+			s = new Morrisville("first", "last", "id", "email@ncsu.edu", null, 6);
 		} catch (IllegalArgumentException e) {
 			assertNull(s);
 		}
 
 		//test invalid maxcredits
 		try{
-			s = new Student("first", "last", "id", "email@ncsu.edu", "hashedpassword", 2);
+			s = new Morrisville("first", "last", "id", "email@ncsu.edu", "hashedpassword", 2);
 		} catch (IllegalArgumentException e) {
 			assertNull(s);
 		}	
@@ -98,7 +101,7 @@ public class StudentTest {
 		//test valid student creation
 		User s = null;
 		try{
-		Student sValid = new Student("first", "last", "id", "email@ncsu.edu", "hashpassword");
+		Morrisville sValid = new Morrisville("first", "last", "id", "email@ncsu.edu", "hashpassword");
 		assertEquals("first", sValid.getFirstName());
 		assertEquals("last", sValid.getLastName());
 		assertEquals("id", sValid.getId());
@@ -110,7 +113,7 @@ public class StudentTest {
 		}
 		//test invalid first name
 		try {
-		    s = new Student(null, "last", "id", "email@ncsu.edu", "hashedpassword");
+		    s = new Morrisville(null, "last", "id", "email@ncsu.edu", "hashedpassword");
 		    //Note that for testing purposes, the password doesn't need to be hashedpassword
 		    fail(); //If we reach this point a Student was constructed when it shouldn't have been!
 		} catch (IllegalArgumentException e) {
@@ -121,35 +124,35 @@ public class StudentTest {
 		
 		//test invalid last name
 		try{
-			s = new Student("first", null, "id", "email@ncsu.edu", "hashedpassword");
+			s = new Morrisville("first", null, "id", "email@ncsu.edu", "hashedpassword");
 		} catch (IllegalArgumentException e) {
 			assertNull(s);
 		}
 
 		//test invalid last name
 		try{
-			s = new Student("first", null, "id", "email@ncsu.edu", "hashedpassword");
+			s = new Morrisville("first", null, "id", "email@ncsu.edu", "hashedpassword");
 		} catch (IllegalArgumentException e) {
 			assertNull(s);
 		}	
 		
 		//test invalid id
 		try{
-			s = new Student("first", "last", null, "email@ncsu.edu", "hashedpassword");
+			s = new Morrisville("first", "last", null, "email@ncsu.edu", "hashedpassword");
 		} catch (IllegalArgumentException e) {
 			assertNull(s);
 		}
 
 		//test invalid email
 		try{
-			s = new Student("first", "last", "id", null, "hashedpassword");
+			s = new Morrisville("first", "last", "id", null, "hashedpassword");
 		} catch (IllegalArgumentException e) {
 			assertNull(s);
 		}
 
 		//test invalid password
 		try{
-			s = new Student("first", "last", "id", "email@ncsu.edu", null);
+			s = new Morrisville("first", "last", "id", "email@ncsu.edu", null);
 		} catch (IllegalArgumentException e) {
 			assertNull(s);
 		}
@@ -162,7 +165,7 @@ public class StudentTest {
 	@Test
 	public void testSetFirstName() {
 		//Construct a valid Student
-		Student s = new Student("first", "last", "id", "email@ncsu.edu", "hashedpassword", 6);
+		Morrisville s = new Morrisville("first", "last", "id", "email@ncsu.edu", "hashedpassword", 6);
 		
 		//test invalid set to null
 		try {
@@ -198,7 +201,7 @@ public class StudentTest {
 	@Test
 	public void testSetLastName() {
 		//Construct a valid Student
-		Student s = new Student("first", "last", "id", "email@ncsu.edu", "hashedpassword", 6);
+		Morrisville s = new Morrisville("first", "last", "id", "email@ncsu.edu", "hashedpassword", 6);
 		
 		//test invalid set to null
 		try {
@@ -235,7 +238,7 @@ public class StudentTest {
 	@Test
 	public void testSetEmail() {
 		//Construct a valid Student
-		Student s = new Student("first", "last", "id", "email@ncsu.edu", "hashedpassword", 6);
+		Morrisville s = new Morrisville("first", "last", "id", "email@ncsu.edu", "hashedpassword", 6);
 		
 		//test invalid set to null
 		try {
@@ -310,7 +313,7 @@ public class StudentTest {
 	@Test
 	public void testSetPassword() {
 		//Construct a valid Student
-		Student s = new Student("first", "last", "id", "email@ncsu.edu", "hashedpassword", 6);
+		Morrisville s = new Morrisville("first", "last", "id", "email@ncsu.edu", "hashedpassword", 6);
 		
 		//test invalid set to null
 		try {
@@ -346,7 +349,7 @@ public class StudentTest {
 	@Test
 	public void testSetMaxCredits() {
 		//Construct a valid Student
-		Student s = new Student("first", "last", "id", "email@ncsu.edu", "hashedpassword", 6);
+		Morrisville s = new Morrisville("first", "last", "id", "email@ncsu.edu", "hashedpassword", 6);
 		
 		//test invalid set to below 3
 		try {
@@ -383,9 +386,9 @@ public class StudentTest {
 	@Test
 	public void testCompareTo() {
 		//Construct valid Students 
-		Student s1 = new Student("first", "last", "id", "email@ncsu.edu", "hashedpassword", 6);
-		Student s2 = new Student("first", "last", "id", "email@ncsu.edu", "hashedpassword", 6);
-		Student s3 = new Student("a", "last", "id", "email@ncsu.edu", "hashedpassword", 6);		
+		Morrisville s1 = new Morrisville("first", "last", "id", "email@ncsu.edu", "hashedpassword", 6);
+		Morrisville s2 = new Morrisville("first", "last", "id", "email@ncsu.edu", "hashedpassword", 6);
+		Morrisville s3 = new Morrisville("a", "last", "id", "email@ncsu.edu", "hashedpassword", 6);		
 		
 		assertEquals(0, s1.compareTo(s2));
 		assertEquals(0, s2.compareTo(s1));
@@ -400,14 +403,14 @@ public class StudentTest {
 	@Test
 	public void testEqualsObject() {
 		//Construct valid Students
-		User s1 = new Student("first", "last", "id", "email@ncsu.edu", "hashedpassword", 6);
-		User s2 = new Student("first", "last", "id", "email@ncsu.edu", "hashedpassword", 6);
-		User s3 = new Student("a", "last", "id", "email@ncsu.edu", "hashedpassword", 6);
-		User s4 = new Student("first", "b", "id", "email@ncsu.edu", "hashedpassword", 6);
-		User s5 = new Student("first", "last", "c", "email@ncsu.edu", "hashedpassword", 6);
-		User s6 = new Student("first", "last", "id", "d@ncsu.edu", "hashedpassword", 6);
-		User s7 = new Student("first", "last", "id", "email@ncsu.edu", "e", 6);
-		User s8 = new Student("first", "last", "id", "email@ncsu.edu", "hashedpassword", 7);
+		User s1 = new Morrisville("first", "last", "id", "email@ncsu.edu", "hashedpassword", 6);
+		User s2 = new Morrisville("first", "last", "id", "email@ncsu.edu", "hashedpassword", 6);
+		User s3 = new Morrisville("a", "last", "id", "email@ncsu.edu", "hashedpassword", 6);
+		User s4 = new Morrisville("first", "b", "id", "email@ncsu.edu", "hashedpassword", 6);
+		User s5 = new Morrisville("first", "last", "c", "email@ncsu.edu", "hashedpassword", 6);
+		User s6 = new Morrisville("first", "last", "id", "d@ncsu.edu", "hashedpassword", 6);
+		User s7 = new Morrisville("first", "last", "id", "email@ncsu.edu", "e", 6);
+		User s8 = new Morrisville("first", "last", "id", "email@ncsu.edu", "hashedpassword", 7);
 		
 		//Test s1 is equal to s2
 		assertTrue(s1.equals(s2));
@@ -434,14 +437,14 @@ public class StudentTest {
 	@Test
 	public void testHashCode() {
 		//Construct valid Students
-		User s1 = new Student("first", "last", "id", "email@ncsu.edu", "hashedpassword", 6);
-		User s2 = new Student("first", "last", "id", "email@ncsu.edu", "hashedpassword", 6);
-		User s3 = new Student("a", "last", "id", "email@ncsu.edu", "hashedpassword", 6);
-		User s4 = new Student("first", "b", "id", "email@ncsu.edu", "hashedpassword", 6);
-		User s5 = new Student("first", "last", "c", "email@ncsu.edu", "hashedpassword", 6);
-		User s6 = new Student("first", "last", "id", "d@ncsu.edu", "hashedpassword", 6);
-		User s7 = new Student("first", "last", "id", "email@ncsu.edu", "e", 6);
-		User s8 = new Student("first", "last", "id", "email@ncsu.edu", "hashedpassword", 7);
+		User s1 = new Morrisville("first", "last", "id", "email@ncsu.edu", "hashedpassword", 6);
+		User s2 = new Morrisville("first", "last", "id", "email@ncsu.edu", "hashedpassword", 6);
+		User s3 = new Morrisville("a", "last", "id", "email@ncsu.edu", "hashedpassword", 6);
+		User s4 = new Morrisville("first", "b", "id", "email@ncsu.edu", "hashedpassword", 6);
+		User s5 = new Morrisville("first", "last", "c", "email@ncsu.edu", "hashedpassword", 6);
+		User s6 = new Morrisville("first", "last", "id", "d@ncsu.edu", "hashedpassword", 6);
+		User s7 = new Morrisville("first", "last", "id", "email@ncsu.edu", "e", 6);
+		User s8 = new Morrisville("first", "last", "id", "email@ncsu.edu", "hashedpassword", 7);
 		
 		//Test s1 is equal to s2
 		assertEquals(s1.hashCode(), s2.hashCode());
@@ -461,8 +464,8 @@ public class StudentTest {
 	@Test
 	public void testToString() {
 		//Construct a valid Students
-		User s1 = new Student("first", "last", "id", "email@ncsu.edu", "hashedpassword", 6);
-		User s2 = new Student("first", "last", "id", "email@ncsu.edu", "hashedpassword");		
+		User s1 = new Morrisville("first", "last", "id", "email@ncsu.edu", "hashedpassword", 6);
+		User s2 = new Morrisville("first", "last", "id", "email@ncsu.edu", "hashedpassword");		
 		//Expected strings
 		String str1 = "first,last,id,email@ncsu.edu,hashedpassword,6";
 		String str2 = "first,last,id,email@ncsu.edu,hashedpassword,18";	

@@ -8,6 +8,8 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.circa.mrv.grs_manager.util.LinkedQueue;
+
 /**
  * Provides suite of tests for the LinkedQueue Class
  * @author Ben W Ioppolo
@@ -33,7 +35,7 @@ public class LinkedQueueTest {
 //	}
 
 	/**
-	 * Test method for {@link edu.ncsu.csc216.pack_scheduler.util.LinkedQueue#enqueue(java.lang.Object)}.
+	 * Test method for {@link com.circa.mrv.grs_manager.util.LinkedQueue#enqueue(java.lang.Object)}.
 	 */
 	@Test
 	public void testEnqueue() {
@@ -84,7 +86,7 @@ public class LinkedQueueTest {
 	}
 
 	/**
-	 * Test method for {@link edu.ncsu.csc216.pack_scheduler.util.LinkedQueue#dequeue()}.
+	 * Test method for {@link com.circa.mrv.grs_manager.util.LinkedQueue#dequeue()}.
 	 */
 	@Test
 	public void testDequeue() {
@@ -135,7 +137,7 @@ public class LinkedQueueTest {
 	}
 
 	/**
-	 * Test method for {@link edu.ncsu.csc216.pack_scheduler.util.LinkedQueue#isEmpty()}.
+	 * Test method for {@link com.circa.mrv.grs_manager.util.LinkedQueue#isEmpty()}.
 	 */
 	@Test
 	public void testIsEmpty() {
@@ -145,7 +147,7 @@ public class LinkedQueueTest {
 	}
 
 	/**
-	 * Test method for {@link edu.ncsu.csc216.pack_scheduler.util.LinkedQueue#size()}.
+	 * Test method for {@link com.circa.mrv.grs_manager.util.LinkedQueue#size()}.
 	 */
 	@Test
 	public void testSize() {
@@ -155,7 +157,7 @@ public class LinkedQueueTest {
 	}
 
 	/**
-	 * Test method for {@link edu.ncsu.csc216.pack_scheduler.util.LinkedQueue#setCapacity(int)}.
+	 * Test method for {@link com.circa.mrv.grs_manager.util.LinkedQueue#setCapacity(int)}.
 	 */
 	@Test
 	public void testSetCapacity() {
