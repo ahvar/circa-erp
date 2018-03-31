@@ -19,7 +19,7 @@ import edu.ncsu.csc216.collections.list.SortedList;
 /**
  * ProductRecordIO class handles I/O for NIOX product records. 
  * 
- * @author Ben Ioppolo
+ * @author Arthur Vargas
  *
  */
 public class ProductRecordIO {
