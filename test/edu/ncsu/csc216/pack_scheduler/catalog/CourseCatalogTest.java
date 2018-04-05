@@ -78,8 +78,8 @@ public class CourseCatalogTest {
 	public void testCourseCatalog() {
 		//Test that the CourseCatalog is initialized to an empty list
 		NioxCatalog cc = new NioxCatalog();
-		assertFalse(cc.removeCourseFromCatalog(NAME, SECTION));
-		assertEquals(0, cc.getCourseCatalog().length);
+		assertFalse(cc.removeProductFromCatalog(NAME, SECTION));
+		assertEquals(0, cc.getNioxCatalog().length);
 	}	
 	
 	/**
@@ -91,22 +91,22 @@ public class CourseCatalogTest {
 		//test with file that doesn't exist
 		NioxCatalog cc = new NioxCatalog();
 		try{
-			cc.loadCoursesFromFile(doesNotExistFile);
+			cc.loadProductsFromFile(doesNotExistFile);
 			fail();
 		} catch(IllegalArgumentException e){
-			assertEquals(0, cc.getCourseCatalog().length);
+			assertEquals(0, cc.getNioxCatalog().length);
 		}
 
 		//Test with invalid file.  Should have an empty catalog and schedule. 
 
-			cc.loadCoursesFromFile(invalidTestFile);
-			assertEquals(0, cc.getCourseCatalog().length);			
+			cc.loadProductsFromFile(invalidTestFile);
+			assertEquals(0, cc.getNioxCatalog().length);			
 
 		
 		//Test with valid file containing 8 courses.  Will test other methods in other tests.
 		try{
-			cc.loadCoursesFromFile(validTestFile);
-			assertEquals(8, cc.getCourseCatalog().length);			
+			cc.loadProductsFromFile(validTestFile);
+			assertEquals(8, cc.getNioxCatalog().length);			
 		} catch (IllegalArgumentException e) {
 			fail();
 		}
@@ -119,14 +119,14 @@ public class CourseCatalogTest {
 	@Test
 	public void testGetCourseFromCatalog() {
 		NioxCatalog cc = new NioxCatalog();
-		cc.loadCoursesFromFile(validTestFile);
+		cc.loadProductsFromFile(validTestFile);
 				
 		//Attempt to get a course that doesn't exist
-		assertNull(cc.getCourseFromCatalog("CSC492", "001"));
+		assertNull(cc.getProductFromCatalog("CSC492", "001"));
 		
 		//Attempt to get a course that does exist
 		Mino c = new Mino(NAME, TITLE, SECTION, CREDITS, null, ENROLLMENT_CAP, MEETING_DAYS, START_TIME, END_TIME);
-		assertEquals(c, cc.getCourseFromCatalog("CSC216", "001"));
+		assertEquals(c, cc.getProductFromCatalog("CSC216", "001"));
 	}
 	
 	/**
@@ -135,16 +135,16 @@ public class CourseCatalogTest {
 	@Test
 	public void testaddCourseToCatalog() {
 		NioxCatalog cc = new NioxCatalog();
-		cc.loadCoursesFromFile(validTestFile);
+		cc.loadProductsFromFile(validTestFile);
 		
 		//Attempt to add a course that does exist on catalog
-		assertFalse(cc.addCourseToCatalog(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLLMENT_CAP, MEETING_DAYS, START_TIME, END_TIME));
-		assertEquals(8, cc.getCourseCatalog().length);
+		assertFalse(cc.addProductToCatalog(NAME, TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLLMENT_CAP, MEETING_DAYS, START_TIME, END_TIME));
+		assertEquals(8, cc.getNioxCatalog().length);
 
 		
 		//Attempt to add a course that is not on catalog 
 		try{
-		assertTrue(cc.addCourseToCatalog("newcrs", TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLLMENT_CAP, MEETING_DAYS, START_TIME, END_TIME));
+		assertTrue(cc.addProductToCatalog("newcrs", TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLLMENT_CAP, MEETING_DAYS, START_TIME, END_TIME));
 		fail();
 		} catch(IllegalArgumentException e){
 			assertEquals("Invalid Name", e.getMessage());
@@ -158,26 +158,26 @@ public class CourseCatalogTest {
 	@Test
 	public void testremoveCourseFromCatalog() {
 		NioxCatalog cc = new NioxCatalog();
-		cc.loadCoursesFromFile(validTestFile);
+		cc.loadProductsFromFile(validTestFile);
 		
 		//Attempt to remove incorrect name and schedule from empty schedule
-		assertFalse(cc.removeCourseFromCatalog("not on list", SECTION));
-		assertFalse(cc.removeCourseFromCatalog(NAME, "not on list"));
+		assertFalse(cc.removeProductFromCatalog("not on list", SECTION));
+		assertFalse(cc.removeProductFromCatalog(NAME, "not on list"));
 		
 		//Add some courses and remove them
 		try{
-		assertTrue(cc.addCourseToCatalog("newCrs", TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLLMENT_CAP, MEETING_DAYS, START_TIME, END_TIME));
+		assertTrue(cc.addProductToCatalog("newCrs", TITLE, SECTION, CREDITS, INSTRUCTOR_ID, ENROLLMENT_CAP, MEETING_DAYS, START_TIME, END_TIME));
 		fail();
 		} catch (IllegalArgumentException e){
 			assertEquals("Invalid Name", e.getMessage());
 		}
-		assertTrue(cc.addCourseToCatalog(NAME, TITLE, "111", CREDITS, INSTRUCTOR_ID, ENROLLMENT_CAP, MEETING_DAYS, START_TIME, END_TIME));
+		assertTrue(cc.addProductToCatalog(NAME, TITLE, "111", CREDITS, INSTRUCTOR_ID, ENROLLMENT_CAP, MEETING_DAYS, START_TIME, END_TIME));
 
-		assertEquals(9, cc.getCourseCatalog().length);
+		assertEquals(9, cc.getNioxCatalog().length);
 
 		//Remove CSC226
-		assertTrue(cc.removeCourseFromCatalog(NAME, SECTION));
-		assertEquals(8, cc.getCourseCatalog().length);
+		assertTrue(cc.removeProductFromCatalog(NAME, SECTION));
+		assertEquals(8, cc.getNioxCatalog().length);
 
 	}
 	
@@ -187,11 +187,11 @@ public class CourseCatalogTest {
 	@Test
 	public void testGetCourseCatalog() {
 		NioxCatalog cc = new NioxCatalog();
-		cc.loadCoursesFromFile(validTestFile);
+		cc.loadProductsFromFile(validTestFile);
 				
 		//Get the catalog and make sure contents are correct 
 		//Name, section, title
-		String [][] catalog = cc.getCourseCatalog();
+		String [][] catalog = cc.getNioxCatalog();
 		//Row 0
 		assertEquals("CSC116", catalog[0][0]);
 		assertEquals("001", catalog[0][1]);
@@ -240,9 +240,9 @@ public class CourseCatalogTest {
 	@Test
 	public void testgetCourseFromCatalog() {
 		NioxCatalog cc = new NioxCatalog();
-		cc.loadCoursesFromFile(validTestFile);
+		cc.loadProductsFromFile(validTestFile);
 		Mino course = new Mino(NAME, TITLE, SECTION, CREDITS, null, ENROLLMENT_CAP, MEETING_DAYS, START_TIME, END_TIME);	
-		Mino c = cc.getCourseFromCatalog(NAME, SECTION);
+		Mino c = cc.getProductFromCatalog(NAME, SECTION);
 		assertTrue(c.equals(course));
 	}
 	
@@ -258,9 +258,9 @@ public class CourseCatalogTest {
 		cc.saveCourseCatalog("test-files/actual_empty_export.txt");
 		checkFiles("test-files/expected_empty_export.txt", "test-files/actual_empty_export.txt");
 		
-		cc.loadCoursesFromFile(validTestFile);		
+		cc.loadProductsFromFile(validTestFile);		
 		//Add courses and test that exports correctly
-		assertEquals(8, cc.getCourseCatalog().length);
+		assertEquals(8, cc.getNioxCatalog().length);
 		cc.saveCourseCatalog("test-files/actual_catalog_export.txt");
 		checkFiles("test-files/expected_catalog_export.txt", "test-files/actual_catalog_export.txt");
 	}

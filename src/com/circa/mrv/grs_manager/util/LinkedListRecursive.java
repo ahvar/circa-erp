@@ -178,6 +178,19 @@ public class LinkedListRecursive<E> {
 	}
 	
 	/**
+	 * Tests if this list is equal to the parameter object
+	 * @param obj the object to test for equality
+	 * @return true if they are equal
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		for(int i = this.size(); this.size() != 0; i--) {
+			if(!this.get(i).equals(obj)) return false;
+		}
+		return true;
+	}
+	
+	/**
 	 *  Class which provides the methods and data for creating new nodes in a linked list 
 	 * @author Ben W Ioppolo
 	 */

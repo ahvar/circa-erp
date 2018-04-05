@@ -3,13 +3,13 @@ package com.circa.mrv.grs_manager.niox;
 import java.util.Calendar;
 
 /**
- * Creates a product in the NIOX family with a part-number, description, and price. The Niox class implements
- * the Expiration interface which declares methods for how different Niox items calculate their expiration
- * date.
+ * Product is an abstract class with a part-number, description, and price. 
  * 
  * @author Arthur Vargas
  */
 public abstract class Product {
+	/** Trade name */
+	private String name;
 	/** A description of the product. */
 	private String description;
 	/** A part-number for the product */
@@ -23,7 +23,8 @@ public abstract class Product {
 	 * @param desc the product description
 	 * @param partNumber partNumber for this Niox product
 	 */
-	public Product(String desc, String pn) {
+	public Product(String name, String desc, String pn) {
+		setName(name);
 		setDescription(desc);
 		setPartNumber(pn);
 	}
@@ -34,9 +35,25 @@ public abstract class Product {
 	 * @param desc the product description
 	 * @param partNumber partNumber for this Niox product
 	 */
-	public Product(String desc, String pn, double p ) {
-		this(desc,pn);
+	public Product(String name, String desc, String pn, double p ) {
+		this(name,desc,pn);
 		setPrice(p);
+	}
+	
+	/**
+	 * returns the name of the product
+	 * @return name the name of the product
+	*/
+	public String getName() {
+		return name;
+	}
+	
+	/**
+	 * Sets the name of the product to the parameter name
+	 * @param name the name to set
+	*/
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 	/**

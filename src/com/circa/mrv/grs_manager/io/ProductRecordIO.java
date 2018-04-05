@@ -9,9 +9,11 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-import com.circa.mrv.grs_manager.directory.SwedenDirectory;
+import com.circa.mrv.grs_manager.directory.CustomerDirectory;
 import com.circa.mrv.grs_manager.manager.GRSManager;
+import com.circa.mrv.grs_manager.niox.Component;
 import com.circa.mrv.grs_manager.niox.Mino;
+import com.circa.mrv.grs_manager.niox.Product;
 import com.circa.mrv.grs_manager.util.LinkedListRecursive;
 
 import edu.ncsu.csc216.collections.list.SortedList;
@@ -23,24 +25,25 @@ import edu.ncsu.csc216.collections.list.SortedList;
  *
  */
 public class ProductRecordIO {
-	String[][] data;
 	
 	/**
-	 * Reads course records from a file and generates a list of valid Courses.
-	 * Any invalid Courses are ignored. If the file to read cannot be found or
+	 * Reads product records from a file and generates a list of valid Niox products.
+	 * Any invalid products are ignored. If the file to read cannot be found or
 	 * the permissions are incorrect a FileNotFoundException is thrown.
 	 * 
-	 * @param fileName file to read Course records from
-	 * @return courses a sorted list of valid Courses
+	 * @param fileName file to read product records from
+	 * @return product a list of valid Courses
 	 * @throws FileNotFoundException if the file cannot be found or read
 	 *             
 	 */
-	public static LinkedListRecursive<Product> readCourseRecords(String fileName) throws FileNotFoundException {
+	public static LinkedListRecursive<Product> readProductRecords(String fileName) throws FileNotFoundException {
 		Scanner fileReader = new Scanner(new File(fileName));
+		LinkedListRecursive<Product> products = new LinkedListRecursive<Product>();
 		while (fileReader.hasNextLine()) {
 			try {
-				String line = readLine(fileReader.nextLine());
-				if (line != null) {
+				if( ( !products.add( ProductRecordIO.readLine( fileReader.nextLine() ) ) ) ) 
+					throw new IllegalArgumentException("Duplicate"); 
+		
 					// add to records
 
 					//boolean duplicate = false;
@@ -54,107 +57,28 @@ public class ProductRecordIO {
 					//if (!duplicate) {
 						//courses.add(course);
 					//}
-				}
+			
 			} catch (IllegalArgumentException e) {
 				// skip the line
 			}
 		}
 		fileReader.close();
-		return courses;
+		return products;
 	}
 
 	/**
-	 * Reads the passed line and calls countTokens method to determine the number of parameters
-	 * that the line contains. it then checks that number vs what the two constructors in Course
-	 * can use (6 or 8 parameters). If one of these is true, then the appropriate constructor is 
-	 * called. Course's methods then check the validity of each parameter. If neither 6 or 8 
-	 * parameters are contained in the line, it is assumed to be invalid and a null Course is 
-	 * returned. 
+	 * Reads the value fields from the string and constructs an instance of Product class.
 	 * @param nextLine the line that is to be processed
-	 * @return c a course generated from the line
-	 * @throws IllegalArgumentException if the parameters are not in appropriate order or if there
+	 * @return p a product constructed from the line
+	 * @throws IllegalArgumentException if the parameters are not in the correct order or if there
 	 * is an incorrect number of parameters.
 	 */
 	private static Product readLine(String nextLine) {
-		SwedenDirectory dir = GRSManager.getInstance().getFacultyDirectory();
-		//FacultyDirectory dir = new FacultyDirectory();
-		//dir.loadFacultyFromFile("test-files/faculty_records.txt");
-		
-		//FacultySchedule sch;
-		
-		String course; 
-		String title;
-		String section;
-		int credits;
-		String instructor;
-		int cap;
-		String meetingDays;
-		int start;
-		int end;
-
-		int tokenCount = countTokens(nextLine);
-
-		if (tokenCount == 7) {
-			Scanner lineScanner = new Scanner(nextLine);
-			lineScanner.useDelimiter(",");
-			try {
-				course = lineScanner.next();
-				title = lineScanner.next();
-				section = lineScanner.next();
-				credits = lineScanner.nextInt();
-				instructor = lineScanner.next();
-				cap = lineScanner.nextInt();
-				meetingDays = lineScanner.next();
-				lineScanner.close();
-				
-				Product c = new Product(course, title, section, credits, null, cap, meetingDays);
-				
-				if (dir.getFacultyById(instructor) != null) {
-					dir.getFacultyById(instructor).getSchedule().addCourseToSchedule(c);
-				}
-				
-//				c.setInstructorId(instructor);
-				return c;
-			} catch (Exception e) {
-				//Invalid parameter order
-			}
-
-		}
-		if (tokenCount == 9) {
-			Scanner lineScanner = new Scanner(nextLine);
-			lineScanner.useDelimiter(",");
-			try {
-				course = lineScanner.next();
-				title = lineScanner.next();
-				section = lineScanner.next();
-				credits = lineScanner.nextInt();
-				instructor = lineScanner.next();
-				cap = lineScanner.nextInt();
-				meetingDays = lineScanner.next();
-				start = lineScanner.nextInt();
-				end = lineScanner.nextInt();
-				lineScanner.close();
-				
-				Product c = new Product(course, title, section, credits, null, cap, meetingDays, start, end);
-				
-				if (dir.getFacultyById(instructor) != null) {
-					dir.getFacultyById(instructor).getSchedule().addCourseToSchedule(c);
-				}
-				
-//				c.setInstructorId(instructor);
-				return c;
-			} catch (Exception e) {
-				//invalid parameter order
-			}
-		} else {
-			throw new IllegalArgumentException();
-		}
-		// string, string, string, int, string, string
-		// string, string, string, int, string, string, int, int
-		// returns a course which means i need to call the course constructor
-		// with the given data
-		Product c = null;
+		Scanner word = new Scanner(nextLine);
+		Component c = new Component(word.next(), word.next(), word.next(), 0.0);
+		word.close();
 		return c;
+		
 	}
 
 	/**
@@ -180,21 +104,21 @@ public class ProductRecordIO {
 	}
 
 	/**
-	 * Writes the given list of Courses to a text file.
+	 * Writes the given list of products to a text file.
 	 * 
 	 * @param fileName
-	 *            name of file to write courses to
-	 * @param courses
-	 *            list of courses to write
+	 *            name of file to write products to
+	 * @param products
+	 *            list of products to write
 	 * @throws IOException
 	 *             if file can not be written to
 	 */
-	public static void writeCourseRecords(String fileName, LinkedListRecursive<Product> courses) throws IOException {
+	public static void writeProductRecords(String fileName, LinkedListRecursive<Product> products) throws IOException {
 
 		PrintStream fileWriter = new PrintStream(new File(fileName));
 
-		for (int i = 0; i < courses.size(); i++) {
-			fileWriter.println(courses.get(i).toString());
+		for (int i = 0; i < products.size(); i++) {
+			fileWriter.println(products.get(i).toString());
 		}
 
 		fileWriter.close();

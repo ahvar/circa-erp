@@ -24,7 +24,7 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.AbstractTableModel;
 
-import com.circa.mrv.grs_manager.directory.MorrisvilleDirectory;
+import com.circa.mrv.grs_manager.directory.VendorDirectory;
 import com.circa.mrv.grs_manager.manager.GRSManager;
 
 /**
@@ -82,7 +82,7 @@ public class MorrisvilleDirectoryPanel extends JPanel implements ActionListener 
 	/** Button for removing the selected Course from the schedule */
 	private JButton btnRemoveStudent;
 	/** Reference to StudentDirectory */
-	private MorrisvilleDirectory studentDirectory;
+	private VendorDirectory studentDirectory;
 	
 	/**
 	 * Constructs the StudentDirectoryGUI and sets up the GUI 
@@ -91,7 +91,7 @@ public class MorrisvilleDirectoryPanel extends JPanel implements ActionListener 
 	public MorrisvilleDirectoryPanel() {
 		super(new GridBagLayout());
 		
-		studentDirectory = GRSManager.getInstance().getStudentDirectory();
+		studentDirectory = GRSManager.getInstance().getVendorDirectory();
 		
 		//Set up Directory buttons
 		btnNewStudentList = new JButton("New Student Directory");
@@ -392,7 +392,7 @@ public class MorrisvilleDirectoryPanel extends JPanel implements ActionListener 
 		}
 		
 		/**
-		 * Updates the given model with {@link Morrisville} information from the {@link MorrisvilleDirectory}.
+		 * Updates the given model with {@link Product} information from the {@link VendorDirectory}.
 		 */
 		public void updateData() {
 			data = studentDirectory.getStudentDirectory();

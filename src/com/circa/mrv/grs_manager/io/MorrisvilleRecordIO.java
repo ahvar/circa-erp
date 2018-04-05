@@ -3,7 +3,7 @@ package com.circa.mrv.grs_manager.io;
 
 import java.util.Scanner;
 
-import com.circa.mrv.grs_manager.user.Morrisville;
+import com.circa.mrv.grs_manager.directory.Product;
 import com.circa.mrv.grs_manager.user.User;
 
 import java.io.*;
@@ -27,16 +27,16 @@ public class MorrisvilleRecordIO {
 	 * @return students an array list of student objects that are not null. 
 	 * @throws FileNotFoundException if the file is not found at given location
 	 */
-	public static SortedList<Morrisville> readStudentRecords(String fileName) throws FileNotFoundException {
+	public static SortedList<Product> readStudentRecords(String fileName) throws FileNotFoundException {
 		
 		Scanner fileReader = new Scanner(new FileInputStream(fileName));
 		//set new scanner to read file
-		SortedList<Morrisville> students = new SortedList<Morrisville>();
+		SortedList<Product> students = new SortedList<Product>();
 		//set new array list
 		//System.out.println("Test 0 " + students.size());	
 	    while (fileReader.hasNextLine()) {
 	        try {
-	            Morrisville student = processStudent(fileReader.nextLine());
+	            Product student = processStudent(fileReader.nextLine());
 	            //set a new student object to returned student
 	            //System.out.println("Test 1 " + students.size());
                 if (student == null){
@@ -80,8 +80,8 @@ public class MorrisvilleRecordIO {
 	 * @param line the passed line. one student record from the file.
 	 * @return student created student object or null student object if the line was invalid. 
 	 */
-	private static Morrisville processStudent(String line){
-			Morrisville student = null;
+	private static Product processStudent(String line){
+			Product student = null;
 			int itemCount = 0;
 			//scanner to use for counting items on line
 			Scanner lineCounter = new Scanner(line);
@@ -124,12 +124,12 @@ public class MorrisvilleRecordIO {
 				else if(itemCount == 5){
 					//if 5 strings then 5 string constructor can be used
 					
-					student = new Morrisville(lineScanner.next(), lineScanner.next(), lineScanner.next(), lineScanner.next(), lineScanner.next());
+					student = new Product(lineScanner.next(), lineScanner.next(), lineScanner.next(), lineScanner.next(), lineScanner.next());
 				}
 				else{
 					//item count is 6
 					//if 5 strings and int then 6 construtor can be used
-					student = new Morrisville(lineScanner.next(), lineScanner.next(), lineScanner.next(), lineScanner.next(), lineScanner.next(), lineScanner.nextInt());
+					student = new Product(lineScanner.next(), lineScanner.next(), lineScanner.next(), lineScanner.next(), lineScanner.next(), lineScanner.nextInt());
 					}	
 			} catch (Exception e){
 				//skip
@@ -148,7 +148,7 @@ public class MorrisvilleRecordIO {
 	 * @param studentDirectory array list of students
 	 * @throws IOException if the file is not available for writing
 	 */
-	public static void writeStudentRecords(String fileName, SortedList<Morrisville> studentDirectory) throws IOException {	
+	public static void writeStudentRecords(String fileName, SortedList<Product> studentDirectory) throws IOException {	
 
 		PrintStream fileWriter = new PrintStream(new File(fileName));
 		//creates new output printstream object for new file

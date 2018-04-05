@@ -1,90 +1,93 @@
 package com.circa.mrv.grs_manager.product.list;
 
-import com.circa.mrv.grs_manager.niox.Mino;
-import com.circa.mrv.grs_manager.user.Morrisville;
 import com.circa.mrv.grs_manager.util.LinkedAbstractList;
 import com.circa.mrv.grs_manager.util.LinkedQueue;
+import com.circa.mrv.grs_manager.niox.Product;
 
 
 /**
- * The CourseRoll class provides functionality for maintaining a list of students who are registered for a particular
- * course. The list is a LinkedAbstractList and students can enroll or drop the course. Also, the registrar can set the
- * enrollment cap for the course before or during registration. The system can also see the number of open seats remaining
- * for the course based on the current registration and enrollment cap.
- * @author Ben W Ioppolo
+ * The ProductList class provides functionality for maintaining a list of products that have been ordered for a particular
+ * company. The list is a LinkedAbstractList and company's employees can add or remove products. Also, the administrator can 
+ * set the list cap for total products at any time. The system can also see the number of spaces remaining
+ * for the product based on the current list size and maximum capacity.
+ * @author Arthur Vargas
  */
 public class ProductList {
-	
-	private LinkedAbstractList<Morrisville> roll;
-	private int enrollmentCap;
-	private static final int MIN_ENROLLMENT = 10;
-	private static final int MAX_ENROLLMENT = 250;
-	private static final int WAITLIST_SIZE = 10;
-	private LinkedQueue<Morrisville> waitlist;
-	private Mino course;
+	/** A list of products */
+	private LinkedAbstractList<Product> list;
+	/** The capacity of the list set by the customer */
+	private int listCapacity;
+	/** The minimum capacity of the list */
+	private static final int MIN_CAPACITY = 1;
+	/** The maximum capacity of the list */
+	private static final int MAX_CAPACITY = 30;
+	/** The maximum holding capacity */
+	private static final int MAX_HOLDING = 5;
+	/** The holding list permits extra capacity for additional products */
+	private LinkedQueue<Product> holding;
+	/** A product in the list */
+	private Product product;
 	
 	/**
-	 * Creates a new LinkedAbstractList of Students to store the students who are registered for a particular course. 
-	 * The capacity of the list is passed by the user and set using the setEnrollmentCap method which checks that the 
-	 * capacity falls within the minimum and max values. 
-	 * @param enrollmentCap The requested enrollment cap.
-	 * @param c The course to enroll student from waitlist into.
+	 * Creates a new LinkedAbstractList of products. The capacity of the list is passed by the user and set using 
+	 * the setCapacity method which checks that the capacity falls within the minimum and max values. 
+	 * @param cap The requested enrollment cap.
+	 * @param p the product to add to the list or holding
 	 */
-	public ProductList(Mino c, int enrollmentCap){
-		if (c == null)
+	public ProductList(Product p, int cap){
+		if (p == null)
 			throw new IllegalArgumentException();
-		course = c;
-		setEnrollmentCap(enrollmentCap);
-		roll = new LinkedAbstractList<Morrisville>(this.enrollmentCap);	
-		waitlist = new LinkedQueue<Morrisville>(WAITLIST_SIZE);
-		waitlist.setCapacity(WAITLIST_SIZE);
+		product = p;
+		setCapacity(cap);
+		list = new LinkedAbstractList<Product>(this.listCapacity);	
+		holding = new LinkedQueue<Product>(MAX_HOLDING);
+		holding.setCapacity(MAX_HOLDING);
 	}
 	
 	/**
-	 * Sets the cap on the number of students allowed to enroll in a particular course to the passed value. If the passed
-	 * value is less than 10 or greater than 250 an IllegalArgumentException is thrown. Also, if the current course 
-	 * enrollment is greater than the passed enrollment Cap than the IAE is thrown.
-	 * @param enrollmentCap the requested enrollment cap. 
-	 * @throws IllegalArgumentException if the passed enrollment cap is less than 10, greater than 250, or less than the
-	 * current enrollment for the course.
+	 * Sets the cap on the number of products allowed to be added to the list. If the passed
+	 * value is less than 1 or greater than 30 an IllegalArgumentException is thrown. Also, if the current product 
+	 * list size is greater than the passed capacity than the IAE is thrown.
+	 * @param capacity the requested capacity. 
+	 * @throws IllegalArgumentException if the passed capacity is less than 1, greater than 30, or less than the
+	 * current size of the list.
 	 */
-	public void setEnrollmentCap(int enrollmentCap){
-		if (enrollmentCap < MIN_ENROLLMENT || enrollmentCap > MAX_ENROLLMENT)
+	public void setCapacity(int capacity) {
+		if (capacity < MIN_CAPACITY || capacity > MAX_CAPACITY)
 			throw new IllegalArgumentException("Enrollment Cap must be between 10 – 250");
-		else if (roll != null && enrollmentCap < roll.size())
+		else if (list != null && capacity < list.size())
 			throw new IllegalArgumentException();
 		else{
-			this.enrollmentCap = enrollmentCap;
-			if (roll != null && enrollmentCap >= roll.size())
-				roll.setCapacity(enrollmentCap);
+			this.listCapacity = capacity;
+			if (list != null && capacity >= list.size())
+				list.setCapacity(capacity);
 		}
 	}
 	
 	/**
-	 * Gets the number of students that are allowed to enroll in a particular course.
-	 * @return enrollmentCap The cap on the number of students allowed to enroll in a particular course.
+	 * Gets the number of products that are allowed to be added in a particular list.
+	 * @return listCapacity the cap on the number of products that can be added to the list.
 	 */
-	public int getEnrollmentCap(){
-		return enrollmentCap;
+	public int getCapacity(){
+		return listCapacity;
 	}
 	
 	/**
-	 * Enrolls the passed student if they are not null, if there is more room in the class, if the student is not already
-	 * enrolled in the class, and if no other exceptions are thrown from the LinkedAbstractList class when attempting to 
-	 * add the student to the end of the list.
-	 * @param s The student to enroll in the course roll list.
-	 * @throws IllegalArgumentException if the canEnroll method returns false or if an exception is thrown from the 
-	 * LinkedAbstractList class when attempting to add the student to the end of the course roll list.
+	 * Adds the product to the list if there is room in the list and if no other exceptions are thrown 
+	 * from the LinkedAbstractList class when attempting to add the product to the end of the list.
+	 * @param p the product to add to the list.
+	 * @throws IllegalArgumentException if the add() method returns false or if an exception is thrown from the 
+	 * LinkedAbstractList class when attempting to add the product to the end of the list.
 	 */
-	public void enroll(Morrisville s){
-		if (!canEnroll(s))
+	public void add(Product p){
+		if (!canAdd(p))
 			throw new IllegalArgumentException();
-		if(roll.size() >= enrollmentCap){ //it got here so there must be room on the waitlist
-			waitlist.enqueue(s);
+		if(list.size() >= listCapacity){ 
+			holding.enqueue(p);
 		} else{
 			try{
-				roll.add(roll.size(), s);
-				s.getSchedule().addCourseToSchedule(course);
+				list.add(list.size(), p);
+				//p.getSchedule().addCourseToSchedule(product);
 			} catch (Exception e){
 				throw new IllegalArgumentException(e);
 			}	
@@ -92,32 +95,32 @@ public class ProductList {
 	}
 	
 	/**
-	 * Removes an enrolled student from the course roll list if they are present on the list and if the student is not null. 
-	 * @throws IllegalArgumentException if the student is null or if the LinkedAbstractList class throws an exception 
-	 * during the removal process.
-	 * @param s The student to remove from the course roll list. 
+	 * Removes a product from the list if it are present on the list and if product is not null. 
+	 * @throws IllegalArgumentException if the product is null or if the LinkedAbstractList class 
+	 * throws an exception during the removal process.
+	 * @param p The product to remove from the list. 
 	 */
-	public void drop(Morrisville s){
-		if (s == null)
+	public void drop(Product p) {
+		if (p == null)
 			throw new IllegalArgumentException();
 		try{
-			for (int i = 0 ; i < roll.size() ; i++){
-				if (roll.get(i).equals(s)){
-					roll.remove(i); //removes from course roll
-					if (!waitlist.isEmpty()){ //if it is not empty then put the person on the waitlist into the class
-						Morrisville waitingStudent = waitlist.dequeue();
-						roll.add(roll.size(), waitingStudent);
-						waitingStudent.getSchedule().addCourseToSchedule(course);
+			for (int i = 0 ; i < list.size() ; i++){
+				if (list.get(i).equals(p)){
+					list.remove(i); 
+					if (!holding.isEmpty()){ 
+						Product onHold = holding.dequeue();
+						list.add(list.size(), onHold);
+						//onHold.getSchedule().addCourseToSchedule(product);
 					}
 				}
 			}
-			if (!waitlist.isEmpty()){ //this is checking if the student that dropped is on the waitlist.
-				Morrisville waitingStudent;
-				int initialWaitlistSize = waitlist.size();
-				for (int i = 0 ; i < initialWaitlistSize ; i++){
-					waitingStudent = waitlist.dequeue();
-					if (!waitingStudent.equals(s)){ //if not equal put student back into queue at end.
-						waitlist.enqueue(waitingStudent);
+			if (!holding.isEmpty()){ 
+				Product productOnHold;
+				int initialHoldingSize = holding.size();
+				for (int i = 0 ; i < initialHoldingSize ; i++){
+					productOnHold = holding.dequeue();
+					if (!productOnHold.equals(p)){ //if not equal put student back into queue at end.
+						holding.enqueue(productOnHold);
 					}
 					//otherwise, the student is removed and the queue is simply "requeued"
 				}
@@ -128,64 +131,62 @@ public class ProductList {
 	}
 	
 	/**
-	 * Gets the number of available seats for students to enroll into the course.
-	 * @return The difference between the enrollment cap and the current number of students enrolled in the course.
+	 * Gets the spaces in the list for additional products.
+	 * @return The difference between the capacity and the current number of products in the list.
 	 */
-	public int getOpenSeats(){
-		return enrollmentCap - roll.size();
+	public int getRemainingCapacity(){
+		return listCapacity - list.size();
 	}
 	
 	/**
-	 * Checks whether a student is allowed to enroll in a particular course. A student would be allowed if the passed student
-	 * is not null, if the current enrollment is less than the enrollment cap, or if the student is not already enrolled
-	 * in the course.
-	 * @param s The student to check whether they are allowed to enroll in the course.
-	 * @return True if student passes the above criteria. False otherwise. 
+	 * Checks whether a product can be added to the list. A product would be allowed if it is not null and 
+	 * if the current enrollment is less than the enrollment cap.
+	 * @param s the product to check whether it can be added to the list.
+	 * @return True if product can be added. False otherwise. 
 	 */
-	public boolean canEnroll(Morrisville s){
-		//if null or if both the waitlist and the roll are full then cant enroll. roll is full if wait is full.
-		if (s == null || waitlist.size() >= WAITLIST_SIZE) 
+	public boolean canAdd(Product s){
+		if (s == null || holding.size() >= MAX_HOLDING) 
 			return false;
-		//waitlist not full but course is. check if student is on either list.
-		if (waitlist.size() < WAITLIST_SIZE && roll.size() >= enrollmentCap){
-			try{ //this is checking to see if a student is already on the course roll.
-				for (int i = 0; i < roll.size() ; i++){
-					if (roll.get(i).equals(s))
-						return false;
-				}
+		
+		if (holding.size() < MAX_HOLDING && list.size() >= listCapacity){
+			try { 
+				holding.enqueue(s);
+				//for (int i = 0; i < list.size() ; i++){
+					//if (list.get(i).equals(s))
+						//return false;
+				//}
 				
-				if(waitlist.isEmpty()){ //wasnt on roll so we can add to empty waitlist
-					return true;
-				} else{
-					Morrisville stu;
-					int matchCount = 0;
-					for (int i = 0 ; i < waitlist.size() ; i++){
-						stu = waitlist.dequeue();
-						if (stu.equals(s)){ //then they are already on the waitlist
-							matchCount++;
-						}
-						waitlist.enqueue(stu);
-					}
-					if (matchCount > 0)
-						return false; //the student is already on wait list
-				}	
+				
+			
+				//Product stu;
+				//int matchCount = 0;
+				//for (int i = 0 ; i < holding.size() ; i++) {
+				  //  stu = holding.dequeue();
+					//if (stu.equals(s)) { 
+						//matchCount++;
+					//}
+						//holding.enqueue(stu);
+					//}
+					//if (matchCount > 0)
+						//return false; //the student is already on wait list
+				//}	
 			} catch (IllegalArgumentException e){
 				return false;
 			}				
-		} else { //the course is not full so check that student is not on roll
-			for (int i = 0; i < roll.size() ; i++){
-				if (roll.get(i).equals(s))
-					return false;
-			}
-		}
+		} //else { //the course is not full so check that student is not on roll
+			//for (int i = 0; i < list.size() ; i++){
+				//if (list.get(i).equals(s))
+					//return false;
+			//}
+		//}
 		return true;
 	}
 	
 	/**
-	 * Gets the number of students on the waitlist for the course.
-	 * @return The number of students on the waitlist.
+	 * Gets the number of products on hold for the product list.
+	 * @return The number of products on the holding list.
 	 */
-	public int getNumberOnWaitlist(){
-		return waitlist.size();
+	public int getsNumberOnHold(){
+		return holding.size();
 	}
 }

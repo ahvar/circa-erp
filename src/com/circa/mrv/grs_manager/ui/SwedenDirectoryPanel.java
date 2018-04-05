@@ -25,7 +25,7 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.AbstractTableModel;
 
-import com.circa.mrv.grs_manager.directory.SwedenDirectory;
+import com.circa.mrv.grs_manager.directory.CustomerDirectory;
 import com.circa.mrv.grs_manager.manager.GRSManager;
 
 /**
@@ -83,7 +83,7 @@ public class SwedenDirectoryPanel extends JPanel implements ActionListener {
 	/** Button for removing the selected Faculty from the directory */
 	private JButton btnRemoveFaculty;
 	/** Reference to FacultyDirectory */
-	private SwedenDirectory facultyDirectory;
+	private CustomerDirectory facultyDirectory;
 	
 	/**
 	 * Constructs the FacultyDirectoryPanel and sets up the GUI 
@@ -397,7 +397,7 @@ public class SwedenDirectoryPanel extends JPanel implements ActionListener {
 		}
 		
 		/**
-		 * Updates the given model with {@link Sweden} information from the {@link SwedenDirectory}.
+		 * Updates the given model with {@link Employee} information from the {@link CustomerDirectory}.
 		 */
 		public void updateData() {
 			data = facultyDirectory.getFacultyDirectory();

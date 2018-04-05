@@ -118,7 +118,7 @@ public class ProductCatalogPanel extends JPanel implements ActionListener {
 	public ProductCatalogPanel() {
 		super(new GridBagLayout());
 		
-		catalog = GRSManager.getInstance().getCourseCatalog();
+		catalog = GRSManager.getInstance().getNioxCatalog();
 		
 		//Set up Catalog buttons
 		btnNewCourseCatalog = new JButton("New Course Catalog");
@@ -347,7 +347,7 @@ public class ProductCatalogPanel extends JPanel implements ActionListener {
 		if (e.getSource() == btnLoadCourseCatalog) {
 			String fileName = getFileName(true);
 			try {
-				catalog.loadCoursesFromFile(fileName);
+				catalog.loadProductsFromFile(fileName);
 				courseCatalogTableModel.updateData();
 				scrollCourseCatalog.revalidate();
 				scrollCourseCatalog.repaint();
@@ -363,7 +363,7 @@ public class ProductCatalogPanel extends JPanel implements ActionListener {
 				JOptionPane.showMessageDialog(this, iae.getMessage());
 			}
 		} else if (e.getSource() == btnNewCourseCatalog) {
-			catalog.newCourseCatalog();
+			catalog.newProductCatalog();
 			courseCatalogTableModel.updateData();
 			scrollCourseCatalog.revalidate();
 			scrollCourseCatalog.repaint();
@@ -451,7 +451,7 @@ public class ProductCatalogPanel extends JPanel implements ActionListener {
 			}
 			
 			try {
-				if (catalog.addCourseToCatalog(name, title, section, credits, instructorId, enrollmentCap, meetingDays, startTime, endTime)) {
+				if (catalog.addProductToCatalog(name, title, section, credits, instructorId, enrollmentCap, meetingDays, startTime, endTime)) {
 					txtName.setText("");
 					txtTitle.setText("");
 					txtSection.setText("");
@@ -469,7 +469,7 @@ public class ProductCatalogPanel extends JPanel implements ActionListener {
 				JOptionPane.showMessageDialog(this, "No course selected.");
 			} else {
 				try {
-					catalog.removeCourseFromCatalog(courseCatalogTableModel.getValueAt(row, 0).toString(), courseCatalogTableModel.getValueAt(row, 1).toString());
+					catalog.removeProductFromCatalog(courseCatalogTableModel.getValueAt(row, 0).toString(), courseCatalogTableModel.getValueAt(row, 1).toString());
 				} catch (ArrayIndexOutOfBoundsException aioobe) {
 					JOptionPane.showMessageDialog(this, "No course selected.");
 				}
@@ -579,7 +579,7 @@ public class ProductCatalogPanel extends JPanel implements ActionListener {
 		 * Updates the given model with {@link Mino} information from the {@link NioxCatalog}.
 		 */
 		public void updateData() {
-			data = catalog.getCourseCatalog();
+			data = catalog.getNioxCatalog();
 		}
 	}
 

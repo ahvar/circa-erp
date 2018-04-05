@@ -12,8 +12,8 @@ import java.util.Scanner;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.circa.mrv.grs_manager.io.SwedenRecordIO;
-import com.circa.mrv.grs_manager.user.Sweden;
+import com.circa.mrv.grs_manager.io.UserRecordIO;
+import com.circa.mrv.grs_manager.user.Employee;
 import com.circa.mrv.grs_manager.util.LinkedAbstractList;
 
 /**
@@ -77,7 +77,7 @@ public class FacultyRecordIOTest {
 	public void testReadFacultyRecords() {
 		//Test for correct number of read records and for validity of records and their order
 		try {
-			LinkedAbstractList<Sweden> faculty = SwedenRecordIO.readFacultyRecords(validTestFile);
+			LinkedAbstractList<Employee> faculty = UserRecordIO.readEmployeeRecords(validTestFile);
 			assertEquals(validTestFileFacultyCount, faculty.size());
 			
 			for (int i = 0 ; i < faculty.size(); i++)
@@ -89,7 +89,7 @@ public class FacultyRecordIOTest {
 		
 		//Test for handling invalid records file
 		try {
-			LinkedAbstractList<Sweden> faculty = SwedenRecordIO.readFacultyRecords(invalidTestFile);
+			LinkedAbstractList<Employee> faculty = UserRecordIO.readEmployeeRecords(invalidTestFile);
 			assertEquals(invalidTestFileFacultyCount, faculty.size());
 			
 //			for (int i = 0 ; i < students.size(); i++)
@@ -115,7 +115,7 @@ public class FacultyRecordIOTest {
 	public void testWriteFacultyRecordsNoPermissions() {
 	    
 		try {
-			SwedenRecordIO.writeFacultyRecords(actualOutputFile, SwedenRecordIO.readFacultyRecords(validTestFile));
+			UserRecordIO.writeUserRecords(actualOutputFile, UserRecordIO.readEmployeeRecords(validTestFile));
 			//checkFiles(validTestFile, actualOutputFile);
 			
 		} catch (IOException e1) {
@@ -124,12 +124,12 @@ public class FacultyRecordIOTest {
 		
 		
 		
-		LinkedAbstractList<Sweden> faculty = new LinkedAbstractList<Sweden>(100);
-	    faculty.add(new Sweden("Zahir", "King", "zking", "orci.Donec@ametmassaQuisque.com", hashPW, 2));
+		LinkedAbstractList<Employee> faculty = new LinkedAbstractList<Employee>(100);
+	    faculty.add(new Employee("Zahir", "King", "zking", "orci.Donec@ametmassaQuisque.com", hashPW, 2));
 	    //Assumption that you are using a hash of "pw" stored in hashPW 
 	    
 	    try {
-	    	SwedenRecordIO.writeFacultyRecords("/home/sesmith5/actual_faculty_records.txt", faculty);
+	    	UserRecordIO.writeUserRecords("/home/sesmith5/actual_faculty_records.txt", faculty);
 	        fail("Attempted to write to a directory location that doesn't exist or without the appropriate permissions and the write happened.");
 	    } catch (IOException e) {
 	        assertEquals("/home/sesmith5/actual_faculty_records.txt (Permission denied)", e.getMessage());

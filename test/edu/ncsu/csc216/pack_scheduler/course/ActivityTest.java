@@ -7,7 +7,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.circa.mrv.grs_manager.niox.Product;
+import com.circa.mrv.grs_manager.niox.ProductList;
 import com.circa.mrv.grs_manager.niox.ConflictException;
 import com.circa.mrv.grs_manager.niox.Mino;
 

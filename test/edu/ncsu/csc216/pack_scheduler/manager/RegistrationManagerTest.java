@@ -6,15 +6,15 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.circa.mrv.grs_manager.catalog.NioxCatalog;
-import com.circa.mrv.grs_manager.directory.SwedenDirectory;
+import com.circa.mrv.grs_manager.directory.CustomerDirectory;
+import com.circa.mrv.grs_manager.directory.Product;
 import com.circa.mrv.grs_manager.manager.GRSManager;
 import com.circa.mrv.grs_manager.niox.Mino;
-import com.circa.mrv.grs_manager.directory.MorrisvilleDirectory;
-import com.circa.mrv.grs_manager.user.Sweden;
-import com.circa.mrv.grs_manager.user.Morrisville;
+import com.circa.mrv.grs_manager.directory.VendorDirectory;
+import com.circa.mrv.grs_manager.user.Employee;
 import com.circa.mrv.grs_manager.user.User;
-import com.circa.mrv.grs_manager.user.schedule.ROWSchedule;
-import com.circa.mrv.grs_manager.user.schedule.MorrisvilleSchedule;
+import com.circa.mrv.grs_manager.user.schedule.CustomerSchedule;
+import com.circa.mrv.grs_manager.user.schedule.VendorSchedule;
 
 /**
  * the registration manager test class provides a number of tests of the functionallity of the registration manager class.
@@ -24,8 +24,8 @@ public class RegistrationManagerTest {
 	
 	private GRSManager manager;
 	private NioxCatalog catalog;
-	private MorrisvilleDirectory directory;
-	private SwedenDirectory fDirectory;
+	private VendorDirectory directory;
+	private CustomerDirectory fDirectory;
 	private String validCourseRecordsFile = "test-files/course_records.txt";
 	private String validStudentRecordsFile = "test-files/student_records.txt";
 	/**
@@ -43,10 +43,10 @@ public class RegistrationManagerTest {
 	 */
 	@Test
 	public void testGetInstance(){
-		catalog = manager.getCourseCatalog();
-		directory = manager.getStudentDirectory();
+		catalog = manager.getNioxCatalog();
+		directory = manager.getVendorDirectory();
 		
-		assertEquals(0, catalog.getCourseCatalog().length);
+		assertEquals(0, catalog.getNioxCatalog().length);
 		assertEquals(0, directory.getStudentDirectory().length);
 		assertTrue(manager.login("registrar", "Regi5tr@r"));	
 	}
@@ -56,10 +56,10 @@ public class RegistrationManagerTest {
 	 */
 	@Test
 	public void testGetCourseCatalog() {
-		catalog = manager.getCourseCatalog();
-		catalog.loadCoursesFromFile(validCourseRecordsFile);
+		catalog = manager.getNioxCatalog();
+		catalog.loadProductsFromFile(validCourseRecordsFile);
 		//catalog = manager.getCourseCatalog();
-		assertEquals(8, catalog.getCourseCatalog().length);
+		assertEquals(8, catalog.getNioxCatalog().length);
 	}
 
 	/**
@@ -67,9 +67,9 @@ public class RegistrationManagerTest {
 	 */
 	@Test
 	public void testGetStudentDirectory() {
-		directory = manager.getStudentDirectory();
+		directory = manager.getVendorDirectory();
 		directory.loadStudentsFromFile(validStudentRecordsFile);
-		directory = manager.getStudentDirectory();
+		directory = manager.getVendorDirectory();
 		assertEquals(10, directory.getStudentDirectory().length);
 	}
 
@@ -78,9 +78,9 @@ public class RegistrationManagerTest {
 	 */
 	@Test
 	public void testLogin() {
-		directory = manager.getStudentDirectory();
+		directory = manager.getVendorDirectory();
 		directory.loadStudentsFromFile(validStudentRecordsFile);
-		directory = manager.getStudentDirectory();
+		directory = manager.getVendorDirectory();
 		directory.addStudent("Ben", "Iop", "biop", "biop@mail.com", "123", "123", 15);
 		manager.logout();
 		assertTrue(manager.login("registrar", "Regi5tr@r"));
@@ -113,7 +113,7 @@ public class RegistrationManagerTest {
 	 */
 	@Test
 	public void testGetCurrentUser() {
-		directory = manager.getStudentDirectory();
+		directory = manager.getVendorDirectory();
 		directory.addStudent("Ben", "Iop", "biop", "biop@mail.com", "123", "123", 15);
 		manager.logout();
 		manager.login("registrar", "Regi5tr@r");	
@@ -130,17 +130,17 @@ public class RegistrationManagerTest {
 	 */
 	@Test
 	public void testEnrollStudentInCourse() {
-	    directory = manager.getStudentDirectory();
+	    directory = manager.getVendorDirectory();
 	    directory.loadStudentsFromFile("test-files/student_records.txt");
 	    
-	    catalog = manager.getCourseCatalog();
-	    catalog.loadCoursesFromFile("test-files/course_records.txt");
+	    catalog = manager.getNioxCatalog();
+	    catalog.loadProductsFromFile("test-files/course_records.txt");
 	    
 	    manager.logout(); //In case not handled elsewhere
 	    
 	    //test if not logged in
 	    try {
-	        manager.enrollStudentInCourse(catalog.getCourseFromCatalog("CSC216", "001"));
+	        manager.enrollStudentInCourse(catalog.getProductFromCatalog("CSC216", "001"));
 	        fail("RegistrationManager.enrollStudentInCourse() - If the current user is null, an IllegalArgumentException should be thrown, but was not.");
 	    } catch (IllegalArgumentException e) {
 	        assertNull("RegistrationManager.enrollStudentInCourse() - currentUser is null, so cannot enroll in course.", manager.getCurrentUser());
@@ -149,7 +149,7 @@ public class RegistrationManagerTest {
 	    //test if registrar is logged in
 	    manager.login("registrar", "Regi5tr@r");
 	    try {
-	        manager.enrollStudentInCourse(catalog.getCourseFromCatalog("CSC216", "001"));
+	        manager.enrollStudentInCourse(catalog.getProductFromCatalog("CSC216", "001"));
 	        fail("RegistrationManager.enrollStudentInCourse() - If the current user is registrar, an IllegalArgumentException should be thrown, but was not.");
 	    } catch (IllegalArgumentException e) {
 	        assertEquals("RegistrationManager.enrollStudentInCourse() - currentUser is registrar, so cannot enroll in course.", "registrar", manager.getCurrentUser().getId());
@@ -157,13 +157,13 @@ public class RegistrationManagerTest {
 	    manager.logout();
 	    
 	    manager.login("efrost", "pw");
-	    assertFalse("Action: enroll\nUser: efrost\nCourse: CSC216-001\nResults: False - Student max credits are 3 and course has 4.", manager.enrollStudentInCourse(catalog.getCourseFromCatalog("CSC216", "001")));
-	    assertTrue("Action: enroll\nUser: efrost\nCourse: CSC226-001\nResults: True", manager.enrollStudentInCourse(catalog.getCourseFromCatalog("CSC226", "001")));
-	    assertFalse("Action: enroll\nUser: efrost\nCourse: CSC226-001, CSC230-001\nResults: False - cannot exceed max student credits.", manager.enrollStudentInCourse(catalog.getCourseFromCatalog("CSC230", "001")));
+	    assertFalse("Action: enroll\nUser: efrost\nCourse: CSC216-001\nResults: False - Student max credits are 3 and course has 4.", manager.enrollStudentInCourse(catalog.getProductFromCatalog("CSC216", "001")));
+	    assertTrue("Action: enroll\nUser: efrost\nCourse: CSC226-001\nResults: True", manager.enrollStudentInCourse(catalog.getProductFromCatalog("CSC226", "001")));
+	    assertFalse("Action: enroll\nUser: efrost\nCourse: CSC226-001, CSC230-001\nResults: False - cannot exceed max student credits.", manager.enrollStudentInCourse(catalog.getProductFromCatalog("CSC230", "001")));
 	    
 	    //Check Student Schedule
-	    Morrisville efrost = directory.getStudentById("efrost");
-	    MorrisvilleSchedule scheduleFrost = efrost.getSchedule();
+	    Product efrost = directory.getEmployeeById("efrost");
+	    VendorSchedule scheduleFrost = efrost.getSchedule();
 	    assertEquals(3, scheduleFrost.getScheduleCredits());
 	    String[][] scheduleFrostArray = scheduleFrost.getScheduledCourses();
 	    assertEquals(1, scheduleFrostArray.length);
@@ -176,17 +176,17 @@ public class RegistrationManagerTest {
 	    manager.logout();
 	    
 	    manager.login("ahicks", "pw");
-	    assertTrue("Action: enroll\nUser: ahicks\nCourse: CSC216-001\nResults: True", manager.enrollStudentInCourse(catalog.getCourseFromCatalog("CSC216", "001")));
-	    assertTrue("Action: enroll\nUser: ahicks\nCourse: CSC216-001, CSC226-001\nResults: True", manager.enrollStudentInCourse(catalog.getCourseFromCatalog("CSC226", "001")));
-	    assertFalse("Action: enroll\nUser: ahicks\nCourse: CSC216-001, CSC226-001, CSC226-001\nResults: False - duplicate", manager.enrollStudentInCourse(catalog.getCourseFromCatalog("CSC226", "001")));
-	    assertFalse("Action: enroll\nUser: ahicks\nCourse: CSC216-001, CSC226-001, CSC116-001\nResults: False - time conflict", manager.enrollStudentInCourse(catalog.getCourseFromCatalog("CSC116", "001")));
-	    assertTrue("Action: enroll\nUser: ahicks\nCourse: CSC216-001, CSC226-001, CSC116-003\nResults: True", manager.enrollStudentInCourse(catalog.getCourseFromCatalog("CSC116", "003")));
-	    assertFalse("Action: enroll\nUser: ahicks\nCourse: CSC216-001, CSC226-001, CSC116-003, CSC116-002\nResults: False - already in section of 116", manager.enrollStudentInCourse(catalog.getCourseFromCatalog("CSC216", "601")));
-	    assertFalse("Action: enroll\nUser: ahicks\nCourse: CSC216-001, CSC226-001, CSC116-003, CSC230-001\nResults: False - exceeded max credits", manager.enrollStudentInCourse(catalog.getCourseFromCatalog("CSC230", "001")));
+	    assertTrue("Action: enroll\nUser: ahicks\nCourse: CSC216-001\nResults: True", manager.enrollStudentInCourse(catalog.getProductFromCatalog("CSC216", "001")));
+	    assertTrue("Action: enroll\nUser: ahicks\nCourse: CSC216-001, CSC226-001\nResults: True", manager.enrollStudentInCourse(catalog.getProductFromCatalog("CSC226", "001")));
+	    assertFalse("Action: enroll\nUser: ahicks\nCourse: CSC216-001, CSC226-001, CSC226-001\nResults: False - duplicate", manager.enrollStudentInCourse(catalog.getProductFromCatalog("CSC226", "001")));
+	    assertFalse("Action: enroll\nUser: ahicks\nCourse: CSC216-001, CSC226-001, CSC116-001\nResults: False - time conflict", manager.enrollStudentInCourse(catalog.getProductFromCatalog("CSC116", "001")));
+	    assertTrue("Action: enroll\nUser: ahicks\nCourse: CSC216-001, CSC226-001, CSC116-003\nResults: True", manager.enrollStudentInCourse(catalog.getProductFromCatalog("CSC116", "003")));
+	    assertFalse("Action: enroll\nUser: ahicks\nCourse: CSC216-001, CSC226-001, CSC116-003, CSC116-002\nResults: False - already in section of 116", manager.enrollStudentInCourse(catalog.getProductFromCatalog("CSC216", "601")));
+	    assertFalse("Action: enroll\nUser: ahicks\nCourse: CSC216-001, CSC226-001, CSC116-003, CSC230-001\nResults: False - exceeded max credits", manager.enrollStudentInCourse(catalog.getProductFromCatalog("CSC230", "001")));
 	    
 	    //Check Student Schedule
-	    Morrisville ahicks = directory.getStudentById("ahicks");
-	    MorrisvilleSchedule scheduleHicks = ahicks.getSchedule();
+	    Product ahicks = directory.getEmployeeById("ahicks");
+	    VendorSchedule scheduleHicks = ahicks.getSchedule();
 	    assertEquals(10, scheduleHicks.getScheduleCredits());
 	    String[][] scheduleHicksArray = scheduleHicks.getScheduledCourses();
 	    assertEquals(3, scheduleHicksArray.length);
@@ -214,17 +214,17 @@ public class RegistrationManagerTest {
 	 */
 	@Test
 	public void testDropStudentFromCourse() {
-	    directory = manager.getStudentDirectory();
+	    directory = manager.getVendorDirectory();
 	    directory.loadStudentsFromFile("test-files/student_records.txt");
 	    
-	    catalog = manager.getCourseCatalog();
-	    catalog.loadCoursesFromFile("test-files/course_records.txt");
+	    catalog = manager.getNioxCatalog();
+	    catalog.loadProductsFromFile("test-files/course_records.txt");
 	    
 	    manager.logout(); //In case not handled elsewhere
 	    
 	    //test if not logged in
 	    try {
-	        manager.dropStudentFromCourse(catalog.getCourseFromCatalog("CSC216", "001"));
+	        manager.dropStudentFromCourse(catalog.getProductFromCatalog("CSC216", "001"));
 	        fail("RegistrationManager.dropStudentFromCourse() - If the current user is null, an IllegalArgumentException should be thrown, but was not.");
 	    } catch (IllegalArgumentException e) {
 	        assertNull("RegistrationManager.dropStudentFromCourse() - currentUser is null, so cannot enroll in course.", manager.getCurrentUser());
@@ -233,7 +233,7 @@ public class RegistrationManagerTest {
 	    //test if registrar is logged in
 	    manager.login("registrar", "Regi5tr@r");
 	    try {
-	        manager.dropStudentFromCourse(catalog.getCourseFromCatalog("CSC216", "001"));
+	        manager.dropStudentFromCourse(catalog.getProductFromCatalog("CSC216", "001"));
 	        fail("RegistrationManager.dropStudentFromCourse() - If the current user is registrar, an IllegalArgumentException should be thrown, but was not.");
 	    } catch (IllegalArgumentException e) {
 	        assertEquals("RegistrationManager.dropStudentFromCourse() - currentUser is registrar, so cannot enroll in course.", "registrar", manager.getCurrentUser().getId());
@@ -241,16 +241,16 @@ public class RegistrationManagerTest {
 	    manager.logout();
 	    
 	    manager.login("efrost", "pw");
-	    assertFalse("Action: enroll\nUser: efrost\nCourse: CSC216-001\nResults: False - Student max credits are 3 and course has 4.", manager.enrollStudentInCourse(catalog.getCourseFromCatalog("CSC216", "001")));
-	    assertTrue("Action: enroll\nUser: efrost\nCourse: CSC226-001\nResults: True", manager.enrollStudentInCourse(catalog.getCourseFromCatalog("CSC226", "001")));
-	    assertFalse("Action: enroll\nUser: efrost\nCourse: CSC226-001, CSC230-001\nResults: False - cannot exceed max student credits.", manager.enrollStudentInCourse(catalog.getCourseFromCatalog("CSC230", "001")));
+	    assertFalse("Action: enroll\nUser: efrost\nCourse: CSC216-001\nResults: False - Student max credits are 3 and course has 4.", manager.enrollStudentInCourse(catalog.getProductFromCatalog("CSC216", "001")));
+	    assertTrue("Action: enroll\nUser: efrost\nCourse: CSC226-001\nResults: True", manager.enrollStudentInCourse(catalog.getProductFromCatalog("CSC226", "001")));
+	    assertFalse("Action: enroll\nUser: efrost\nCourse: CSC226-001, CSC230-001\nResults: False - cannot exceed max student credits.", manager.enrollStudentInCourse(catalog.getProductFromCatalog("CSC230", "001")));
 	    
-	    assertFalse("Action: drop\nUser: efrost\nCourse: CSC216-001\nResults: False - student not enrolled in the course", manager.dropStudentFromCourse(catalog.getCourseFromCatalog("CSC216", "001")));
-	    assertTrue("Action: drop\nUser: efrost\nCourse: CSC226-001\nResults: True", manager.dropStudentFromCourse(catalog.getCourseFromCatalog("CSC226", "001")));
+	    assertFalse("Action: drop\nUser: efrost\nCourse: CSC216-001\nResults: False - student not enrolled in the course", manager.dropStudentFromCourse(catalog.getProductFromCatalog("CSC216", "001")));
+	    assertTrue("Action: drop\nUser: efrost\nCourse: CSC226-001\nResults: True", manager.dropStudentFromCourse(catalog.getProductFromCatalog("CSC226", "001")));
 	    
 	    //Check Student Schedule
-	    Morrisville efrost = directory.getStudentById("efrost");
-	    MorrisvilleSchedule scheduleFrost = efrost.getSchedule();
+	    Product efrost = directory.getEmployeeById("efrost");
+	    VendorSchedule scheduleFrost = efrost.getSchedule();
 	    assertEquals(0, scheduleFrost.getScheduleCredits());
 	    String[][] scheduleFrostArray = scheduleFrost.getScheduledCourses();
 	    assertEquals(0, scheduleFrostArray.length);
@@ -258,16 +258,16 @@ public class RegistrationManagerTest {
 	    manager.logout();
 	    
 	    manager.login("ahicks", "pw");
-	    assertTrue("Action: enroll\nUser: ahicks\nCourse: CSC216-001\nResults: True", manager.enrollStudentInCourse(catalog.getCourseFromCatalog("CSC216", "001")));
-	    assertTrue("Action: enroll\nUser: ahicks\nCourse: CSC216-001, CSC226-001\nResults: True", manager.enrollStudentInCourse(catalog.getCourseFromCatalog("CSC226", "001")));
-	    assertFalse("Action: enroll\nUser: ahicks\nCourse: CSC216-001, CSC226-001, CSC226-001\nResults: False - duplicate", manager.enrollStudentInCourse(catalog.getCourseFromCatalog("CSC226", "001")));
-	    assertFalse("Action: enroll\nUser: ahicks\nCourse: CSC216-001, CSC226-001, CSC116-001\nResults: False - time conflict", manager.enrollStudentInCourse(catalog.getCourseFromCatalog("CSC116", "001")));
-	    assertTrue("Action: enroll\nUser: ahicks\nCourse: CSC216-001, CSC226-001, CSC116-003\nResults: True", manager.enrollStudentInCourse(catalog.getCourseFromCatalog("CSC116", "003")));
-	    assertFalse("Action: enroll\nUser: ahicks\nCourse: CSC216-001, CSC226-001, CSC116-003, CSC116-002\nResults: False - already in section of 116", manager.enrollStudentInCourse(catalog.getCourseFromCatalog("CSC216", "601")));
-	    assertFalse("Action: enroll\nUser: ahicks\nCourse: CSC216-001, CSC226-001, CSC116-003, CSC230-001\nResults: False - exceeded max credits", manager.enrollStudentInCourse(catalog.getCourseFromCatalog("CSC230", "001")));
+	    assertTrue("Action: enroll\nUser: ahicks\nCourse: CSC216-001\nResults: True", manager.enrollStudentInCourse(catalog.getProductFromCatalog("CSC216", "001")));
+	    assertTrue("Action: enroll\nUser: ahicks\nCourse: CSC216-001, CSC226-001\nResults: True", manager.enrollStudentInCourse(catalog.getProductFromCatalog("CSC226", "001")));
+	    assertFalse("Action: enroll\nUser: ahicks\nCourse: CSC216-001, CSC226-001, CSC226-001\nResults: False - duplicate", manager.enrollStudentInCourse(catalog.getProductFromCatalog("CSC226", "001")));
+	    assertFalse("Action: enroll\nUser: ahicks\nCourse: CSC216-001, CSC226-001, CSC116-001\nResults: False - time conflict", manager.enrollStudentInCourse(catalog.getProductFromCatalog("CSC116", "001")));
+	    assertTrue("Action: enroll\nUser: ahicks\nCourse: CSC216-001, CSC226-001, CSC116-003\nResults: True", manager.enrollStudentInCourse(catalog.getProductFromCatalog("CSC116", "003")));
+	    assertFalse("Action: enroll\nUser: ahicks\nCourse: CSC216-001, CSC226-001, CSC116-003, CSC116-002\nResults: False - already in section of 116", manager.enrollStudentInCourse(catalog.getProductFromCatalog("CSC216", "601")));
+	    assertFalse("Action: enroll\nUser: ahicks\nCourse: CSC216-001, CSC226-001, CSC116-003, CSC230-001\nResults: False - exceeded max credits", manager.enrollStudentInCourse(catalog.getProductFromCatalog("CSC230", "001")));
 	    
-	    Morrisville ahicks = directory.getStudentById("ahicks");
-	    MorrisvilleSchedule scheduleHicks = ahicks.getSchedule();
+	    Product ahicks = directory.getEmployeeById("ahicks");
+	    VendorSchedule scheduleHicks = ahicks.getSchedule();
 	    assertEquals(10, scheduleHicks.getScheduleCredits());
 	    String[][] scheduleHicksArray = scheduleHicks.getScheduledCourses();
 	    assertEquals(3, scheduleHicksArray.length);
@@ -287,10 +287,10 @@ public class RegistrationManagerTest {
 	    assertEquals("TH 11:20AM-1:10PM", scheduleHicksArray[2][3]);
 	    assertEquals("9", scheduleHicksArray[2][4]);
 	    
-	    assertTrue("Action: drop\nUser: efrost\nCourse: CSC226-001\nResults: True", manager.dropStudentFromCourse(catalog.getCourseFromCatalog("CSC226", "001")));
+	    assertTrue("Action: drop\nUser: efrost\nCourse: CSC226-001\nResults: True", manager.dropStudentFromCourse(catalog.getProductFromCatalog("CSC226", "001")));
 	    
 	    //Check schedule
-	    ahicks = directory.getStudentById("ahicks");
+	    ahicks = directory.getEmployeeById("ahicks");
 	    scheduleHicks = ahicks.getSchedule();
 	    assertEquals(7, scheduleHicks.getScheduleCredits());
 	    scheduleHicksArray = scheduleHicks.getScheduledCourses();
@@ -306,12 +306,12 @@ public class RegistrationManagerTest {
 	    assertEquals("TH 11:20AM-1:10PM", scheduleHicksArray[1][3]);
 	    assertEquals("9", scheduleHicksArray[1][4]);
 	    
-	    assertFalse("Action: drop\nUser: efrost\nCourse: CSC226-001\nResults: False - already dropped", manager.dropStudentFromCourse(catalog.getCourseFromCatalog("CSC226", "001")));
+	    assertFalse("Action: drop\nUser: efrost\nCourse: CSC226-001\nResults: False - already dropped", manager.dropStudentFromCourse(catalog.getProductFromCatalog("CSC226", "001")));
 	    
-	    assertTrue("Action: drop\nUser: efrost\nCourse: CSC216-001\nResults: True", manager.dropStudentFromCourse(catalog.getCourseFromCatalog("CSC216", "001")));
+	    assertTrue("Action: drop\nUser: efrost\nCourse: CSC216-001\nResults: True", manager.dropStudentFromCourse(catalog.getProductFromCatalog("CSC216", "001")));
 	    
 	    //Check schedule
-	    ahicks = directory.getStudentById("ahicks");
+	    ahicks = directory.getEmployeeById("ahicks");
 	    scheduleHicks = ahicks.getSchedule();
 	    assertEquals(3, scheduleHicks.getScheduleCredits());
 	    scheduleHicksArray = scheduleHicks.getScheduledCourses();
@@ -322,10 +322,10 @@ public class RegistrationManagerTest {
 	    assertEquals("TH 11:20AM-1:10PM", scheduleHicksArray[0][3]);
 	    assertEquals("9", scheduleHicksArray[0][4]);
 	    
-	    assertTrue("Action: drop\nUser: efrost\nCourse: CSC116-003\nResults: True", manager.dropStudentFromCourse(catalog.getCourseFromCatalog("CSC116", "003")));
+	    assertTrue("Action: drop\nUser: efrost\nCourse: CSC116-003\nResults: True", manager.dropStudentFromCourse(catalog.getProductFromCatalog("CSC116", "003")));
 	    
 	    //Check schedule
-	    ahicks = directory.getStudentById("ahicks");
+	    ahicks = directory.getEmployeeById("ahicks");
 	    scheduleHicks = ahicks.getSchedule();
 	    assertEquals(0, scheduleHicks.getScheduleCredits());
 	    scheduleHicksArray = scheduleHicks.getScheduledCourses();
@@ -339,11 +339,11 @@ public class RegistrationManagerTest {
 	 */
 	@Test
 	public void testResetSchedule() {
-	    directory = manager.getStudentDirectory();
+	    directory = manager.getVendorDirectory();
 	    directory.loadStudentsFromFile("test-files/student_records.txt");
 	    
-	    catalog = manager.getCourseCatalog();
-	    catalog.loadCoursesFromFile("test-files/course_records.txt");
+	    catalog = manager.getNioxCatalog();
+	    catalog.loadProductsFromFile("test-files/course_records.txt");
 	    
 	    manager.logout(); //In case not handled elsewhere
 	    
@@ -366,14 +366,14 @@ public class RegistrationManagerTest {
 	    manager.logout();
 	    
 	    manager.login("efrost", "pw");
-	    assertFalse("Action: enroll\nUser: efrost\nCourse: CSC216-001\nResults: False - Student max credits are 3 and course has 4.", manager.enrollStudentInCourse(catalog.getCourseFromCatalog("CSC216", "001")));
-	    assertTrue("Action: enroll\nUser: efrost\nCourse: CSC226-001\nResults: True", manager.enrollStudentInCourse(catalog.getCourseFromCatalog("CSC226", "001")));
-	    assertFalse("Action: enroll\nUser: efrost\nCourse: CSC226-001, CSC230-001\nResults: False - cannot exceed max student credits.", manager.enrollStudentInCourse(catalog.getCourseFromCatalog("CSC230", "001")));
+	    assertFalse("Action: enroll\nUser: efrost\nCourse: CSC216-001\nResults: False - Student max credits are 3 and course has 4.", manager.enrollStudentInCourse(catalog.getProductFromCatalog("CSC216", "001")));
+	    assertTrue("Action: enroll\nUser: efrost\nCourse: CSC226-001\nResults: True", manager.enrollStudentInCourse(catalog.getProductFromCatalog("CSC226", "001")));
+	    assertFalse("Action: enroll\nUser: efrost\nCourse: CSC226-001, CSC230-001\nResults: False - cannot exceed max student credits.", manager.enrollStudentInCourse(catalog.getProductFromCatalog("CSC230", "001")));
 	    
 	    manager.resetSchedule();
 	    //Check Student Schedule
-	    Morrisville efrost = directory.getStudentById("efrost");
-	    MorrisvilleSchedule scheduleFrost = efrost.getSchedule();
+	    Product efrost = directory.getEmployeeById("efrost");
+	    VendorSchedule scheduleFrost = efrost.getSchedule();
 	    assertEquals(0, scheduleFrost.getScheduleCredits());
 	    String[][] scheduleFrostArray = scheduleFrost.getScheduledCourses();
 	    assertEquals(0, scheduleFrostArray.length);
@@ -381,18 +381,18 @@ public class RegistrationManagerTest {
 	    manager.logout();
 	    
 	    manager.login("ahicks", "pw");
-	    assertTrue("Action: enroll\nUser: ahicks\nCourse: CSC216-001\nResults: True", manager.enrollStudentInCourse(catalog.getCourseFromCatalog("CSC216", "001")));
-	    assertTrue("Action: enroll\nUser: ahicks\nCourse: CSC216-001, CSC226-001\nResults: True", manager.enrollStudentInCourse(catalog.getCourseFromCatalog("CSC226", "001")));
-	    assertFalse("Action: enroll\nUser: ahicks\nCourse: CSC216-001, CSC226-001, CSC226-001\nResults: False - duplicate", manager.enrollStudentInCourse(catalog.getCourseFromCatalog("CSC226", "001")));
-	    assertFalse("Action: enroll\nUser: ahicks\nCourse: CSC216-001, CSC226-001, CSC116-001\nResults: False - time conflict", manager.enrollStudentInCourse(catalog.getCourseFromCatalog("CSC116", "001")));
-	    assertTrue("Action: enroll\nUser: ahicks\nCourse: CSC216-001, CSC226-001, CSC116-003\nResults: True", manager.enrollStudentInCourse(catalog.getCourseFromCatalog("CSC116", "003")));
-	    assertFalse("Action: enroll\nUser: ahicks\nCourse: CSC216-001, CSC226-001, CSC116-003, CSC116-002\nResults: False - already in section of 116", manager.enrollStudentInCourse(catalog.getCourseFromCatalog("CSC216", "601")));
-	    assertFalse("Action: enroll\nUser: ahicks\nCourse: CSC216-001, CSC226-001, CSC116-003, CSC230-001\nResults: False - exceeded max credits", manager.enrollStudentInCourse(catalog.getCourseFromCatalog("CSC230", "001")));
+	    assertTrue("Action: enroll\nUser: ahicks\nCourse: CSC216-001\nResults: True", manager.enrollStudentInCourse(catalog.getProductFromCatalog("CSC216", "001")));
+	    assertTrue("Action: enroll\nUser: ahicks\nCourse: CSC216-001, CSC226-001\nResults: True", manager.enrollStudentInCourse(catalog.getProductFromCatalog("CSC226", "001")));
+	    assertFalse("Action: enroll\nUser: ahicks\nCourse: CSC216-001, CSC226-001, CSC226-001\nResults: False - duplicate", manager.enrollStudentInCourse(catalog.getProductFromCatalog("CSC226", "001")));
+	    assertFalse("Action: enroll\nUser: ahicks\nCourse: CSC216-001, CSC226-001, CSC116-001\nResults: False - time conflict", manager.enrollStudentInCourse(catalog.getProductFromCatalog("CSC116", "001")));
+	    assertTrue("Action: enroll\nUser: ahicks\nCourse: CSC216-001, CSC226-001, CSC116-003\nResults: True", manager.enrollStudentInCourse(catalog.getProductFromCatalog("CSC116", "003")));
+	    assertFalse("Action: enroll\nUser: ahicks\nCourse: CSC216-001, CSC226-001, CSC116-003, CSC116-002\nResults: False - already in section of 116", manager.enrollStudentInCourse(catalog.getProductFromCatalog("CSC216", "601")));
+	    assertFalse("Action: enroll\nUser: ahicks\nCourse: CSC216-001, CSC226-001, CSC116-003, CSC230-001\nResults: False - exceeded max credits", manager.enrollStudentInCourse(catalog.getProductFromCatalog("CSC230", "001")));
 	    
 	    manager.resetSchedule();
 	    //Check Student schedule
-	    Morrisville ahicks = directory.getStudentById("ahicks");
-	    MorrisvilleSchedule scheduleHicks = ahicks.getSchedule();
+	    Product ahicks = directory.getEmployeeById("ahicks");
+	    VendorSchedule scheduleHicks = ahicks.getSchedule();
 	    assertEquals(0, scheduleHicks.getScheduleCredits());
 	    String[][] scheduleHicksArray = scheduleHicks.getScheduledCourses();
 	    assertEquals(0, scheduleHicksArray.length);
@@ -407,14 +407,14 @@ public class RegistrationManagerTest {
 	public void testAddFacultyToCourse(){
 	    manager.logout();
 		manager.login("registrar", "Regi5tr@r");
-	    catalog = manager.getCourseCatalog();
+	    catalog = manager.getNioxCatalog();
 	    fDirectory = manager.getFacultyDirectory();
-		catalog.loadCoursesFromFile(validCourseRecordsFile);
+		catalog.loadProductsFromFile(validCourseRecordsFile);
 		fDirectory.loadFacultyFromFile("test-files/faculty_records2.txt");
-		manager.removeFacultyFromCourse(catalog.getCourseFromCatalog("CSC116", "001"), fDirectory.getFacultyById("jdyoung2"));
-		assertTrue(manager.addFacultyToCourse(catalog.getCourseFromCatalog("CSC116", "001"), fDirectory.getFacultyById("lwalls")));
-		assertTrue(manager.addFacultyToCourse(catalog.getCourseFromCatalog("CSC216", "001"), fDirectory.getFacultyById("lwalls")));
-		assertFalse(manager.addFacultyToCourse(catalog.getCourseFromCatalog("CSC230", "001"), fDirectory.getFacultyById("lwalls")));
+		manager.removeFacultyFromCourse(catalog.getProductFromCatalog("CSC116", "001"), fDirectory.getEmployeeById("jdyoung2"));
+		assertTrue(manager.addFacultyToCourse(catalog.getProductFromCatalog("CSC116", "001"), fDirectory.getEmployeeById("lwalls")));
+		assertTrue(manager.addFacultyToCourse(catalog.getProductFromCatalog("CSC216", "001"), fDirectory.getEmployeeById("lwalls")));
+		assertFalse(manager.addFacultyToCourse(catalog.getProductFromCatalog("CSC230", "001"), fDirectory.getEmployeeById("lwalls")));
 		
 	}
 	
@@ -426,15 +426,15 @@ public class RegistrationManagerTest {
 		 	fDirectory = manager.getFacultyDirectory();
 		    fDirectory.loadFacultyFromFile("test-files/faculty_records.txt");
 		    
-		    catalog = manager.getCourseCatalog();
-		    catalog.loadCoursesFromFile("test-files/course_records.txt");
+		    catalog = manager.getNioxCatalog();
+		    catalog.loadProductsFromFile("test-files/course_records.txt");
 		    
 		    manager.logout(); //In case not handled elsewhere
 		    
 		    //test if not logged in
 		    try {
-		    	Mino c = catalog.getCourseFromCatalog("CSC216", "001");
-		    	Sweden f = fDirectory.getFacultyById("lwalls");
+		    	Mino c = catalog.getProductFromCatalog("CSC216", "001");
+		    	Employee f = fDirectory.getEmployeeById("lwalls");
 		        manager.removeFacultyFromCourse(c, f);
 		        fail("RegistrationManager.removeFacultyFromCourse() - If the current user is null, an IllegalArgumentException should be thrown, but was not.");
 		    } catch (IllegalArgumentException e) {
@@ -444,8 +444,8 @@ public class RegistrationManagerTest {
 		    //test if registrar is logged in
 		    manager.login("registrar", "Regi5tr@r");
 		    try {
-		    	Mino c = catalog.getCourseFromCatalog("CSC216", "001");
-		    	Sweden f = fDirectory.getFacultyById("lwalls");
+		    	Mino c = catalog.getProductFromCatalog("CSC216", "001");
+		    	Employee f = fDirectory.getEmployeeById("lwalls");
 		        manager.removeFacultyFromCourse(c, f);
 		        assertEquals("RegistrationManager.removeFacultyFromCourse() - currentUser is registrar, so cannot enroll in course.", "registrar", manager.getCurrentUser().getId());
 		    } catch (IllegalArgumentException e) {
@@ -463,11 +463,11 @@ public class RegistrationManagerTest {
 		 fDirectory = manager.getFacultyDirectory();
 		 fDirectory.loadFacultyFromFile("test-files/faculty_records.txt");
 		    
-		 catalog = manager.getCourseCatalog();
-		 catalog.loadCoursesFromFile("test-files/course_records.txt");
+		 catalog = manager.getNioxCatalog();
+		 catalog.loadProductsFromFile("test-files/course_records.txt");
 		 
-		 Mino c = catalog.getCourseFromCatalog("CSC216", "001");
-	     Sweden f = fDirectory.getFacultyById("lwalls");
+		 Mino c = catalog.getProductFromCatalog("CSC216", "001");
+	     Employee f = fDirectory.getEmployeeById("lwalls");
 		    
 		    manager.logout(); //In case not handled elsewhere
 		    
@@ -492,8 +492,8 @@ public class RegistrationManagerTest {
 		    }
 		    manager.logout();
 		    
-		    Mino c1 = catalog.getCourseFromCatalog("CSC230", "001");
-		    Sweden f1 = fDirectory.getFacultyById("bbrewer");
+		    Mino c1 = catalog.getProductFromCatalog("CSC230", "001");
+		    Employee f1 = fDirectory.getEmployeeById("bbrewer");
 		    
 		    
 		  //login as registrar
@@ -506,7 +506,7 @@ public class RegistrationManagerTest {
 		        fail(); // an illegalArgumentException was thrown and it should not have been
 		    }
 		    
-		    ROWSchedule f1Sch = f1.getSchedule();
+		    CustomerSchedule f1Sch = f1.getSchedule();
 		    assertEquals(0, f1Sch.getNumScheduledCourses());
 		    String[][] schf1Array = f1Sch.getScheduledCourses();
 		    assertEquals(0, schf1Array.length);
@@ -521,7 +521,7 @@ public class RegistrationManagerTest {
 	public void testGetFacultyDirectory() {
 		fDirectory = manager.getFacultyDirectory();
 		fDirectory.loadFacultyFromFile("test-files/faculty_records.txt");
-		User f = fDirectory.getFacultyById("awitt");
+		User f = fDirectory.getEmployeeById("awitt");
 		String [][] dir = new String[fDirectory.getFacultyDirectory().length][3];
 		for (int i = 0; i < dir.length; i++) {
 			dir[i][0] = f.getFirstName();

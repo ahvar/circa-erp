@@ -66,7 +66,7 @@ public class CourseRecordIOTest {
 	@Test
 	public void testReadValidCourseRecords() {
 		try {
-			SortedList<Mino> courses = ProductRecordIO.readCourseRecords(validTestFile);
+			SortedList<Mino> courses = ProductRecordIO.readProductRecords(validTestFile);
 			assertEquals(8, courses.size());
 			
 			for (int i = 0; i < validCourses.length; i++) {
@@ -84,7 +84,7 @@ public class CourseRecordIOTest {
 	public void testReadInvalidCourseRecords() {
 		SortedList<Mino> courses;
 		try {
-			courses = ProductRecordIO.readCourseRecords(invalidTestFile);
+			courses = ProductRecordIO.readProductRecords(invalidTestFile);
 			assertEquals(0, courses.size());
 		} catch (FileNotFoundException e) {
 			fail("Unexpected FileNotFoundException");
@@ -102,7 +102,7 @@ public class CourseRecordIOTest {
 		courses.add(new Mino("CSC216", "Programming Concepts - Java", "601", 4, "jep", 10, "A"));
 		
 		try {
-			ProductRecordIO.writeCourseRecords("test-files/actual_course_records.txt", courses);
+			ProductRecordIO.writeProductRecords("test-files/actual_course_records.txt", courses);
 		} catch (IOException e) {
 			fail("Cannot write to course records file");
 		}

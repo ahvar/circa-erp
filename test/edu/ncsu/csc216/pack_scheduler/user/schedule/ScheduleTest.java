@@ -8,7 +8,7 @@ import org.junit.Test;
 import com.circa.mrv.grs_manager.catalog.NioxCatalog;
 import com.circa.mrv.grs_manager.niox.ConflictException;
 import com.circa.mrv.grs_manager.niox.Mino;
-import com.circa.mrv.grs_manager.user.schedule.MorrisvilleSchedule;
+import com.circa.mrv.grs_manager.user.schedule.VendorSchedule;
 
 
 /**
@@ -30,7 +30,7 @@ public class ScheduleTest {
 	/** Course catalog object to help load in courses */
 	private NioxCatalog catalog;
 	/** Schedule */
-	private MorrisvilleSchedule schedule;
+	private VendorSchedule schedule;
 	
 	/**
 	 * Creates new schedule for subsequent tests.
@@ -38,9 +38,9 @@ public class ScheduleTest {
 	@Before
 	public void setup(){
 		//catalog.loadCoursesFromFile(validTestFile);
-		schedule = new MorrisvilleSchedule();
+		schedule = new VendorSchedule();
 		catalog = new NioxCatalog();
-		catalog.loadCoursesFromFile(validTestFile);
+		catalog.loadProductsFromFile(validTestFile);
 		
 	}
 	
@@ -58,21 +58,21 @@ public class ScheduleTest {
 	 */
 	@Test
 	public void testAddCourseToSchedule(){
-		catalog.getCourseFromCatalog(NAME216, SECTION);
+		catalog.getProductFromCatalog(NAME216, SECTION);
 
 		try {
-			assertFalse(schedule.addCourseToSchedule(catalog.getCourseFromCatalog("CSC777", SECTION)));
+			assertFalse(schedule.addCourseToSchedule(catalog.getProductFromCatalog("CSC777", SECTION)));
 		} catch (ConflictException e2) {
 			assertTrue(schedule.getScheduledCourses().length == 0);
 		}
 
 		try {
-			assertTrue(schedule.addCourseToSchedule(catalog.getCourseFromCatalog(NAME216, SECTION)));
+			assertTrue(schedule.addCourseToSchedule(catalog.getProductFromCatalog(NAME216, SECTION)));
 		} catch (ConflictException e1) {
 			fail();
 		}
 		try {
-			assertTrue(schedule.addCourseToSchedule(catalog.getCourseFromCatalog(NAME116, SECTION)));
+			assertTrue(schedule.addCourseToSchedule(catalog.getProductFromCatalog(NAME116, SECTION)));
 		} catch (ConflictException e1) {
 			fail();
 		}
@@ -81,13 +81,13 @@ public class ScheduleTest {
 		assertTrue(courses[1][0].equals(NAME116));		
 		
 		try{
-			schedule.addCourseToSchedule(catalog.getCourseFromCatalog(NAME216, SECTION));
+			schedule.addCourseToSchedule(catalog.getProductFromCatalog(NAME216, SECTION));
 			fail();
 		} catch (Exception e){
 			assertEquals(e.getMessage(), "You are already enrolled in " + NAME216);
 		}
 		try{
-			schedule.addCourseToSchedule(catalog.getCourseFromCatalog(NAME226, SECTION));
+			schedule.addCourseToSchedule(catalog.getProductFromCatalog(NAME226, SECTION));
 			fail();
 		} catch (Exception e){
 			assertEquals(e.getMessage(), "The course cannot be added due to a conflict.");
@@ -99,15 +99,15 @@ public class ScheduleTest {
 	 */
 	@Test
 	public void testRemoveCourseFromSchedule(){
-		catalog.getCourseFromCatalog(NAME216, SECTION);
+		catalog.getProductFromCatalog(NAME216, SECTION);
 		
 		try {
-			assertTrue(schedule.addCourseToSchedule(catalog.getCourseFromCatalog(NAME216, SECTION)));
+			assertTrue(schedule.addCourseToSchedule(catalog.getProductFromCatalog(NAME216, SECTION)));
 		} catch (ConflictException e1) {
 			fail();
 		}
-		assertTrue(schedule.removeCourseFromSchedule(catalog.getCourseFromCatalog(NAME216, SECTION)));
-		assertFalse(schedule.removeCourseFromSchedule(catalog.getCourseFromCatalog(NAME216, SECTION)));
+		assertTrue(schedule.removeCourseFromSchedule(catalog.getProductFromCatalog(NAME216, SECTION)));
+		assertFalse(schedule.removeCourseFromSchedule(catalog.getProductFromCatalog(NAME216, SECTION)));
 	}
 	
 	/**
@@ -126,12 +126,12 @@ public class ScheduleTest {
 	@Test
 	public void testGetScheduledCourses(){
 		try {
-			assertTrue(schedule.addCourseToSchedule(catalog.getCourseFromCatalog(NAME216, SECTION)));
+			assertTrue(schedule.addCourseToSchedule(catalog.getProductFromCatalog(NAME216, SECTION)));
 		} catch (ConflictException e) {
 			fail();
 		}
 		try {
-			assertTrue(schedule.addCourseToSchedule(catalog.getCourseFromCatalog(NAME116, SECTION)));
+			assertTrue(schedule.addCourseToSchedule(catalog.getProductFromCatalog(NAME116, SECTION)));
 		} catch (ConflictException e) {
 			fail();
 		}
@@ -163,8 +163,8 @@ public class ScheduleTest {
 	 */
 	@Test
 	public void testGetScheduleCredits(){
-		schedule.addCourseToSchedule(catalog.getCourseFromCatalog(NAME116, SECTION));
-		schedule.addCourseToSchedule(catalog.getCourseFromCatalog(NAME216, SECTION));
+		schedule.addCourseToSchedule(catalog.getProductFromCatalog(NAME116, SECTION));
+		schedule.addCourseToSchedule(catalog.getProductFromCatalog(NAME216, SECTION));
 		assertEquals(7, schedule.getScheduleCredits());
 	}
 	
@@ -176,8 +176,8 @@ public class ScheduleTest {
 		//test adding a null course
 		assertFalse(schedule.canAdd(null));
 		//test adding a duplicate course
-		schedule.addCourseToSchedule(catalog.getCourseFromCatalog(NAME116, SECTION));
-		assertFalse(schedule.canAdd(catalog.getCourseFromCatalog(NAME116, SECTION)));
+		schedule.addCourseToSchedule(catalog.getProductFromCatalog(NAME116, SECTION));
+		assertFalse(schedule.canAdd(catalog.getProductFromCatalog(NAME116, SECTION)));
 		//test adding a conflicting course
 		Mino c  = new Mino("CSC226", "computer stuff", "002", 4, "joe", 30, "M", 910, 1100);
 		assertFalse(schedule.canAdd(c));

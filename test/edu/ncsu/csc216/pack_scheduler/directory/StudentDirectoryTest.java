@@ -13,7 +13,7 @@ import java.util.Scanner;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.circa.mrv.grs_manager.directory.MorrisvilleDirectory;
+import com.circa.mrv.grs_manager.directory.VendorDirectory;
 
 /**
  * Tests StudentDirectory. 
@@ -59,7 +59,7 @@ public class StudentDirectoryTest {
 	@Test
 	public void testStudentDirectory() {
 		//Test that the StudentDirectory is initialized to an empty list
-		MorrisvilleDirectory sd = new MorrisvilleDirectory();
+		VendorDirectory sd = new VendorDirectory();
 		assertFalse(sd.removeStudent("sesmith5"));
 		assertEquals(0, sd.getStudentDirectory().length);
 	}
@@ -71,7 +71,7 @@ public class StudentDirectoryTest {
 	public void testNewStudentDirectory() {
 		//Test that if there are students in the directory, they 
 		//are removed after calling newStudentDirectory().
-		MorrisvilleDirectory sd = new MorrisvilleDirectory();
+		VendorDirectory sd = new VendorDirectory();
 		
 		sd.loadStudentsFromFile(validTestFile);
 		assertEquals(10, sd.getStudentDirectory().length);
@@ -85,14 +85,14 @@ public class StudentDirectoryTest {
 	 */
 	@Test
 	public void testLoadStudentsFromFile() {
-		MorrisvilleDirectory sd = new MorrisvilleDirectory();
+		VendorDirectory sd = new VendorDirectory();
 				
 		//Test valid file
 		sd.loadStudentsFromFile(validTestFile);
 		assertEquals(10, sd.getStudentDirectory().length);
 		//Test invalid file
 		try {
-			sd = new MorrisvilleDirectory();
+			sd = new VendorDirectory();
 			sd.loadStudentsFromFile("invalidFile.txt");
 		} catch (IllegalArgumentException e) {
 			assertEquals(0, sd.getStudentDirectory().length);	
@@ -104,7 +104,7 @@ public class StudentDirectoryTest {
 	 */
 	@Test
 	public void testAddStudent() {
-		MorrisvilleDirectory sd = new MorrisvilleDirectory();
+		VendorDirectory sd = new VendorDirectory();
 		
 		//Test valid Student
 		sd.addStudent(FIRST_NAME, LAST_NAME, ID, EMAIL, PASSWORD, PASSWORD, MAX_CREDITS);
@@ -167,7 +167,7 @@ public class StudentDirectoryTest {
 	 */
 	@Test
 	public void testRemoveStudent() {
-		MorrisvilleDirectory sd = new MorrisvilleDirectory();
+		VendorDirectory sd = new VendorDirectory();
 				
 		//Add students and remove
 		sd.loadStudentsFromFile(validTestFile);
@@ -185,7 +185,7 @@ public class StudentDirectoryTest {
 	 */
 	@Test
 	public void testSaveStudentDirectory() {
-		MorrisvilleDirectory sd = new MorrisvilleDirectory();
+		VendorDirectory sd = new VendorDirectory();
 		
 		//Add a student
 		sd.addStudent("Zahir", "King", "zking", "orci.Donec@ametmassaQuisque.com", "pw", "pw", 15);
@@ -222,11 +222,11 @@ public class StudentDirectoryTest {
 	@Test
 	public void testgetStudentById(){
 		
-		MorrisvilleDirectory sd = new MorrisvilleDirectory();
+		VendorDirectory sd = new VendorDirectory();
 		
 		sd.addStudent("Zahir", "King", "zking", "orci.Donec@ametmassaQuisque.com", "pw", "pw", 15);
-		assertEquals("Zahir", sd.getStudentById("zking").getFirstName());
-		assertEquals(null, sd.getStudentById("invalid"));
+		assertEquals("Zahir", sd.getEmployeeById("zking").getFirstName());
+		assertEquals(null, sd.getEmployeeById("invalid"));
 	}
 
 }

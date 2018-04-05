@@ -23,10 +23,10 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 
 import com.circa.mrv.grs_manager.catalog.NioxCatalog;
-import com.circa.mrv.grs_manager.directory.SwedenDirectory;
+import com.circa.mrv.grs_manager.directory.CustomerDirectory;
 import com.circa.mrv.grs_manager.manager.GRSManager;
 import com.circa.mrv.grs_manager.niox.Mino;
-import com.circa.mrv.grs_manager.user.Sweden;
+import com.circa.mrv.grs_manager.user.Employee;
 
 /**
  * Creates a user interface for a registrar to assign/remove faculty to/from
@@ -114,7 +114,7 @@ public class InstructorAssignmentPanel  extends JPanel implements ActionListener
 	/** Course catalog */
 	private NioxCatalog catalog;
 	/** Faculty directory */
-	private SwedenDirectory facultyDirectory;
+	private CustomerDirectory facultyDirectory;
 	
 	
 	/**
@@ -124,7 +124,7 @@ public class InstructorAssignmentPanel  extends JPanel implements ActionListener
 		super(new GridBagLayout());
 		
 		GRSManager manager = GRSManager.getInstance();
-		catalog = manager.getCourseCatalog();
+		catalog = manager.getNioxCatalog();
 		facultyDirectory = manager.getFacultyDirectory();
 		
 		//Set up the JPanel that will hold action buttons		
@@ -178,7 +178,7 @@ public class InstructorAssignmentPanel  extends JPanel implements ActionListener
 			public void valueChanged(ListSelectionEvent e) {
 				String name = tableCatalog.getValueAt(tableCatalog.getSelectedRow(), 0).toString();
 				String section = tableCatalog.getValueAt(tableCatalog.getSelectedRow(), 1).toString();
-				Mino c = catalog.getCourseFromCatalog(name, section);
+				Mino c = catalog.getProductFromCatalog(name, section);
 				updateCourseDetails(c);
 			}
 			
@@ -221,7 +221,7 @@ public class InstructorAssignmentPanel  extends JPanel implements ActionListener
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
 				String id = tableFaculty.getValueAt(tableFaculty.getSelectedRow(), 2).toString();
-				Sweden f = facultyDirectory.getFacultyById(id);
+				Employee f = facultyDirectory.getEmployeeById(id);
 				updateFacultyDetails(f);
 			}
 			
@@ -358,8 +358,8 @@ public class InstructorAssignmentPanel  extends JPanel implements ActionListener
 				JOptionPane.showMessageDialog(this, "No faculty selected in the directory.");
 			} else {
 				try {
-					Mino c = catalog.getCourseFromCatalog(tableCatalog.getValueAt(catalogRow, 0).toString(), tableCatalog.getValueAt(catalogRow, 1).toString());
-					Sweden f = facultyDirectory.getFacultyById(tableFaculty.getValueAt(facultyRow, 2).toString());
+					Mino c = catalog.getProductFromCatalog(tableCatalog.getValueAt(catalogRow, 0).toString(), tableCatalog.getValueAt(catalogRow, 1).toString());
+					Employee f = facultyDirectory.getEmployeeById(tableFaculty.getValueAt(facultyRow, 2).toString());
 					
 					if (!GRSManager.getInstance().addFacultyToCourse(c, f)) {
 						JOptionPane.showMessageDialog(this, "Course cannot be added to faculty's schedule.");
@@ -379,8 +379,8 @@ public class InstructorAssignmentPanel  extends JPanel implements ActionListener
 			} else if (facultyRow == -1) {
 				JOptionPane.showMessageDialog(this, "No faculty selected in the directory.");
 			} else {
-				Mino c = catalog.getCourseFromCatalog(tableCatalog.getValueAt(catalogRow, 0).toString(), tableCatalog.getValueAt(catalogRow, 1).toString());
-				Sweden f = facultyDirectory.getFacultyById(tableFaculty.getValueAt(facultyRow, 2).toString());
+				Mino c = catalog.getProductFromCatalog(tableCatalog.getValueAt(catalogRow, 0).toString(), tableCatalog.getValueAt(catalogRow, 1).toString());
+				Employee f = facultyDirectory.getEmployeeById(tableFaculty.getValueAt(facultyRow, 2).toString());
 				
 				if (!GRSManager.getInstance().removeFacultyFromCourse(c, f)) {
 					JOptionPane.showMessageDialog(this, "Course cannot be removed from faculty's schedule.");
@@ -394,7 +394,7 @@ public class InstructorAssignmentPanel  extends JPanel implements ActionListener
 			if (facultyRow == -1) {
 				JOptionPane.showMessageDialog(this, "No faculty selected in the directory.");
 			} else {
-				Sweden f = facultyDirectory.getFacultyById(tableFaculty.getValueAt(facultyRow, 2).toString());
+				Employee f = facultyDirectory.getEmployeeById(tableFaculty.getValueAt(facultyRow, 2).toString());
 				GRSManager.getInstance().resetFacultySchedule(f);
 				updateTables();
 			}
@@ -425,8 +425,8 @@ public class InstructorAssignmentPanel  extends JPanel implements ActionListener
 			lblInstructor.setText(c.getInstructorId());
 			lblCredits.setText("" + c.getCredits());
 			lblMeeting.setText(c.getMeetingString());
-			lblEnrollmentCap.setText("" + c.getCourseRoll().getEnrollmentCap());
-			lblOpenSeats.setText("" + c.getCourseRoll().getOpenSeats());
+			lblEnrollmentCap.setText("" + c.getCourseRoll().getCapacity());
+			lblOpenSeats.setText("" + c.getCourseRoll().getRemainingCapacity());
 		}
 	}
 	
@@ -435,13 +435,13 @@ public class InstructorAssignmentPanel  extends JPanel implements ActionListener
 	 * recently selected faculty.
 	 * @param f most recently selected faculty
 	 */
-	private void updateFacultyDetails(Sweden f) {
+	private void updateFacultyDetails(Employee f) {
 		if (f != null) {
 			lblFirstName.setText(f.getFirstName());
 			lblLastName.setText(f.getLastName());
 			lblId.setText(f.getId());
 			lblEmail.setText(f.getEmail());
-			lblMaxCourse.setText("" + f.getMaxCourses());
+			lblMaxCourse.setText("" + f.getMaxOrders());
 			lblOverloaded.setText("" + f.isOverloaded());
 		}
 	}
@@ -519,7 +519,7 @@ public class InstructorAssignmentPanel  extends JPanel implements ActionListener
 		 * Updates the given model with {@link Mino} information from the {@link NioxCatalog}.
 		 */
 		public void updateData() {
-			data = catalog.getCourseCatalog();
+			data = catalog.getNioxCatalog();
 		}
 	}
 	
@@ -593,7 +593,7 @@ public class InstructorAssignmentPanel  extends JPanel implements ActionListener
 		}
 		
 		/**
-		 * Updates the given model with {@link Sweden} information from the {@link SwedenDirectory}.
+		 * Updates the given model with {@link Employee} information from the {@link CustomerDirectory}.
 		 */
 		public void updateData() {
 			data = facultyDirectory.getFacultyDirectory();

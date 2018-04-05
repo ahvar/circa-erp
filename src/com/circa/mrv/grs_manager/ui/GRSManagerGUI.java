@@ -17,9 +17,9 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import com.circa.mrv.grs_manager.directory.Product;
 import com.circa.mrv.grs_manager.manager.GRSManager;
-import com.circa.mrv.grs_manager.user.Sweden;
-import com.circa.mrv.grs_manager.user.Morrisville;
+import com.circa.mrv.grs_manager.user.Employee;
 
 /**
  * Main GUI for the PackScheduler project.  It controls authentication
@@ -200,10 +200,10 @@ public class GRSManagerGUI {
 				if (manager.login(id, password)) {
 					txtId.setText("");
 					txtPassword.setText("");
-					if (manager.getCurrentUser() instanceof Morrisville) {
+					if (manager.getCurrentUser() instanceof Product) {
 						cardLayout.show(panel, MORRISVILLE_PANEL);
 						pnlStudent.updateTables();
-					} else if (manager.getCurrentUser() instanceof Sweden) {
+					} else if (manager.getCurrentUser() instanceof Employee) {
 						cardLayout.show(panel, SWEDEN_PANEL );
 						pnlFaculty.updateTables();
 					} else {

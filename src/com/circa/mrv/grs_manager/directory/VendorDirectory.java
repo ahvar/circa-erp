@@ -6,7 +6,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import com.circa.mrv.grs_manager.io.MorrisvilleRecordIO;
-import com.circa.mrv.grs_manager.user.Morrisville;
 import com.circa.mrv.grs_manager.user.User;
 
 import edu.ncsu.csc216.collections.list.SortedList;
@@ -16,17 +15,17 @@ import edu.ncsu.csc216.collections.list.SortedList;
  * All students have a unique id.
  * @author Sarah Heckman
  */
-public class MorrisvilleDirectory {
+public class VendorDirectory {
 	
 	/** List of students in the directory */
-	private SortedList<Morrisville> studentDirectory;
+	private SortedList<Product> studentDirectory;
 	/** Hashing algorithm */
 	private static final String HASH_ALGORITHM = "SHA-256";
 	
 	/**
 	 * Creates an empty student directory. 
 	 */
-	public MorrisvilleDirectory() {
+	public VendorDirectory() {
 		newStudentDirectory();
 	}
 	
@@ -35,7 +34,7 @@ public class MorrisvilleDirectory {
 	 * list are list unless saved by the user.
 	 */
 	public void newStudentDirectory() {
-		studentDirectory = new SortedList<Morrisville>();
+		studentDirectory = new SortedList<Product>();
 	}
 	
 	/**
@@ -91,7 +90,7 @@ public class MorrisvilleDirectory {
 		
 		//If an IllegalArgumentException is thrown, it's passed up from Student
 		//to the GUI 
-		Morrisville student = new Morrisville(firstName, lastName, id, email, hashPW, maxCredits);
+		Product student = new Product(firstName, lastName, id, email, hashPW, maxCredits);
 		
 		for (int i = 0; i < studentDirectory.size(); i++) {
 			User s = studentDirectory.get(i);
@@ -151,8 +150,8 @@ public class MorrisvilleDirectory {
 	 * @param id the id of the student to get. 
 	 * @return the student matching the id. If no match is found, null is returned. 
 	 */
-	public Morrisville getStudentById(String id){
-		Morrisville s;
+	public Product getEmployeeById(String id){
+		Product s;
 		for (int i = 0 ; i < studentDirectory.size() ; i++){
 			s = studentDirectory.get(i);
 			if (s.getId().equals(id))

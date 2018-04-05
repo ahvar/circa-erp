@@ -5,8 +5,8 @@ import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import com.circa.mrv.grs_manager.io.SwedenRecordIO;
-import com.circa.mrv.grs_manager.user.Sweden;
+import com.circa.mrv.grs_manager.io.UserRecordIO;
+import com.circa.mrv.grs_manager.user.Employee;
 import com.circa.mrv.grs_manager.user.User;
 import com.circa.mrv.grs_manager.util.LinkedAbstractList;
 
@@ -15,10 +15,10 @@ import com.circa.mrv.grs_manager.util.LinkedAbstractList;
  * All faculty have a unique id.
  * @author Sarah Heckman
  */
-public class SwedenDirectory {
+public class CustomerDirectory {
 	
 	/** List of faculty in the directory */
-	private LinkedAbstractList<Sweden> swedenDirectory;
+	private LinkedAbstractList<Employee> swedenDirectory;
 	
 	/** Hashing algorithm */
 	private static final String HASH_ALGORITHM = "SHA-256";
@@ -26,8 +26,8 @@ public class SwedenDirectory {
 	/**
 	 * Creates an empty faculty directory. 
 	 */
-	public SwedenDirectory() {
-		newFacultyDirectory();
+	public CustomerDirectory() {
+		new CustomerDirectory();
 	}
 	
 	/**
@@ -35,7 +35,7 @@ public class SwedenDirectory {
 	 * list are lost unless saved by the user.
 	 */
 	public void newFacultyDirectory() {
-		swedenDirectory = new LinkedAbstractList<Sweden>(100);
+		swedenDirectory = new LinkedAbstractList<Employee>(100);
 	}
 	
 	/**
@@ -46,7 +46,7 @@ public class SwedenDirectory {
 	 */
 	public void loadFacultyFromFile(String fileName) {
 		try {
-			swedenDirectory = SwedenRecordIO.readFacultyRecords(fileName);
+			swedenDirectory = UserRecordIO.readEmployeeRecords(fileName);
 		} catch (FileNotFoundException e) {
 			throw new IllegalArgumentException("Unable to read file " + fileName);
 		}
@@ -91,7 +91,7 @@ public class SwedenDirectory {
 		
 		//If an IllegalArgumentException is thrown, it's passed up from faculty
 		//to the GUI 
-		Sweden faculty = new Sweden(firstName, lastName, id, email, hashPW, maxCourses);
+		Employee faculty = new Employee(firstName, lastName, id, email, hashPW, maxCourses);
 		
 		for (int i = 0; i < swedenDirectory.size(); i++) {
 			User s = swedenDirectory.get(i);
@@ -140,7 +140,7 @@ public class SwedenDirectory {
 	 */
 	public void saveFacultyDirectory(String fileName) {
 		try {
-			SwedenRecordIO.writeFacultyRecords(fileName, swedenDirectory);
+			UserRecordIO.writeUserRecords(fileName, swedenDirectory);
 		} catch (IOException e) {
 			throw new IllegalArgumentException("Unable to write to file " + fileName);
 		}
@@ -151,8 +151,8 @@ public class SwedenDirectory {
 	 * @param id the id of the faculty to get. 
 	 * @return the faculty matching the id. If no match is found, null is returned. 
 	 */
-	public Sweden getFacultyById(String id){
-		Sweden s;
+	public Employee getEmployeeById(String id){
+		Employee s;
 		for (int i = 0 ; i < swedenDirectory.size() ; i++){
 			s = swedenDirectory.get(i);
 			if (s.getId().equals(id))

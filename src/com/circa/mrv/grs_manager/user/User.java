@@ -2,14 +2,18 @@ package com.circa.mrv.grs_manager.user;
 
 /**
  * The user class represents a user of the system. The user has a first name, last name, id, email, and password. 
- * @author Ben Ioppolo
+ * @author Arthur Vargas
  */
 public abstract class User {
-
+    /** A user's first name */
 	private String firstName;
+	/** A user's last name */
 	private String lastName;
+	/** The unique ID for this user */
 	private String id;
+	/** User's email address */
 	private String email;
+	/** User's password */
 	private String hashPW;
 
 	/**
@@ -29,7 +33,7 @@ public abstract class User {
 	}
 
 	/**
-	 * gets the students first name
+	 * gets the user's first name
 	 * @return the firstName
 	 */
 	public String getFirstName() {
@@ -37,7 +41,7 @@ public abstract class User {
 	}
 
 	/**
-	 * sets the students first name
+	 * sets the user's first name
 	 * @param firstName the firstName to set
 	 * @throws IllegalArgumentException if firstName is null or empty
 	 */
@@ -51,7 +55,7 @@ public abstract class User {
 	}
 
 	/**
-	 * gets the students last name
+	 * gets the user's last name
 	 * @return the lastName
 	 */
 	public String getLastName() {
@@ -59,7 +63,7 @@ public abstract class User {
 	}
 
 	/**
-	 * sets the students last name
+	 * sets the user's last name
 	 * @param lastName the lastName to set
 	 * @throws IllegalArgumentException if lastName is null or empty	 
 	 */
@@ -71,7 +75,7 @@ public abstract class User {
 	}
 
 	/**
-	 * gets student id
+	 * gets user id
 	 * @return the id
 	 */
 	public String getId() {
@@ -79,7 +83,7 @@ public abstract class User {
 	}
 
 	/**
-	 * sets the students id
+	 * sets the user's id
 	 * @param id the id to set
 	 * @throws IllegalArgumentException if id is null or empty
 	 */
@@ -91,7 +95,7 @@ public abstract class User {
 	}
 
 	/**
-	 * gets student email
+	 * gets user email
 	 * @return the email
 	 */
 	public String getEmail() {
@@ -99,7 +103,7 @@ public abstract class User {
 	}
 
 	/**
-	 * sets the student email
+	 * sets the user email
 	 * @param email the email to set
 	 * @throws IllegalArgumentException if email is null or empty or if it is missing "." or "@" or if "." and "@" are out of order
 	 */
@@ -113,7 +117,7 @@ public abstract class User {
 	}
 
 	/**
-	 * gets student password
+	 * gets user password
 	 * @return the hashPW
 	 */
 	public String getPassword() {
@@ -121,7 +125,7 @@ public abstract class User {
 	}
 
 	/**
-	 * sets student password
+	 * sets user password
 	 * @param hashPW the hashPW to set
 	 * @throws IllegalArgumentException if hashPW is null or empty
 	 */
@@ -133,7 +137,7 @@ public abstract class User {
 	}
 
 	/**
-	 * Generates a hashcode for student using the maxCredits field. 
+	 * Generates a hashcode for user using the maxCredits field. 
 	 * @return result the hashcode for student
 	 */
 	@Override

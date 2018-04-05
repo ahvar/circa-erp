@@ -13,8 +13,8 @@ import java.util.Scanner;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.circa.mrv.grs_manager.directory.Product;
 import com.circa.mrv.grs_manager.io.MorrisvilleRecordIO;
-import com.circa.mrv.grs_manager.user.Morrisville;
 
 import edu.ncsu.csc216.collections.list.SortedList;
 
@@ -81,7 +81,7 @@ public class StudentRecordIOTest {
 	public void testReadStudentRecords() {
 		//Test for correct number of read records and for validity of records and their order
 		try {
-			SortedList<Morrisville> students = MorrisvilleRecordIO.readStudentRecords(validTestFile);
+			SortedList<Product> students = MorrisvilleRecordIO.readStudentRecords(validTestFile);
 			assertEquals(validTestFileStudentCount, students.size());
 			
 			for (int i = 0 ; i < students.size(); i++)
@@ -93,7 +93,7 @@ public class StudentRecordIOTest {
 		
 		//Test for handling invalid records file
 		try {
-			SortedList<Morrisville> students = MorrisvilleRecordIO.readStudentRecords(invalidTestFile);
+			SortedList<Product> students = MorrisvilleRecordIO.readStudentRecords(invalidTestFile);
 			assertEquals(invalidTestFileStudentCount, students.size());
 			
 //			for (int i = 0 ; i < students.size(); i++)
@@ -104,7 +104,7 @@ public class StudentRecordIOTest {
 		}
 		
 		try{
-		SortedList<Morrisville> students = MorrisvilleRecordIO.readStudentRecords("test-files/test_StudentRecordIO.txt");
+		SortedList<Product> students = MorrisvilleRecordIO.readStudentRecords("test-files/test_StudentRecordIO.txt");
 		assertEquals(1, students.size());
 		} catch(FileNotFoundException e) {
 			fail();
@@ -128,8 +128,8 @@ public class StudentRecordIOTest {
 		
 		
 		
-		SortedList<Morrisville> students = new SortedList<Morrisville>();
-	    students.add(new Morrisville("Zahir", "King", "zking", "orci.Donec@ametmassaQuisque.com", hashPW, 15));
+		SortedList<Product> students = new SortedList<Product>();
+	    students.add(new Product("Zahir", "King", "zking", "orci.Donec@ametmassaQuisque.com", hashPW, 15));
 	    //Assumption that you are using a hash of "pw" stored in hashPW 
 	    
 	    try {

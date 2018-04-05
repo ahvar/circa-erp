@@ -17,11 +17,11 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.AbstractTableModel;
 
-import com.circa.mrv.grs_manager.directory.MorrisvilleDirectory;
+import com.circa.mrv.grs_manager.directory.Product;
+import com.circa.mrv.grs_manager.directory.VendorDirectory;
 import com.circa.mrv.grs_manager.manager.GRSManager;
-import com.circa.mrv.grs_manager.user.Sweden;
-import com.circa.mrv.grs_manager.user.schedule.ROWSchedule;
-import com.circa.mrv.grs_manager.user.Morrisville;
+import com.circa.mrv.grs_manager.user.Employee;
+import com.circa.mrv.grs_manager.user.schedule.CustomerSchedule;
 
 
 /**
@@ -87,8 +87,8 @@ public class SwedenSchedulePanel extends JPanel implements ActionListener {
 //	private JButton btnLogout;
 //	JPanel pnlButtons = new JPanel();
 	/** Current user */
-	private Sweden currentUser;
-	private ROWSchedule schedule;
+	private Employee currentUser;
+	private CustomerSchedule schedule;
 	
 	/**
 	 * Constructs the FacultySchedulePanel and sets up the GUI 
@@ -98,7 +98,7 @@ public class SwedenSchedulePanel extends JPanel implements ActionListener {
 		super(new GridBagLayout());
 		
 		//RegistrationManager manager = RegistrationManager.getInstance();
-		currentUser = (Sweden)GRSManager.getInstance().getCurrentUser();
+		currentUser = (Employee)GRSManager.getInstance().getCurrentUser();
 		if (currentUser != null)
 			schedule = currentUser.getSchedule();
 
@@ -313,7 +313,7 @@ public class SwedenSchedulePanel extends JPanel implements ActionListener {
 		}
 		
 		/**
-		 * Updates the given model with {@link Morrisville} information from the {@link MorrisvilleDirectory}.
+		 * Updates the given model with {@link Product} information from the {@link VendorDirectory}.
 		 */
 		public void updateData() {
 			//data = currentUser.getSchedule().getScheduledCourses();
@@ -390,7 +390,7 @@ public class SwedenSchedulePanel extends JPanel implements ActionListener {
 		}
 		
 		/**
-		 * Updates the given model with {@link Mino} information from the {@link ROWSchedule}.
+		 * Updates the given model with {@link Mino} information from the {@link CustomerSchedule}.
 		 */
 		public void updateData() {
 			if (currentUser != null){

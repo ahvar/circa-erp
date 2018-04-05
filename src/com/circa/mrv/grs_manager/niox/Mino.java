@@ -3,7 +3,7 @@
  */
 package com.circa.mrv.grs_manager.niox;
 
-import com.circa.mrv.grs_manager.product.list.ProductList;
+import com.circa.mrv.grs_manager.product.list.Product;
 import com.circa.mrv.grs_manager.product.validator.InvalidTransitionException;
 import com.circa.mrv.grs_manager.product.validator.ProductNameValidator;
 import com.circa.mrv.grs_manager.util.LinkedListRecursive;
@@ -15,7 +15,7 @@ import com.circa.mrv.grs_manager.util.LinkedListRecursive;
  */
 public class Mino extends Product implements Consumable {
     
-	private ProductList roll;
+	private Product roll;
 	/** The Mino monitor */
 	private Niox monitor;
 	
@@ -355,7 +355,7 @@ public class Mino extends Product implements Consumable {
 	 * Gets the course roll which shows which students are registered for the course
 	 * @return roll The linked list that shows which students are registered for the course.
 	 */
-	public ProductList getCourseRoll(){
+	public Product getCourseRoll(){
 		return roll;
 	}
 }

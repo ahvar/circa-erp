@@ -1,5 +1,7 @@
 package com.circa.mrv.grs_manager.location;
 
+import com.circa.mrv.grs_manager.directory.UserDirectory;
+
 /**
  * The ShipTo class extends abstract class Location and contains the name of a shipping contact.
  * The ShipTo is a location where goods are shipped.
@@ -7,7 +9,7 @@ package com.circa.mrv.grs_manager.location;
  * @author ArthurVargas 
  */
 public class ShipTo extends Location {
-	/** The name of a person who will receive the goods */
+	/** The name of a contact in shipping department */
 	private String shippingContact;
 	
 	/**

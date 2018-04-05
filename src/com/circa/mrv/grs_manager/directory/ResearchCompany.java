@@ -11,13 +11,13 @@ import com.circa.mrv.grs_manager.util.LinkedListRecursive;
  * 
  * @author ArthurVargas
  */
-public class ResearchClient extends Client {
+public class ResearchCompany extends Company {
 	/** A list of research studies */
 	private LinkedListRecursive<Study> studies;
 	/** The total number of devices this research client has */
 	private int devices;
 	
-	public ResearchClient( LinkedListRecursive<Location> locations, String name, LinkedListRecursive<Study> studies ){
+	public ResearchCompany( LinkedListRecursive<Location> locations, String name, LinkedListRecursive<Study> studies ){
 		super(locations, name);
 		setStudies(studies);
 		setDevices();

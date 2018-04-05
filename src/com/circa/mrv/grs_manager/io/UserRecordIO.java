@@ -3,64 +3,65 @@ package com.circa.mrv.grs_manager.io;
 
 import java.util.Scanner;
 
-import com.circa.mrv.grs_manager.user.Sweden;
+import com.circa.mrv.grs_manager.user.Employee;
 import com.circa.mrv.grs_manager.user.User;
 import com.circa.mrv.grs_manager.util.LinkedAbstractList;
+import com.circa.mrv.grs_manager.document.*;
 
 import java.io.*;
 
 /**
- * This class is passed a file with Faculty records. it reads the file line by line. 
- * each line is checked for the appropriate number of items and item types. a non null faculty is created
+ * This class is passed a file with user records. it reads the file line by line. 
+ * each line is checked for the appropriate number of items and item types. a non null user is created
  * if the line is not invalid. 
- * @author Ben Ioppolo
+ * @author Arthur Vargas
  *
  */
-public class SwedenRecordIO {
+public class UserRecordIO {
 
 	/**
-	 * reads in a file with faculty records. passes the file line by line to processStudent. it recieves
-	 * a faculty object from processFaculty which could be null. it checks for null and also for duplicate
-	 * faculty. it creates an linkedList of Faculty from the non null faculty. if all records were invalid,
+	 * reads in a file with user records. passes the file line by line to processUser. it recives
+	 * an User object from processUser which could be null. it checks for null and also for duplicate
+	 * Users. it creates an linkedList of Users from the non null User. if all records were invalid,
 	 * the linked list will be null.
 	 * @param fileName name and possibly path of file to read
-	 * @return faculty a linked list of faculty objects that are not null. 
+	 * @return User a linked list of faculty objects that are not null. 
 	 * @throws FileNotFoundException if the file is not found at given location
 	 */
-	public static LinkedAbstractList<Sweden> readFacultyRecords(String fileName) throws FileNotFoundException {
+	public static LinkedAbstractList<User> readUserRecords(String fileName) throws FileNotFoundException {
 		
 		Scanner fileReader = new Scanner(new FileInputStream(fileName));
 		//set new scanner to read file
-		LinkedAbstractList<Sweden> facultyList = new LinkedAbstractList<Sweden>(100);
+		LinkedAbstractList<User> employeeList = new LinkedAbstractList<User>(100);
 		//set new linked list	
 	    while (fileReader.hasNextLine()) {
 	        try {
-	            Sweden faculty = processFaculty(fileReader.nextLine());
+	            User employee = processUser(fileReader.nextLine());
 	            //set a new faculty object to returned faculty
-                if (faculty == null){
+                if (employee == null){
                 	//checks if returned faculty was null (record was invalid)
                 	//line was invalid
                   	throw new IllegalArgumentException("Invalid line");
                 }	
 	            boolean duplicate = false;
-	            for (int i = 0; i < facultyList.size(); i++) {
+	            for (int i = 0; i < employeeList.size(); i++) {
 	            	//loop through list to check for duplicates
-	                User f = facultyList.get(i);
-	                if (faculty == null){
+	                User e = employeeList.get(i);
+	                if (employee == null){
 	                	//checks if returned faculty was null (record was invalid)
 	                	//line was invalid
 	                	duplicate = true;
 	                	throw new IllegalArgumentException("Invalid line");
 	                }	
-	                else if (faculty.getId().equals(f.getId())) {
+	                else if (employee.getId().equals(e.getId())) {
 	                	//check for duplicates
 	                    //it's a duplicate
 	                    duplicate = true;
-	                	throw new IllegalArgumentException("Faculty already in system");
+	                	throw new IllegalArgumentException("Employee already in system");
 	                }
 	            }
 	            if (!duplicate) {
-	                facultyList.add(facultyList.size(), faculty);
+	                employeeList.add(employeeList.size(), employee);
 	            }
 	        } catch (IllegalArgumentException e) {
 	            //skip the line
@@ -68,17 +69,17 @@ public class SwedenRecordIO {
 	    }
 		
 		fileReader.close();
-		return facultyList;
+		return employeeList;
 	}
 	/**
-	 * recieves a single faculty record and processes it. it counts the items in the record to determine
-	 * if the record is invalid. it checks the type of the 5th record for an int. it limits valid records to 5 or 6
-	 * items. if the record is deemed valid, it passes the items to the faculty constructor. 
-	 * @param line the passed line. one faculty record from the file.
-	 * @return faculty created faculty object or null faculty object if the line was invalid. 
+	 * recieves a single employee record and processes it. it counts the items in the record to determine
+	 * if the record is invalid. it limits valid records to 5 or 6
+	 * items. if the record is deemed valid, it passes the items to the employee constructor. 
+	 * @param line the passed line. one employee record from the file.
+	 * @return employee created employee object or null employee object if the line was invalid. 
 	 */
-	private static Sweden processFaculty(String line){
-			Sweden faculty = null;
+	private static User processUser(String line){
+			User user = null;
 			int itemCount = 0;
 			//scanner to use for counting items on line
 			Scanner lineCounter = new Scanner(line);
@@ -98,7 +99,7 @@ public class SwedenRecordIO {
 						//returns null faculty
 						lineCounter.close();
 						lineScanner.close();
-						return faculty;
+						return user;
 
 					}
 					else{
@@ -114,19 +115,19 @@ public class SwedenRecordIO {
 					//defective line
 					lineScanner.close();
 					lineCounter.close();
-					return faculty;
+					return user;
 					//null
 				}
 				
 				else if(itemCount == 5){
 					//if 5 strings then 5 string constructor can be used
 					
-					faculty = new Sweden(lineScanner.next(), lineScanner.next(), lineScanner.next(), lineScanner.next(), lineScanner.next());
+					user = new Employee(lineScanner.next(), lineScanner.next(), lineScanner.next(), lineScanner.next(), lineScanner.next());
 				}
 				else{
 					//item count is 6
 					//if 5 strings and int then 6 construtor can be used
-					faculty = new Sweden(lineScanner.next(), lineScanner.next(), lineScanner.next(), lineScanner.next(), lineScanner.next(), lineScanner.nextInt());
+					user = new Employee(lineScanner.next(), lineScanner.next(), lineScanner.next(), lineScanner.next(), lineScanner.next(), new LinkedAbstractList<Order>(10) );
 					}	
 			} catch (Exception e){
 				//skip
@@ -135,24 +136,24 @@ public class SwedenRecordIO {
 		lineScanner.close();
 		lineCounter.close();
 		
-		return faculty;
+		return user;
 		//returns faculty null or otherwise for verification
 	}
 	
 	/**
-	 * writes out faculty records to a file from an linked list of faculty.
+	 * writes out employee records to a file from an linked list of employee.
 	 * @param fileName file name to write to
-	 * @param facultyDirectory linked list of faculty
+	 * @param employees linked list of employee
 	 * @throws IOException if the file is not available for writing
 	 */
-	public static void writeFacultyRecords(String fileName, LinkedAbstractList<Sweden> facultyDirectory) throws IOException {	
+	public static void writeUserRecords(String fileName, LinkedAbstractList<User> employee) throws IOException {	
 
 		PrintStream fileWriter = new PrintStream(new File(fileName));
 		//creates new output printstream object for new file
 		
-		for(int i = 0 ; i < facultyDirectory.size() ; i++){//loops through the faculty directory linked list
+		for(int i = 0 ; i < employee.size() ; i++){//loops through the faculty directory linked list
 			
-			fileWriter.println(facultyDirectory.get(i).toString());
+			fileWriter.println(employee.get(i).toString());
 			//writes out each item in the list
 		}
 		

@@ -25,10 +25,10 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 
 import com.circa.mrv.grs_manager.catalog.NioxCatalog;
+import com.circa.mrv.grs_manager.directory.Product;
 import com.circa.mrv.grs_manager.manager.GRSManager;
 import com.circa.mrv.grs_manager.niox.Mino;
-import com.circa.mrv.grs_manager.user.Morrisville;
-import com.circa.mrv.grs_manager.user.schedule.MorrisvilleSchedule;
+import com.circa.mrv.grs_manager.user.schedule.VendorSchedule;
 
 /**
  * Creates a user interface for students to register for classes.
@@ -99,11 +99,11 @@ public class MorrisvilleRegistrationPanel  extends JPanel implements ActionListe
 	/** Label for Course Details open seats */
 	private JLabel lblOpenSeats = new JLabel("");
 	/** Current user */
-	private Morrisville currentUser;
+	private Product currentUser;
 	/** Course catalog */
 	private NioxCatalog catalog;
 	/** Current user's schedule */
-	private MorrisvilleSchedule schedule;
+	private VendorSchedule schedule;
 	
 	
 	/**
@@ -113,8 +113,8 @@ public class MorrisvilleRegistrationPanel  extends JPanel implements ActionListe
 		super(new GridBagLayout());
 		
 		GRSManager manager = GRSManager.getInstance();
-		currentUser = (Morrisville)manager.getCurrentUser();
-		catalog = manager.getCourseCatalog();
+		currentUser = (Product)manager.getCurrentUser();
+		catalog = manager.getNioxCatalog();
 		
 		//Set up the JPanel that will hold action buttons		
 		btnAddCourse = new JButton("Add Course");
@@ -183,7 +183,7 @@ public class MorrisvilleRegistrationPanel  extends JPanel implements ActionListe
 			public void valueChanged(ListSelectionEvent e) {
 				String name = tableCatalog.getValueAt(tableCatalog.getSelectedRow(), 0).toString();
 				String section = tableCatalog.getValueAt(tableCatalog.getSelectedRow(), 1).toString();
-				Mino c = catalog.getCourseFromCatalog(name, section);
+				Mino c = catalog.getProductFromCatalog(name, section);
 				updateCourseDetails(c);
 			}
 			
@@ -298,7 +298,7 @@ public class MorrisvilleRegistrationPanel  extends JPanel implements ActionListe
 				JOptionPane.showMessageDialog(this, "No course selected in the catalog.");
 			} else {
 				try {
-					if (!GRSManager.getInstance().enrollStudentInCourse(catalog.getCourseFromCatalog(tableCatalog.getValueAt(row, 0).toString(), tableCatalog.getValueAt(row, 1).toString()))) {
+					if (!GRSManager.getInstance().enrollStudentInCourse(catalog.getProductFromCatalog(tableCatalog.getValueAt(row, 0).toString(), tableCatalog.getValueAt(row, 1).toString()))) {
 						JOptionPane.showMessageDialog(this, "Course cannot be added to schedule.");
 					}
 				} catch (IllegalArgumentException iae) {
@@ -311,7 +311,7 @@ public class MorrisvilleRegistrationPanel  extends JPanel implements ActionListe
 			if (row == -1) {
 				JOptionPane.showMessageDialog(this, "No item selected in the schedule.");
 			} else {
-				if (!GRSManager.getInstance().dropStudentFromCourse(catalog.getCourseFromCatalog(tableSchedule.getValueAt(row, 0).toString(), tableSchedule.getValueAt(row, 1).toString()))) {
+				if (!GRSManager.getInstance().dropStudentFromCourse(catalog.getProductFromCatalog(tableSchedule.getValueAt(row, 0).toString(), tableSchedule.getValueAt(row, 1).toString()))) {
 					JOptionPane.showMessageDialog(this, "Cannot drop student from " + tableSchedule.getValueAt(row, 0).toString());
 				}
 			}
@@ -352,8 +352,8 @@ public class MorrisvilleRegistrationPanel  extends JPanel implements ActionListe
 			lblInstructor.setText(c.getInstructorId());
 			lblCredits.setText("" + c.getCredits());
 			lblMeeting.setText(c.getMeetingString());
-			lblEnrollmentCap.setText("" + c.getCourseRoll().getEnrollmentCap());
-			lblOpenSeats.setText("" + c.getCourseRoll().getOpenSeats());
+			lblEnrollmentCap.setText("" + c.getCourseRoll().getCapacity());
+			lblOpenSeats.setText("" + c.getCourseRoll().getRemainingCapacity());
 		}
 	}
 	
@@ -434,9 +434,9 @@ public class MorrisvilleRegistrationPanel  extends JPanel implements ActionListe
 		 */
 		private void updateData() {
 			if (isCatalog) {
-				data = catalog.getCourseCatalog();
+				data = catalog.getNioxCatalog();
 			} else {
-				currentUser = (Morrisville)GRSManager.getInstance().getCurrentUser();
+				currentUser = (Product)GRSManager.getInstance().getCurrentUser();
 				if (currentUser != null) {
 					schedule = currentUser.getSchedule();
 					txtScheduleTitle.setText(schedule.getTitle());

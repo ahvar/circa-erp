@@ -1,5 +1,6 @@
 package com.circa.mrv.grs_manager.user.schedule;
 
+import com.circa.mrv.grs_manager.document.Order;
 import com.circa.mrv.grs_manager.niox.ConflictException;
 import com.circa.mrv.grs_manager.niox.Mino;
 import com.circa.mrv.grs_manager.util.LinkedListRecursive;
@@ -8,10 +9,10 @@ import com.circa.mrv.grs_manager.util.LinkedListRecursive;
  * The ROW (rest of world) order schedule.
  * @author Sarah Heckman
  */
-public class ROWSchedule {
+public class CustomerSchedule {
 
 	/** Schedule of courses with no cap */
-	private LinkedListRecursive<Mino> schedule;
+	private LinkedListRecursive<Order> schedule;
 	/** Instructor id for updating courses */
 	private String instructorId;
 	
@@ -19,8 +20,8 @@ public class ROWSchedule {
 	 * Creates an empty schedule.
 	 * @param instructorId faculty's id for updating Course
 	 */
-	public ROWSchedule(String instructorId) {
-		schedule = new LinkedListRecursive<Mino>();
+	public CustomerSchedule(String instructorId) {
+		schedule = new LinkedListRecursive<Order>();
 		this.instructorId = instructorId;
 	}
 	
@@ -29,10 +30,10 @@ public class ROWSchedule {
 	 * @param course Course to add to schedule
 	 * @return true if added
 	 */
-	public boolean addCourseToSchedule(Mino course) {
+	public boolean addCourseToSchedule(Order ord) {
 		for (int i = 0; i < schedule.size(); i++) {
-			if (schedule.get(i).isDuplicate(course)) {
-				throw new IllegalArgumentException("Already assigned " + course.getName());
+			if (schedule.get(i).isDuplicate(ord)) {
+				throw new IllegalArgumentException("Already assigned " + ord.getNumber());
 			}
 			try {
 				schedule.get(i).checkConflict(course);

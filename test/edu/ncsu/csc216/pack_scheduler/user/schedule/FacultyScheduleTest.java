@@ -13,8 +13,8 @@ import org.junit.Test;
 import com.circa.mrv.grs_manager.catalog.NioxCatalog;
 import com.circa.mrv.grs_manager.manager.GRSManager;
 import com.circa.mrv.grs_manager.niox.Mino;
-import com.circa.mrv.grs_manager.user.Sweden;
-import com.circa.mrv.grs_manager.user.schedule.ROWSchedule;
+import com.circa.mrv.grs_manager.user.Employee;
+import com.circa.mrv.grs_manager.user.schedule.CustomerSchedule;
 
 /**
  * Tests the FacultySchedule object.
@@ -42,7 +42,7 @@ public class FacultyScheduleTest {
 		}
 		
 		catalog = new NioxCatalog();
-		catalog.loadCoursesFromFile("test-files/course_records.txt");
+		catalog.loadProductsFromFile("test-files/course_records.txt");
 	}
 	
 	/**
@@ -50,7 +50,7 @@ public class FacultyScheduleTest {
 	 */
 	@Test
 	public void testFacultySchedule() {
-		ROWSchedule schedule = new ROWSchedule("sesmith5");
+		CustomerSchedule schedule = new CustomerSchedule("sesmith5");
 		assertEquals("Schedule should start with a length of 0, but did not.", 0, schedule.getScheduledCourses().length);	
 		assertEquals("Schedule should start with zero courses, but did not.", 0, schedule.getNumScheduledCourses());
 	}
@@ -60,11 +60,11 @@ public class FacultyScheduleTest {
 	 */
 	@Test
 	public void testAddCourseToSchedule() {
-		Sweden f = new Sweden("Sarah", "Heckman", "sesmith5", "sesmith5@ncsu.edu", "pw", 2);
-		ROWSchedule schedule = f.getSchedule();
+		Employee f = new Employee("Sarah", "Heckman", "sesmith5", "sesmith5@ncsu.edu", "pw", 2);
+		CustomerSchedule schedule = f.getSchedule();
 		
 		//Add course to schedule
-		Mino course = catalog.getCourseFromCatalog("CSC216", "001");
+		Mino course = catalog.getProductFromCatalog("CSC216", "001");
 		schedule.addCourseToSchedule(course);
 		String [][] actSchedule = schedule.getScheduledCourses();
 		assertEquals("Added CSC216-001 to schedule.  Length of getScheduledCourses() should be 1, but was not.", 1, actSchedule.length);
@@ -78,7 +78,7 @@ public class FacultyScheduleTest {
 		
 		//Attempt to add a duplicate course
 		try {
-			Mino csc216002 = catalog.getCourseFromCatalog("CSC216", "002");
+			Mino csc216002 = catalog.getProductFromCatalog("CSC216", "002");
 			schedule.addCourseToSchedule(csc216002);
 			fail("Added CSC216-001 to schedule.  Cannot add CSC216-002 to schedule, but was able to.");
 		} catch (IllegalArgumentException e) {
@@ -96,7 +96,7 @@ public class FacultyScheduleTest {
 		}
 		
 		//Add another course
-		Mino csc226 = catalog.getCourseFromCatalog("CSC226", "001");
+		Mino csc226 = catalog.getProductFromCatalog("CSC226", "001");
 		schedule.addCourseToSchedule(csc226);
 		actSchedule = schedule.getScheduledCourses();
 		assertEquals("Added CSC216-001 and CSC226-001 to schedule.  Length of getScheduledCourses() should be 2, but was not.", 2, actSchedule.length);
@@ -114,16 +114,16 @@ public class FacultyScheduleTest {
 		
 		//Attempt to add a conflicting course
 		try {
-			schedule.addCourseToSchedule(catalog.getCourseFromCatalog("CSC116", "001"));
+			schedule.addCourseToSchedule(catalog.getProductFromCatalog("CSC116", "001"));
 			fail("Added conflicting course to schedule.  Cannot add conflict to schedule, but was able to.");
 		} catch (IllegalArgumentException e) {
 			assertEquals("Added CSC216-001 and CSC226-001 to schedule. Attempting to add a CSC116-001 course shouldn't change the schedule. Length of getScheduledCourses() should be 2, but was not.", 2, actSchedule.length);
 			assertEquals("Added CSC216-001 and CSC226-001 to schedule.  getNumScheduledCourses() should return 2, but did not.", 2, schedule.getNumScheduledCourses());
-			assertNull("Added CSC216-001 and CSC226-001 to schedule.  Attempting to add CSC116-001 (conflicting) shouldn't work and the instructor should remain null, but did not.", catalog.getCourseFromCatalog("CSC116", "001").getInstructorId());
+			assertNull("Added CSC216-001 and CSC226-001 to schedule.  Attempting to add CSC116-001 (conflicting) shouldn't work and the instructor should remain null, but did not.", catalog.getProductFromCatalog("CSC116", "001").getInstructorId());
 		}
 		
 		//Attempt to add another instructor to a course with a schedule
-		ROWSchedule schedule2 = new ROWSchedule("jdyoung2");
+		CustomerSchedule schedule2 = new CustomerSchedule("jdyoung2");
 		try {
 			schedule2.addCourseToSchedule(csc226);
 			fail("Attempted to add CSC226-001 to jdyoung2 schedule when already assigned to sesmith5.  Should throw an IllegalArgumentException, but it did not.");
@@ -132,7 +132,7 @@ public class FacultyScheduleTest {
 		}
 		
 		//Add a third course
-		Mino csc116 = catalog.getCourseFromCatalog("CSC116", "002");
+		Mino csc116 = catalog.getProductFromCatalog("CSC116", "002");
 		schedule.addCourseToSchedule(csc116);
 		assertTrue("After adding 3 courses when max courses is 2, faculty is overloaded, but returned false", f.isOverloaded());
 	}
@@ -142,19 +142,19 @@ public class FacultyScheduleTest {
 	 */
 	@Test
 	public void testRemoveCourseFromSchedule() {
-		ROWSchedule schedule = new ROWSchedule("sesmith5");
+		CustomerSchedule schedule = new CustomerSchedule("sesmith5");
 		
 		//Attempt to remove from empty schedule
 		try {
-			schedule.removeCourseFromSchedule(catalog.getCourseFromCatalog("CSC216", "001"));
+			schedule.removeCourseFromSchedule(catalog.getProductFromCatalog("CSC216", "001"));
 		} catch (IndexOutOfBoundsException e) {
 			fail("Schedule.removeCourseFromSchedule() - Should not throw IndexOutOfBoundsExcpetion, but did.");
 		}
 		
 		//Add some courses and remove them
-		Mino csc216 = catalog.getCourseFromCatalog("CSC216", "001");
-		Mino csc226 = catalog.getCourseFromCatalog("CSC226", "001");
-		Mino csc116 = catalog.getCourseFromCatalog("CSC116", "002");
+		Mino csc216 = catalog.getProductFromCatalog("CSC216", "001");
+		Mino csc226 = catalog.getProductFromCatalog("CSC226", "001");
+		Mino csc116 = catalog.getProductFromCatalog("CSC116", "002");
 		schedule.addCourseToSchedule(csc216);
 		schedule.addCourseToSchedule(csc226);
 		schedule.addCourseToSchedule(csc116);
@@ -167,21 +167,21 @@ public class FacultyScheduleTest {
 		
 		//Check that removing a course that doesn't exist when there are 
 		//scheduled courses doesn't break anything
-		schedule.removeCourseFromSchedule(catalog.getCourseFromCatalog("CSC492", "001"));
+		schedule.removeCourseFromSchedule(catalog.getProductFromCatalog("CSC492", "001"));
 		assertEquals("Schedule.removeCourseFromSchedule() - Added CSC216-001, CSC226-001, and CSC116-002.  Attempted to remove CSC492-001. Schedule length should remain three and no exception should be thrown.", 3, schedule.getScheduledCourses().length);
 		
 		//Remove CSC226
-		schedule.removeCourseFromSchedule(catalog.getCourseFromCatalog("CSC226", "001"));
+		schedule.removeCourseFromSchedule(catalog.getProductFromCatalog("CSC226", "001"));
 		assertEquals("Schedule.removeCourseFromSchedule() - Added CSC216-001, CSC226-001, and CSC116-002. Removed CSC226-001.  Length should be 2, but was not.", 2, schedule.getScheduledCourses().length);
 		assertEquals("Added CSC216-001, CSC226-001, CSC116-002 to schedule. Removed CSC226-001. CSC226-001 should have instructor id null, but did not.", null, csc226.getInstructorId());
 		
 		//Remove CSC116
-		schedule.removeCourseFromSchedule(catalog.getCourseFromCatalog("CSC116", "002"));
+		schedule.removeCourseFromSchedule(catalog.getProductFromCatalog("CSC116", "002"));
 		assertEquals("Schedule.removeCourseFromSchedule() - Added CSC216-001, CSC226-001, and CSC116-002. Removed CSC226-001 then CSC116-002.  Length should be 1, but was not.", 1, schedule.getScheduledCourses().length);
 		assertEquals("Added CSC216-001, CSC226-001, CSC116-002 to schedule. Removed CSC226-001, CSC116-002. CSC116-002 should have instructor id null, but did not.", null, csc116.getInstructorId());
 		
 		//Remove CSC216
-		schedule.removeCourseFromSchedule(catalog.getCourseFromCatalog("CSC216", "001"));
+		schedule.removeCourseFromSchedule(catalog.getProductFromCatalog("CSC216", "001"));
 		assertEquals("Schedule.removeCourseFromSchedule() - Added CSC216-001, CSC226-001, and CSC116-002. Removed CSC226-001 then CSC116-002 and CSC216-001.  Length should be 0, but was not.", 0, schedule.getScheduledCourses().length);
 		assertEquals("Added CSC216-001, CSC226-001, CSC116-002 to schedule. Removed CSC226-001, CSC116-002, CSC216-001. CSC216-001 should have instructor id null, but did not.", null, csc216.getInstructorId());
 		
@@ -192,19 +192,19 @@ public class FacultyScheduleTest {
 	 */
 	@Test
 	public void testResetSchedule() {
-		ROWSchedule schedule = new ROWSchedule("sesmith5");
+		CustomerSchedule schedule = new CustomerSchedule("sesmith5");
 		
 		//Add some courses and reset schedule
-		schedule.addCourseToSchedule(catalog.getCourseFromCatalog("CSC216", "001"));
-		schedule.addCourseToSchedule(catalog.getCourseFromCatalog("CSC226", "001"));
-		schedule.addCourseToSchedule(catalog.getCourseFromCatalog("CSC116", "002"));
+		schedule.addCourseToSchedule(catalog.getProductFromCatalog("CSC216", "001"));
+		schedule.addCourseToSchedule(catalog.getProductFromCatalog("CSC226", "001"));
+		schedule.addCourseToSchedule(catalog.getProductFromCatalog("CSC116", "002"));
 		assertEquals("Schedule.resetSchedule() - Added CSC216-001, CSC226-001, and CSC116-002 as setup for remove test.", 3, schedule.getScheduledCourses().length);
 		
 		schedule.resetSchedule();
 		assertEquals("Schedule.resetSchedule() - Added CSC216-001, CSC226-001, and CSC116-002.  Reset schedule.  Length should be 0, but was not.", 0, schedule.getScheduledCourses().length);
 		
 		//Check that resetting doesn't break future adds
-		schedule.addCourseToSchedule(catalog.getCourseFromCatalog("CSC230", "001"));
+		schedule.addCourseToSchedule(catalog.getProductFromCatalog("CSC230", "001"));
 		assertEquals("Schedule.resetSchedule() - Added CSC216-001, CSC226-001, and CSC116-002.  Reset schedule.  Added CSC230-001 to ensure schedule is not broken.  Length should be 1, but was not.", 1, schedule.getScheduledCourses().length);
 	}
 }

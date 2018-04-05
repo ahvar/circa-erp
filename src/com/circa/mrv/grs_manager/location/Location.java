@@ -2,9 +2,12 @@
  * 
  */
 package com.circa.mrv.grs_manager.location;
+import com.circa.mrv.grs_manager.user.*;
+import com.circa.mrv.grs_manager.util.LinkedListRecursive;
 
 /**
- * The Location class is an abstract class with data fields for address information, city, state, and country.
+ * The Location class is an abstract class with data fields for address information and a list of employees
+ * at this location.
  * 
  * @author ArthurVargas
  */
@@ -19,6 +22,8 @@ public abstract class Location {
 	private String state;
 	/** The location's country */
 	private String country;
+	/** A list of employees at this location */
+	private LinkedListRecursive<Employee> employees;
 	
 	/**
 	 * Assigns the parameters to Location's appropriate instance variables.
@@ -128,10 +133,46 @@ public abstract class Location {
 	public void setCountry(String country) {
 		this.country = country;
 	}
+	
+	
+	/**
+	 * Returns a list of employees at this location.
+	 * @return the employees
+	 */
+	public LinkedListRecursive<Employee> getEmployees() {
+		return employees;
+	}
 
 	/**
-	 * Generates the hashcode for Location.
-	 * @return int the hashcode for Location
+	 * Sets the employees list to the list parameter
+	 * @param employees the employees to set
+	 */
+	public void setEmployees(LinkedListRecursive<Employee> employees) {
+		this.employees = employees;
+	}
+	
+	/**
+	 * Finds the employee whose unique id matches userID parameter. If userID is an empty string or if it is null,
+	 * an IllegalArgumentException is thrown.
+	 * 
+	 * @param userID the unique id for the employee
+	 * @param password the employee password
+	 * @throws IllegalArgumentException if the userID is invalid
+	 * @return the employee whose unique id matches userID
+	 */
+	public Employee findEmployee(String userID, String password) throws IllegalArgumentException {
+		if( userID == null || userID.equals("") || password == null || password.equals("")) 
+			throw new IllegalArgumentException("Invalid User ID");
+		for(int i = 0; i < employees.size(); i++ ) {
+			if(employees.get(i).getId().equals(userID) && employees.get(i).getPassword().equals(password))
+				return employees.get(i);
+		}
+		return null;
+	}
+
+	/**
+	 * Generates the hashcode for Location
+	 * @param int the result
 	 */
 	@Override
 	public int hashCode() {
@@ -141,13 +182,15 @@ public abstract class Location {
 		result = prime * result + ((address2 == null) ? 0 : address2.hashCode());
 		result = prime * result + ((city == null) ? 0 : city.hashCode());
 		result = prime * result + ((country == null) ? 0 : country.hashCode());
+		result = prime * result + ((employees == null) ? 0 : employees.hashCode());
 		result = prime * result + ((state == null) ? 0 : state.hashCode());
 		return result;
 	}
 
-	/** 
-	 * Compares a Location object to the parameter objecct
-	 * @param obj the comparison object
+	/**
+	 * Tests if this location is equal to the parameter object
+	 * @param obj the object to test for equality
+	 * @return true if they are equal
 	 */
 	@Override
 	public boolean equals(Object obj) {
@@ -155,7 +198,7 @@ public abstract class Location {
 			return true;
 		if (obj == null)
 			return false;
-		if (getClass() != obj.getClass())
+		if (!(obj instanceof Location))
 			return false;
 		Location other = (Location) obj;
 		if (address1 == null) {
@@ -177,6 +220,11 @@ public abstract class Location {
 			if (other.country != null)
 				return false;
 		} else if (!country.equals(other.country))
+			return false;
+		if (employees == null) {
+			if (other.employees != null)
+				return false;
+		} else if (!employees.equals(other.employees))
 			return false;
 		if (state == null) {
 			if (other.state != null)

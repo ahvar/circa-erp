@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import com.circa.mrv.grs_manager.io.ProductRecordIO;
+import com.circa.mrv.grs_manager.niox.Component;
 import com.circa.mrv.grs_manager.niox.Mino;
 import com.circa.mrv.grs_manager.niox.Product;
 import com.circa.mrv.grs_manager.util.LinkedListRecursive;
@@ -14,78 +15,92 @@ import com.circa.mrv.grs_manager.util.LinkedListRecursive;
 import edu.ncsu.csc216.collections.list.SortedList;
 
 /**
- * The NioxCatalog is a list of Niox products.
+ * The NioxCatalog is a list of Products. All NIOX products extend the abstract class Product.
  *    
  * @author Arthur Vargas 
  */
 public class NioxCatalog {
-/** The catalog as a Sorted list of courses */
+/** The catalog for products */
 	private LinkedListRecursive<Product> catalog;
 	
 	/**
-	 * Null Constructor which calls the newCourseCatalog method
+	 * Null Constructor which calls the newNioxCatalog method
 	 */
 	public NioxCatalog() {
-		newCourseCatalog();
+		newNioxCatalog();
 	}
 	/**
-	 * Creates an empty course catalog
+	 * Creates an empty product catalog
 	 */
-	public void newCourseCatalog() {
+	public void newNioxCatalog() {
 		catalog = new LinkedListRecursive<Product>();
 	}
 	/**
-	 * Loads an input file of courses into the catalog. If the file is unable to be found an IllegalArgumentexception is thrown.
+	 * Loads an input file of products into the catalog. If the file is unable to be found a IllegalArgumentException is thrown.
 	 * @throws IllegalArgumentException if the file is unable to be found.
-	 * @param fileName the filename for the file of courses to be read in to create the catalog. 
+	 * @param fileName the filename for the file of products to be read in to create the catalog. 
 	 */
-	public void loadCoursesFromFile(String fileName) {
+	public void loadProductsFromFile(String fileName) {
 		try {
-			catalog = ProductRecordIO.readCourseRecords(fileName);
+			catalog = ProductRecordIO.readProductRecords(fileName);
 		} catch (FileNotFoundException e) {
 			throw new IllegalArgumentException("Unable to read file " + fileName);
 		}
 	}
-	/**
-	 * Adds a course to the catalog if the name and section of the course to be added does not match one of the 
-	 * courses in the catalog. If the course exists on the catalog, the new course is not added. 
-	 * @param name the name of the course to add
-	 * @param title the title of the course to add
-	 * @param section the section of the course to add
-	 * @param credits the credit hours of the course to add
-	 * @param instructorId the instructors Id for the course to add
-	 * @param meetingDays the days that the course meets
-	 * @param startTime the start time of the course in military time. 
-	 * @param endTime the end time of the course in military time
-	 * @return True if the course can be added to the catalog. False otherwise. 
-	 * @param enrollmentCap The number of students that can register for the course
-	 */
-	public boolean addCourseToCatalog(String name, String title, String section, int credits, String instructorId, 
-			int enrollmentCap, String meetingDays, int startTime, int endTime) {
-			int isDuplicate;
-			
-			Product c = new Product(name, title, section, credits, instructorId, enrollmentCap, meetingDays, startTime, endTime);
-			
-			for (int i = 0 ; i < catalog.size() ; i++){
-				isDuplicate = catalog.get(i).compareTo(c);
-				if (isDuplicate == 0)
-					return false;
 	
-			}
-				catalog.add(c);
-				return true;
-	}
 	/**
-	 * Removes a course from the catalog if the course's name and section match the passed values.
-	 * @param name the name of the course to remove
-	 * @param section the section of the course to remove
-	 * @return True if the course can be removed. I.E. the course is on the catalog. False if the course is not on the catalog.
+	 * Adds a product to the catalog if the name and part number of the product to be added does not match one of the 
+	 * products in the catalog. If the product exists on the catalog, the new course is not added.
+	 *  
+	 * @param name the name of the product to add
+	 * @param description the description of the product to add
+	 * @param partNumber the partNumber of the product to add
+	 * @param price the price of the product to add
+	 * @return true if the product is added to the catalog
 	 */
-	public boolean removeCourseFromCatalog(String name, String section){
+	public boolean addProductToCatalog(String name, String description, String partNumber, double price) {
+			
+		Product c = new Component(name, description, partNumber, price);
+			
+		for (int i = 0 ; i < catalog.size(); i++) {
+			if( catalog.get(i).equals(c) )
+				return false;
+	
+		}
+		catalog.add(c);
+		return true;
+	}
+	
+	/**
+	 * Adds a product to the catalog if it is not already listed.
+	 * If the product exists on the catalog, the new course is not added and the method returns false.
+	 *  
+	 * @param product the product to add to the catalog
+	 * @return true if the product is added to the catalog
+	 */
+	public boolean addProductToCatalog(Product product) {
+			
+		for (int i = 0 ; i < catalog.size(); i++) {
+			if( catalog.get(i).equals(product) )
+				return false;
+	
+		}
+		catalog.add(product);
+		return true;
+	}
+	
+	
+	/**
+	 * Removes a product from the catalog if the product's name, description, and part number match the passed values.
+	 * @param name the name of the name of the product to remove
+	 * @param desc the description of the product to remove
+	 * @return True if the course was removed 
+	 */
+	public boolean removeProductFromCatalog(String name, String desc, String partNumber){
 		
 		for (int i = 0; i < catalog.size(); i++) {
-			Product c = catalog.get(i);
-			if (c.getName().equals(name) && c.getSection().equals(section)) {
+			if (catalog.get(i).getName().equals(name) && catalog.get(i).getDescription().equals(desc) && 
+					catalog.get(i).getPartNumber().equals(partNumber)) {
 				catalog.remove(i);
 				return true;
 			}
@@ -93,46 +108,47 @@ public class NioxCatalog {
 		return false;
 	}
 	/**
-	 * Gets a course from the catalog that is specified by the passed name and section. If the passed values match a course
-	 * on the catalog, the course is returned. 
-	 * @param name the name of the course to get
-	 * @param section the section of the course to get. 
-	 * @return c the course that matches the passed name and section. Returns null if no match existed.
+	 * Gets a product from the catalog that is specified by the passed name and section. If the passed values match a product
+	 * on the catalog, the product is returned. 
+	 * 
+	 * @param name the name of the product to get
+	 * @param desc the section of the product to get
+	 * @param pn the part number of the product to get
+	 * @return c the product that matches the passed name and section. Returns null if no match existed.
 	 */
-	public Product getCourseFromCatalog(String name, String section){	
+	public Product getProductFromCatalog(String name, String desc, String pn){	
 		for (int i = 0; i < catalog.size(); i++) {
-			Product c = catalog.get(i);
-			if (c.getName().equals(name) && c.getSection().equals(section))
-				return c;
+			if (catalog.get(i).getName().equals(name) && catalog.get(i).getDescription().equals(desc) &&
+					catalog.get(i).getPartNumber().equals(pn))
+				return new Component(catalog.get(i).getName(), catalog.get(i).getDescription(), catalog.get(i).getPartNumber());
 		}
 		return null;
 	}
 	/**
-	 * Gets the full course catalog which is stored as a 2D array. The rows of the array are individual courses and the 
-	 * columns of the array are the name, section, title, and meeting information (days and times), respectively. 
-	 * @return courseCatalog a 2D String array representing the course catalog. 
+	 * Gets the full product catalog which is stored as a 2D array. The rows of the array are individual products and the 
+	 * columns of the array are the description and part number 
+	 * @return nioxCatalog a 2D String array representing the niox catalog. 
 	 */
-	public String[][] getCourseCatalog() {
-		String [][] courseCatalog = new String[catalog.size()][5];
+	public String[][] getNioxCatalog() {
+		String [][] nioxCatalog = new String[catalog.size()][5];
 		for (int i = 0; i < catalog.size(); i++) {
 			Product c = catalog.get(i);
-			courseCatalog[i][0] = c.getName();
-			courseCatalog[i][1] = c.getSection();
-			courseCatalog[i][2] = c.getDescription();
-			courseCatalog[i][3] = c.getMeetingString();
-			courseCatalog[i][4] = "" + c.getCourseRoll().getOpenSeats();	
+			nioxCatalog[i][0] = c.getPartNumber();
+			nioxCatalog[i][2] = c.getName();
+			nioxCatalog[i][3] = c.getDescription();	
 		}
-		return courseCatalog;
+		return nioxCatalog;
 	}
+	
 	/**
-	 * Saves the course catalog to the passed file name. Passes the filename and the catalog to the writeCourseRecords method
-	 * in the CourseRecordIO class.
-	 * @param fileName the name of the file to save the course records to. 
-	 * @throws IllegalArgumentException if the writeCourseRecords method is unable to write to the file.
+	 * Saves the product catalog to the passed file name. Passes the filename and the catalog to the writeProducteRecords method
+	 * in the ProductRecordIO class.
+	 * @param fileName the name of the file to save the product records to. 
+	 * @throws IllegalArgumentException if the writeProductRecords method is unable to write to the file.
 	 */
-	public void saveCourseCatalog(String fileName) {
+	public void saveProductCatalog(String fileName) {
 		try {
-			ProductRecordIO.writeCourseRecords(fileName, catalog);
+			ProductRecordIO.writeProductRecords(fileName, catalog);
 		} catch (IOException e) {
 			throw new IllegalArgumentException("Unable to write to file " + fileName);
 		}

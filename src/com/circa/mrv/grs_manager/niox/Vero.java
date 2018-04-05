@@ -3,7 +3,7 @@
  */
 package com.circa.mrv.grs_manager.niox;
 
-import com.circa.mrv.grs_manager.product.list.ProductList;
+import com.circa.mrv.grs_manager.product.list.Product;
 import com.circa.mrv.grs_manager.product.validator.InvalidTransitionException;
 import com.circa.mrv.grs_manager.product.validator.ProductNameValidator;
 
@@ -14,7 +14,7 @@ import com.circa.mrv.grs_manager.product.validator.ProductNameValidator;
  */
 public class Vero extends Product implements Consumable {
     
-	private ProductList roll;
+	private Product roll;
 	/** The list of Vero components
 	private LinkedListRecursive<Component> pieces;
 	
@@ -30,7 +30,7 @@ public class Vero extends Product implements Consumable {
 		setSection(section);
 		setCredits(credits);
 		setInstructorId(instructorId);
-		roll = new ProductList(this, enrollmentCap);
+		roll = new Product(this, enrollmentCap);
 
 	}
 
@@ -197,9 +197,9 @@ public class Vero extends Product implements Consumable {
 	@Override
 	public String toString() {
 		if (getMeetingDays().equals("A")) {
-			return name + "," + getDescription() + "," + section + "," + credits + "," + instructorId + "," + roll.getEnrollmentCap() + "," + getMeetingDays();
+			return name + "," + getDescription() + "," + section + "," + credits + "," + instructorId + "," + roll.getCapacity() + "," + getMeetingDays();
 		}
-		return name + "," + getDescription() + "," + section + "," + credits + "," + instructorId + "," + roll.getEnrollmentCap() + "," + getMeetingDays() + ","
+		return name + "," + getDescription() + "," + section + "," + credits + "," + instructorId + "," + roll.getCapacity() + "," + getMeetingDays() + ","
 				+ getStartTime() + "," + getEndTime();
 	}
 
@@ -261,7 +261,7 @@ public class Vero extends Product implements Consumable {
 	 */
 	@Override
 	public String[] getShortDisplayArray() {
-		String[] shortCourseInfo = {name, section, getDescription(), getMeetingString(), "" + roll.getOpenSeats()}; 
+		String[] shortCourseInfo = {name, section, getDescription(), getMeetingString(), "" + roll.getRemainingCapacity()}; 
 		return shortCourseInfo;
 	}
 
@@ -362,7 +362,7 @@ public class Vero extends Product implements Consumable {
 	 * Gets the course roll which shows which students are registered for the course
 	 * @return roll The linked list that shows which students are registered for the course.
 	 */
-	public ProductList getCourseRoll(){
+	public Product getCourseRoll(){
 		return roll;
 	}
 }

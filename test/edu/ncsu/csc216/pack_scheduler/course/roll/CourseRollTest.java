@@ -9,16 +9,16 @@ import org.junit.Before;
 
 import org.junit.Test;
 
+import com.circa.mrv.grs_manager.directory.Product;
 import com.circa.mrv.grs_manager.niox.Mino;
-import com.circa.mrv.grs_manager.product.list.ProductList;
-import com.circa.mrv.grs_manager.user.Morrisville;
+import com.circa.mrv.grs_manager.product.list.Product;
 
 /**
  * Tests the CourseRoll class
  * @author Arthur Vargas
  */
 public class CourseRollTest {
-	ProductList cr;
+	Product cr;
 	//CourseRoll otherCr;
 	/** Above the max enrollment by 1 */
 	private final static int ONE_OVER_MAX = 251;
@@ -27,20 +27,20 @@ public class CourseRollTest {
 	/** Valid enrollment cap value */
 	private final static int VALID_ENROLLMENT_CAP = 100;
 	/** A student to be added to the roll */
-	private Morrisville s1;
+	private Product s1;
 	/** A student to be added to the roll */
-	private Morrisville s2;
+	private Product s2;
 	/** A student to be added to the roll */
-	private Morrisville s3;
-	Morrisville s4 = new Morrisville("first", "last", "flast", "flast@email.edu", "pw");
-	Morrisville s5 = new Morrisville("first", "blast", "fblast", "fblast@email.edu", "pw");
-	Morrisville s6 = new Morrisville("first", "clast", "fclast", "fclast@email.edu", "pw");
-	Morrisville s7 = new Morrisville("first", "dlast", "fdlast", "fdlast@email.edu", "pw");
-	Morrisville s8 = new Morrisville("first", "elast", "felast", "felast@email.edu", "pw");
-	Morrisville s9 = new Morrisville("first", "flast", "fflast", "fflast@email.edu", "pw");
-	Morrisville s10 = new Morrisville("first", "glast", "fglast", "fglast@email.edu", "pw");
-	Morrisville s11 = new Morrisville("Ben", "Ioppolo", "bioppolo", "bioppolo@email.edu", "pw");
-	Morrisville s12 = new Morrisville("John", "Doe", "jdoe", "jdoe@email.edu", "pw");
+	private Product s3;
+	Product s4 = new Product("first", "last", "flast", "flast@email.edu", "pw");
+	Product s5 = new Product("first", "blast", "fblast", "fblast@email.edu", "pw");
+	Product s6 = new Product("first", "clast", "fclast", "fclast@email.edu", "pw");
+	Product s7 = new Product("first", "dlast", "fdlast", "fdlast@email.edu", "pw");
+	Product s8 = new Product("first", "elast", "felast", "felast@email.edu", "pw");
+	Product s9 = new Product("first", "flast", "fflast", "fflast@email.edu", "pw");
+	Product s10 = new Product("first", "glast", "fglast", "fglast@email.edu", "pw");
+	Product s11 = new Product("Ben", "Ioppolo", "bioppolo", "bioppolo@email.edu", "pw");
+	Product s12 = new Product("John", "Doe", "jdoe", "jdoe@email.edu", "pw");
 	
 	/**
 	 * Sets up a CourseRoll to be used for later tests.
@@ -51,9 +51,9 @@ public class CourseRollTest {
 		//cr = new CourseRoll(c, 20); //  new roll with enrollment cap of 20
 		cr = c.getCourseRoll(); //to test waitlists
 		
-		s1 = new Morrisville("Arthur", "Vargas", "ahvargas", "ahvargas@ncsu.edu", "pw");
-		s2 = new Morrisville("Holly", "Harrington", "hharring", "hharring@ncsu.edu", "pw");
-		s3 = new Morrisville("Carlo", "Vargas", "cavargas", "cavargas@ncsu.edu", "pw");
+		s1 = new Product("Arthur", "Vargas", "ahvargas", "ahvargas@ncsu.edu", "pw");
+		s2 = new Product("Holly", "Harrington", "hharring", "hharring@ncsu.edu", "pw");
+		s3 = new Product("Carlo", "Vargas", "cavargas", "cavargas@ncsu.edu", "pw");
 		
 	}
 
@@ -63,8 +63,8 @@ public class CourseRollTest {
 	@Test
 	public void testCourseRoll() {
 		
-		assertEquals(20, cr.getEnrollmentCap());
-		assertEquals(20, cr.getOpenSeats());
+		assertEquals(20, cr.getCapacity());
+		assertEquals(20, cr.getRemainingCapacity());
 		
 	}
 
@@ -74,21 +74,21 @@ public class CourseRollTest {
 	@Test
 	public void testSetEnrollmentCap() {
 		try {
-			cr.setEnrollmentCap(ONE_OVER_MAX);
+			cr.setCapacity(ONE_OVER_MAX);
 			fail();
 		} catch (IllegalArgumentException e) {
 			// success
 		}
 		
 		try {
-			cr.setEnrollmentCap(ONE_UNDER_MIN);
+			cr.setCapacity(ONE_UNDER_MIN);
 			fail();
 		} catch (IllegalArgumentException e) {
 			//success
 		}
 		
 		try {
-			cr.setEnrollmentCap(VALID_ENROLLMENT_CAP);
+			cr.setCapacity(VALID_ENROLLMENT_CAP);
 		} catch (IllegalArgumentException e) {
 			fail();
 		}
@@ -96,41 +96,41 @@ public class CourseRollTest {
 	}
 
 	/**
-	 * Test method for {@link com.circa.mrv.grs_manager.product.list.ProductList#enroll(com.circa.mrv.grs_manager.user.Morrisville)}.
+	 * Test method for {@link com.circa.mrv.grs_manager.product.list.Product#add(com.circa.mrv.grs_manager.directory.Product)}.
 	 */
 	@Test
 	public void testEnroll() {
 		try {
-			cr.setEnrollmentCap(10); // set the enrollment cap at the minimum
+			cr.setCapacity(10); // set the enrollment cap at the minimum
 		} catch (IllegalArgumentException e) {
 			fail(); // an IllegalArgumentException should not have been thrown
 		}
-		cr.enroll(s1);
-		cr.enroll(s2);
-		cr.enroll(s3);
-		assertEquals(7, cr.getOpenSeats());
+		cr.add(s1);
+		cr.add(s2);
+		cr.add(s3);
+		assertEquals(7, cr.getRemainingCapacity());
 		
 		try {
-			cr.enroll(null);
+			cr.add(null);
 			fail(); // a NullPointerException should have been thrown and was not
 		} catch (IllegalArgumentException e) {
 			//success
 		}
 		
-		cr.enroll(s4);
-		cr.enroll(s5);
-		cr.enroll(s6);
-		cr.enroll(s7);
-		cr.enroll(s8);
-		cr.enroll(s9);
-		cr.enroll(s10);
-		assertEquals(0, cr.getOpenSeats());
+		cr.add(s4);
+		cr.add(s5);
+		cr.add(s6);
+		cr.add(s7);
+		cr.add(s8);
+		cr.add(s9);
+		cr.add(s10);
+		assertEquals(0, cr.getRemainingCapacity());
 		
 		//Student s11 = new Student("Alex", "Alejandro", "avalejandro", "avalejandro@email.edu", "pw");
 		try {
-			cr.enroll(s11);
-			assertEquals(0, cr.getOpenSeats());
-			assertEquals(1, cr.getNumberOnWaitlist());
+			cr.add(s11);
+			assertEquals(0, cr.getRemainingCapacity());
+			assertEquals(1, cr.getsNumberOnHold());
 		} catch (IllegalArgumentException e) {
 			fail(); // student should get added to waitlist
 
@@ -143,18 +143,18 @@ public class CourseRollTest {
 	 */
 	@Test
 	public void testDrop() {
-		cr.setEnrollmentCap(10);
+		cr.setCapacity(10);
 		
-		cr.enroll(s1);
-		cr.enroll(s2);
-		cr.enroll(s3);
-		cr.enroll(s4);
-		cr.enroll(s5);
-		cr.enroll(s6);
-		cr.enroll(s7);
-		cr.enroll(s8);
-		cr.enroll(s9);
-		cr.enroll(s10);
+		cr.add(s1);
+		cr.add(s2);
+		cr.add(s3);
+		cr.add(s4);
+		cr.add(s5);
+		cr.add(s6);
+		cr.add(s7);
+		cr.add(s8);
+		cr.add(s9);
+		cr.add(s10);
 		
 		try {
 			cr.drop(null);
@@ -163,7 +163,7 @@ public class CourseRollTest {
 			// success
 		}
 		
-		assertEquals(0, cr.getOpenSeats());
+		assertEquals(0, cr.getRemainingCapacity());
 		
 		// drop a student and verify that the number of open seats has changed
 		try {
@@ -172,22 +172,22 @@ public class CourseRollTest {
 			fail();
 		}
 		
-		assertEquals(1, cr.getOpenSeats());
+		assertEquals(1, cr.getRemainingCapacity());
 		
 		//add some more so that students are on the waitlist.
-		cr.enroll(s11);
-		cr.enroll(s12);
-		cr.enroll(s1);
-		assertEquals(0, cr.getOpenSeats());
-		assertEquals(2, cr.getNumberOnWaitlist());
+		cr.add(s11);
+		cr.add(s12);
+		cr.add(s1);
+		assertEquals(0, cr.getRemainingCapacity());
+		assertEquals(2, cr.getsNumberOnHold());
 		
 		//drop student in course to push s12 into course from waitlist
 		cr.drop(s3);
-		assertEquals(0, cr.getOpenSeats());
-		assertEquals(1, cr.getNumberOnWaitlist());
+		assertEquals(0, cr.getRemainingCapacity());
+		assertEquals(1, cr.getsNumberOnHold());
 		cr.drop(s1);
-		assertEquals(0, cr.getOpenSeats());
-		assertEquals(0, cr.getNumberOnWaitlist());
+		assertEquals(0, cr.getRemainingCapacity());
+		assertEquals(0, cr.getsNumberOnHold());
 	}
 
 	/**
@@ -196,21 +196,21 @@ public class CourseRollTest {
 	@Test
 	public void testGetOpenSeats() {
 		try {
-			cr.enroll(s1);
-			cr.enroll(s2);
-			cr.enroll(s3);
-			cr.enroll(s4);
-			cr.enroll(s5);
-			cr.enroll(s6);
-			cr.enroll(s7);
-			cr.enroll(s8);
-			cr.enroll(s9);
-			cr.enroll(s10);
+			cr.add(s1);
+			cr.add(s2);
+			cr.add(s3);
+			cr.add(s4);
+			cr.add(s5);
+			cr.add(s6);
+			cr.add(s7);
+			cr.add(s8);
+			cr.add(s9);
+			cr.add(s10);
 			// success
 		} catch (IllegalArgumentException e) {
 			fail(); // an exception was thrown while adding valid students to the roll
 		}
-		assertEquals(10, cr.getOpenSeats());  // verify open seats
+		assertEquals(10, cr.getRemainingCapacity());  // verify open seats
 	
 		try{
 			cr.drop(s1);
@@ -218,19 +218,19 @@ public class CourseRollTest {
 		} catch (IllegalArgumentException e) {
 			fail(); //An IllegalArgumentException should not have been thrown and was
 		}
-		assertEquals(12, cr.getOpenSeats());
+		assertEquals(12, cr.getRemainingCapacity());
 		//Student s11 = new Student("Alex", "Alejandro", "avalejandro", "avalejandro@email.edu", "pw");
 		//Student s12 = new Student("Emily", "Peters", "epeters", "epeters@email.edu", "pw");
-		Morrisville s13 = new Morrisville("Robert", "Wiggins", "rwiggins", "rwiggins@email.edu", "pw");
+		Product s13 = new Product("Robert", "Wiggins", "rwiggins", "rwiggins@email.edu", "pw");
 		try {
-			cr.enroll(s11);
-			cr.enroll(s12);
-			cr.enroll(s13);
+			cr.add(s11);
+			cr.add(s12);
+			cr.add(s13);
 			// success
 		} catch (IllegalArgumentException e) {
 			fail(); //An IllegalArgumentException should not have been thrown and was
 		}
-		assertEquals(9, cr.getOpenSeats());
+		assertEquals(9, cr.getRemainingCapacity());
 	}
 
 	/**
@@ -238,29 +238,29 @@ public class CourseRollTest {
 	 */
 	@Test
 	public void testCanEnroll() {
-		assertFalse(cr.canEnroll(null));
-		cr.setEnrollmentCap(11);
+		assertFalse(cr.canAdd(null));
+		cr.setCapacity(11);
 		try {
-			cr.enroll(s1);
-			cr.enroll(s2);
-			cr.enroll(s3);
-			cr.enroll(s4);
-			cr.enroll(s5);
-			cr.enroll(s6);
-			cr.enroll(s7);
-			cr.enroll(s8);
-			cr.enroll(s9);
-			cr.enroll(s10);
+			cr.add(s1);
+			cr.add(s2);
+			cr.add(s3);
+			cr.add(s4);
+			cr.add(s5);
+			cr.add(s6);
+			cr.add(s7);
+			cr.add(s8);
+			cr.add(s9);
+			cr.add(s10);
 			//Student s11 = new Student("Alex", "Alejandro", "avalejandro", "avalejandro@email.edu", "pw");
-			cr.enroll(s11);
+			cr.add(s11);
 			// success
 		} catch (IllegalArgumentException e) {
 			fail(); // an exception was thrown while adding valid students to the roll
 		}
 		
 		//Student s12 = new Student("Emily", "Peters", "epeters", "epeters@email.edu", "pw");
-		assertTrue(cr.canEnroll(s12)); // can enroll (add to wait) because the class is full but waitlist is not
-		assertFalse(cr.canEnroll(s1)); // cannot be enrolled because is duplicate
+		assertTrue(cr.canAdd(s12)); // can enroll (add to wait) because the class is full but waitlist is not
+		assertFalse(cr.canAdd(s1)); // cannot be enrolled because is duplicate
 		
 	}
 

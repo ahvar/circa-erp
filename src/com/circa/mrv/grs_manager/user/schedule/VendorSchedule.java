@@ -10,7 +10,7 @@ import com.circa.mrv.grs_manager.util.ArrayList;
  * Initializes the title to "My Schedule" and allows the user to reset both title and schedule as necessary.
  * @author Arthur Vargas
  */
-public class MorrisvilleSchedule {
+public class VendorSchedule {
 	
 	/** An ArrayList of courses */
 	private ArrayList<Mino> schedule;
@@ -21,7 +21,7 @@ public class MorrisvilleSchedule {
 	 * Constructs an empty Arraylist of Courses to hold all courses in the Student's schedule. Also initializes the
 	 * title to "My schedule."
 	 */
-	public MorrisvilleSchedule() {
+	public VendorSchedule() {
 		schedule = new ArrayList<Mino>();
 		title = "My Schedule";
 	}

@@ -4,52 +4,68 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import com.circa.mrv.grs_manager.catalog.NioxCatalog;
-import com.circa.mrv.grs_manager.directory.SwedenDirectory;
+import com.circa.mrv.grs_manager.directory.CustomerDirectory;
+import com.circa.mrv.grs_manager.directory.ResearchCompany;
+import com.circa.mrv.grs_manager.directory.Company;
+import com.circa.mrv.grs_manager.directory.UserDirectory;
+import com.circa.mrv.grs_manager.directory.VendorDirectory;
 import com.circa.mrv.grs_manager.niox.Mino;
-import com.circa.mrv.grs_manager.directory.MorrisvilleDirectory;
 import com.circa.mrv.grs_manager.product.list.ProductList;
-import com.circa.mrv.grs_manager.user.Sweden;
-import com.circa.mrv.grs_manager.user.Morrisville;
 import com.circa.mrv.grs_manager.user.User;
-import com.circa.mrv.grs_manager.user.schedule.MorrisvilleSchedule;
+import com.circa.mrv.grs_manager.user.Employee;
+import com.circa.mrv.grs_manager.user.schedule.VendorSchedule;
 
-/**
- * The registration manager class handles users of the registration system. It allows users to log in and out by verifying their credentials, it contains 
- * the registrar user information and handles registrar creation, and it allows the course catalog and student directory to be obtained. 
- * @author Ben
+ /**
+ * The grs manager class handles users of the grs manager. It allows users to log in and out by verifying their credentials, it contains 
+ * the administrator user information and handles administrator creation, and it allows the niox catalog and employee directory to be obtained. 
+ * 
+ * @author Arthur Vargas
  */
 public class GRSManager {
-	
+	/** GRS Manager */
 	private static GRSManager instance;
-	  private NioxCatalog courseCatalog;
-	private MorrisvilleDirectory studentDirectory;
-	private SwedenDirectory facultyDirectory;
-	  private User registrar;
-	   private User currentUser;
+	/** Catalog of NIOX Products */
+	private NioxCatalog catalog;
+	/** Directory of employees for a vendor */
+	private VendorDirectory vendorDirectory;
+	/** Directory of employees for a customer */
+	private CustomerDirectory customerDirectory;
+	/** A company */
+	private Company company;
+	/** A directory of employees */
+	private UserDirectory employeeDirectory;
+	/** The administrator user */
+	private User administrator;
+	/** The user currently logged into GRS Manager */
+	private User currentUser;
 	/** Hashing algorithm */
 	private static final String HASH_ALGORITHM = "SHA-256";
-	   private static final String PW = "Regi5tr@r";
-	  private static String hashPW;
+	/** Administrator Password */
+	private static final String PW = "03CI27RCA17";
+
+	private static String hashPW;
 	
-	//Static code block for hashing the registrar user's password 
+	//Static code block for hashing the administrator's user's password 
 	{
 		try {
-			  MessageDigest digest1 = MessageDigest.getInstance(HASH_ALGORITHM);
-			  digest1.update(PW.getBytes());
+	        MessageDigest digest1 = MessageDigest.getInstance(HASH_ALGORITHM);
+			digest1.update(PW.getBytes());
 			 hashPW = new String(digest1.digest());
 		} catch (NoSuchAlgorithmException e) {
-				throw new IllegalArgumentException("Cannot hash password");
+			throw new IllegalArgumentException("Cannot hash password");
 		}
 	}
 	
 	private GRSManager() {
-		courseCatalog = new NioxCatalog();
-		studentDirectory = new MorrisvilleDirectory();
-		registrar = new Registrar();
-		facultyDirectory = new SwedenDirectory();
+		catalog = new NioxCatalog();
+		vendorDirectory = new VendorDirectory();
+		administrator = new Administrator();
+		employeeDirectory = new UserDirectory();
+		customerDirectory = new CustomerDirectory();
 	}
+	
 	/**
-	 * Obtains or creates an instance of the registration manager. A new instance is created when first called and subsequent calls return the instance. 
+	 * Obtains or creates an instance of the grs manager. A new instance is created when first called and subsequent calls return the instance. 
 	 * Ensures that only one instance is able to be created. 
 	 * @return the instance of the registration manager.
 	 */
@@ -64,24 +80,28 @@ public class GRSManager {
 	 * Gets the course catalog that was created
 	 * @return the course catalog
 	 */
-	public NioxCatalog getCourseCatalog() {
-		return courseCatalog;
+	public NioxCatalog getNioxCatalog() {
+		return catalog;
 	}
 	
 	/**
 	 * gets the student directory that was created
 	 * @return the student directory
 	 */
-	public MorrisvilleDirectory getStudentDirectory() {
-		return studentDirectory;
+	public VendorDirectory getVendorDirectory() {
+		return vendorDirectory;
 	}
 	
 	/**
-	 * Logs a user into the registration manager after checking the passed id and password. If the Id matches a student in the student directory,
-	 * then that student's password is checked against the passed password. If there is a match, then the student is logged in. If the passed Id and password 
-	 * match the registrar's Id and password then the user is logged in as the registrar. If the id and/or password does not match for any students
-	 * in the directory or for the registrar, then the user is not logged in. If there is already a user logged into the system, the user attempting
-	 * log in is not allowed. An error is thrown if the user does not exist in the directory.
+	 * Logs a user into the grs manager after checking the passed id and password. If the employee is located in Sweden,
+	 * then the employee's password is checked against the passed password. If there is a match, then the Sweden employee is logged in. 
+	 * If the passed Id and password match the administrator's Id and password then the user is logged in as the administrator. 
+	 * If the id and/or password matches a Morrisville employee, then the Morrisville employee's password is checked against the passed password. 
+	 * If the employee is located at a research company location, then the employee's password is checked against the passed password. If it matches
+	 * the employee is logged in as a research company employee. If the login and password does not match for Sweden, Morrisville, or the 
+	 * customer, then the user is not logged in. If there is already a user logged into the system, the user attempting log in is not 
+	 * allowed. An error is thrown if the user does not exist in the directory.
+	 * 
 	 * @param id the user's id
 	 * @param password the user's password
 	 * @return true if the user is able to be logged in. False otherwise.
@@ -89,23 +109,33 @@ public class GRSManager {
 	public boolean login(String id, String password) {
 		if (currentUser != null)
 			   return false;
-		Sweden f = facultyDirectory.getFacultyById(id);
-		Morrisville s = studentDirectory.getStudentById(id);
-		if (f == null && s == null && !(id.equals("registrar")))
+		User u;
+		for(int i = 0; i < company.getLocations().size(); ++i )
+			if( ( u = company.getLocations().get(i).findEmployee(id, password) ) != null ) break;
+		if( this.company instanceof ResearchCompany )	
+			// open eRT panel
+		else if( this.company instanceof )
+		Employee s = customerDirectory.getEmployeeById(id);
+		Vendor m = vendorDirectory.getEmployeeById(id);
+		if (s == null && m == null && !(id.equals("administrator")))
 			throw new IllegalArgumentException ("User doesn't exist.");
 
 		try {
 			MessageDigest digest = MessageDigest.getInstance(HASH_ALGORITHM);
 			digest.update(password.getBytes());
 			String localHashPW = new String(digest.digest());
-			if (s != null && s.getPassword().equals(localHashPW)) {
+			if ( this.company instanceof ResearchCompany && u != null && u.getPassword().equals(localHashPW) ||
+					this.company instanceof ProductList && u != null && u.getPassword().equals(localHashPW) ) {
+				currentUser = company.getEmployeeDirectory().getUserById(id);
+				return true;
+		    } else if (m != null && m.getPassword().equals(localHashPW)) {
+			    currentUser = m;
+			    return true;
+			} else if(s != null && s.getPassword().equals(localHashPW)){
 			    currentUser = s;
 			    return true;
-			} else if(f != null && f.getPassword().equals(localHashPW)){
-			    currentUser = f;
-			    return true;
-			} else if (registrar.getId().equals(id) && registrar.getPassword().equals(localHashPW)) {
-			    currentUser = registrar;
+			} else if (administrator.getId().equals(id) && administrator.getPassword().equals(localHashPW)) {
+			    currentUser = administrator;
 			    return true;
 			}
 			} catch (NoSuchAlgorithmException e) {
@@ -133,50 +163,49 @@ public class GRSManager {
 	 * Clears the student directory and course catalog by creating new empty versions.
 	 */
 	public void clearData() {
-		courseCatalog.newCourseCatalog();
-		studentDirectory.newStudentDirectory();
-		facultyDirectory.newFacultyDirectory();
+		catalog.newNioxCatalog();
+		vendorDirectory.newStudentDirectory();
+		customerDirectory.newFacultyDirectory();
 	}
 	
 	/**
-	 * The registrar class is a child class of user and contains information about the registrar user. It also creates the registrar user.
-	 * @author Ben
+	 * The Administrator class is a child class of user and contains information about the registrar user. It also creates the registrar user.
+	 * @author Arthur Vargas
 	 */
-	private static class Registrar extends User {
+	private static class Administrator extends User {
 		
-		  private static final String FIRST_NAME = "Wolf";
-		  private static final String LAST_NAME = "Scheduler";
-		 private static final String ID = "registrar";
-		 	private static final String EMAIL = "registrar@ncsu.edu";
+		  private static final String FIRST_NAME = "Arthur";
+		  private static final String LAST_NAME = "Vargas";
+		 private static final String ID = "administrator";
+		 	private static final String EMAIL = "arthur.vargas@circassia.com";
 		
 		/**
-		 * Create a registrar user with the user id of registrar and
-		 * password of Regi5tr@r.  Note that hard coding passwords in a 
+		 * Create an adminisrator user with the user id of administrator and
+		 * password of 03ci27rca17.  Note that hard coding passwords in a 
 		 * project is HORRIBLY INSECURE, but it simplifies testing here.
-		 * This should NEVER be done in practice!
 		 */
-		public Registrar() {
+		public Administrator() {
 			super(FIRST_NAME, LAST_NAME, ID, EMAIL, hashPW);
 		}
 	}
 	
-	   /**
+	 /**
 	 * Returns true if the logged in student can enroll in the given course.
 	 * @param c Course to enroll in
 	 * @return true if enrolled
 	 */
 	public boolean enrollStudentInCourse(Mino c) {
-	    if (currentUser == null || !(currentUser instanceof Morrisville)) {
+	    if (currentUser == null || !(currentUser instanceof Vendor)) {
 	        throw new IllegalArgumentException("Illegal Action");
 	    }
 	    try {
-	        Morrisville s = (Morrisville)currentUser;
+	        Vendor s = (Vendor)currentUser;
 	        //Schedule schedule = s.getSchedule();
 	        ProductList roll = c.getCourseRoll();
 	        
-	        if (s.canAdd(c) && roll.canEnroll(s)) {
+	        if (s.canAdd(c) && roll.canAdd(s)) {
 	            //schedule.addCourseToSchedule(c);
-	            roll.enroll(s);
+	            roll.add(s);
 	            return true;
 	        }
 	        
@@ -192,11 +221,11 @@ public class GRSManager {
 	 * @return true if dropped
 	 */
 	public boolean dropStudentFromCourse(Mino c) {
-	    if (currentUser == null || !(currentUser instanceof Morrisville)) {
+	    if (currentUser == null || !(currentUser instanceof Vendor)) {
 	        throw new IllegalArgumentException("Illegal Action");
 	    }
 	    try {
-	        Morrisville s = (Morrisville)currentUser;
+	        Vendor s = (Vendor)currentUser;
 	        c.getCourseRoll().drop(s);
 	        return s.getSchedule().removeCourseFromSchedule(c);
 	    } catch (IllegalArgumentException e) {
@@ -209,15 +238,15 @@ public class GRSManager {
 	 * from every course and then resetting the schedule.
 	 */
 	public void resetSchedule() {
-	    if (currentUser == null || !(currentUser instanceof Morrisville)) {
+	    if (currentUser == null || !(currentUser instanceof Vendor)) {
 	        throw new IllegalArgumentException("Illegal Action");
 	    }
 	    try {
-	        Morrisville s = (Morrisville)currentUser;
-	        MorrisvilleSchedule schedule = s.getSchedule();
+	        Vendor s = (Vendor)currentUser;
+	        VendorSchedule schedule = s.getSchedule();
 	        String [][] scheduleArray = schedule.getScheduledCourses();
 	        for (int i = 0; i < scheduleArray.length; i++) {
-	            Mino c = courseCatalog.getCourseFromCatalog(scheduleArray[i][0], scheduleArray[i][1]);
+	            Mino c = catalog.getCourseFromCatalog(scheduleArray[i][0], scheduleArray[i][1]);
 	            c.getCourseRoll().drop(s);
 	        }
 	        schedule.resetSchedule();
@@ -234,10 +263,10 @@ public class GRSManager {
 	 * @return true if the faculty is added to the course, false otherwise.
 	 * @throws IllegalArgumentException if a user other than the registrar tries to add the faculty.
 	 */
-	public boolean addFacultyToCourse(Mino course, Sweden faculty){
-		if (currentUser == null || !currentUser.equals(registrar))
+	public boolean addFacultyToCourse(Mino course, Employee faculty){
+		if (currentUser == null || !currentUser.equals(administrator))
 			throw new IllegalArgumentException("Illegal Action");
-		if (currentUser != null && currentUser.equals(registrar) && faculty.canAdd(course)){
+		if (currentUser != null && currentUser.equals(administrator) && faculty.canAdd(course)){
 				faculty.getSchedule().addCourseToSchedule(course);
 				return true;
 		}
@@ -251,10 +280,10 @@ public class GRSManager {
 	 * @return true if the faculty is removed from the course, false otherwise.
 	 * @throws IllegalArgumentException if a user other than the registrar tries to remove the faculty.
 	 */
-	public boolean removeFacultyFromCourse(Mino course, Sweden faculty){
-		if (currentUser == null || !currentUser.equals(registrar))
+	public boolean removeFacultyFromCourse(Mino course, Employee faculty){
+		if (currentUser == null || !currentUser.equals(administrator))
 			throw new IllegalArgumentException("Illegal Action");
-		if (currentUser != null && currentUser.equals(registrar)){
+		if (currentUser != null && currentUser.equals(administrator)){
 			faculty.getSchedule().removeCourseFromSchedule(course);
 			return true;
 		}
@@ -266,8 +295,8 @@ public class GRSManager {
 	 * @param faculty The faculty whose schedule is to be reset. 
 	 * @throws IllegalArgumentException if a user other than the registrar tries to reset the schedule.
 	 */
-	public void resetFacultySchedule(Sweden faculty){
-		if (currentUser != null && currentUser.equals(registrar)){
+	public void resetFacultySchedule(Employee faculty){
+		if (currentUser != null && currentUser.equals(administrator)){
 			faculty.getSchedule().resetSchedule();
 		} else
 			throw new IllegalArgumentException("Illegal Action");
@@ -277,7 +306,7 @@ public class GRSManager {
 	 * Gets the faculty Directory
 	 * @return facultyDirectory The directory of the faculty. 
 	 */
-	public SwedenDirectory getFacultyDirectory(){
-		return facultyDirectory;
+	public CustomerDirectory getFacultyDirectory(){
+		return customerDirectory;
 	}
 }
