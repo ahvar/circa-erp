@@ -410,7 +410,7 @@ public class RegistrationManagerTest {
 	    catalog = manager.getNioxCatalog();
 	    fDirectory = manager.getFacultyDirectory();
 		catalog.loadProductsFromFile(validCourseRecordsFile);
-		fDirectory.loadFacultyFromFile("test-files/faculty_records2.txt");
+		fDirectory.loadEmployeeFromFile("test-files/faculty_records2.txt");
 		manager.removeFacultyFromCourse(catalog.getProductFromCatalog("CSC116", "001"), fDirectory.getEmployeeById("jdyoung2"));
 		assertTrue(manager.addFacultyToCourse(catalog.getProductFromCatalog("CSC116", "001"), fDirectory.getEmployeeById("lwalls")));
 		assertTrue(manager.addFacultyToCourse(catalog.getProductFromCatalog("CSC216", "001"), fDirectory.getEmployeeById("lwalls")));
@@ -424,7 +424,7 @@ public class RegistrationManagerTest {
 	@Test
 	public void testRemoveFacultyFromCourse() {
 		 	fDirectory = manager.getFacultyDirectory();
-		    fDirectory.loadFacultyFromFile("test-files/faculty_records.txt");
+		    fDirectory.loadEmployeeFromFile("test-files/faculty_records.txt");
 		    
 		    catalog = manager.getNioxCatalog();
 		    catalog.loadProductsFromFile("test-files/course_records.txt");
@@ -461,7 +461,7 @@ public class RegistrationManagerTest {
 	@Test
 	public void testResetFacultySchedule() {
 		 fDirectory = manager.getFacultyDirectory();
-		 fDirectory.loadFacultyFromFile("test-files/faculty_records.txt");
+		 fDirectory.loadEmployeeFromFile("test-files/faculty_records.txt");
 		    
 		 catalog = manager.getNioxCatalog();
 		 catalog.loadProductsFromFile("test-files/course_records.txt");
@@ -520,7 +520,7 @@ public class RegistrationManagerTest {
 	@Test
 	public void testGetFacultyDirectory() {
 		fDirectory = manager.getFacultyDirectory();
-		fDirectory.loadFacultyFromFile("test-files/faculty_records.txt");
+		fDirectory.loadEmployeeFromFile("test-files/faculty_records.txt");
 		User f = fDirectory.getEmployeeById("awitt");
 		String [][] dir = new String[fDirectory.getFacultyDirectory().length][3];
 		for (int i = 0; i < dir.length; i++) {

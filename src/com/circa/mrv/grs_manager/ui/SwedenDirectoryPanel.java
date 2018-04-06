@@ -222,7 +222,7 @@ public class SwedenDirectoryPanel extends JPanel implements ActionListener {
 		if (e.getSource() == btnLoadFacultyList) {
 			String fileName = getFileName(true);
 			try {
-				facultyDirectory.loadFacultyFromFile(fileName);
+				facultyDirectory.loadEmployeeFromFile(fileName);
 				facultyDirectoryTableModel.updateData();
 				scrollFacultyDirectory.revalidate();
 				scrollFacultyDirectory.repaint();

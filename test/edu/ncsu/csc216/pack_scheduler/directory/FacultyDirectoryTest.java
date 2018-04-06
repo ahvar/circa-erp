@@ -70,7 +70,7 @@ public class FacultyDirectoryTest {
 		//are removed after calling newFacultyDirectory().
 		CustomerDirectory sd = new CustomerDirectory();
 		
-		sd.loadFacultyFromFile(validTestFile);
+		sd.loadEmployeeFromFile(validTestFile);
 		assertEquals(8, sd.getFacultyDirectory().length);
 		
 		sd.newFacultyDirectory();
@@ -85,12 +85,12 @@ public class FacultyDirectoryTest {
 		CustomerDirectory sd = new CustomerDirectory();
 				
 		//Test valid file
-		sd.loadFacultyFromFile(validTestFile);
+		sd.loadEmployeeFromFile(validTestFile);
 		assertEquals(8, sd.getFacultyDirectory().length);
 		//Test invalid file
 		try {
 			sd = new CustomerDirectory();
-			sd.loadFacultyFromFile("invalidFile.txt");
+			sd.loadEmployeeFromFile("invalidFile.txt");
 		} catch (IllegalArgumentException e) {
 			assertEquals(0, sd.getFacultyDirectory().length);	
 		}
@@ -167,7 +167,7 @@ public class FacultyDirectoryTest {
 		CustomerDirectory sd = new CustomerDirectory();
 				
 		//Add students and remove
-		sd.loadFacultyFromFile(validTestFile);
+		sd.loadEmployeeFromFile(validTestFile);
 		assertEquals(8, sd.getFacultyDirectory().length);
 		assertTrue(sd.removeFaculty("fmeadow"));
 		String [][] facultyDirectory = sd.getFacultyDirectory();

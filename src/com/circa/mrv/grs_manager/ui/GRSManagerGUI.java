@@ -17,44 +17,43 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import com.circa.mrv.grs_manager.directory.Product;
 import com.circa.mrv.grs_manager.manager.GRSManager;
 import com.circa.mrv.grs_manager.user.Employee;
 
 /**
- * Main GUI for the PackScheduler project.  It controls authentication
+ * Main GUI for GRS Manager project.  It controls authentication
  * and manages the panels for each user.
- * @author Sarah Heckman
+ * @author Arthur Vargas
  */
 public class GRSManagerGUI {
 	
 	/** JFrame for the GUI */
 	private static JFrame gui;
-	/** WolfSchedulerGUI title */
+	/** GRSManagerGUI title */
 	private static final String APP_TITLE = "GRS Manager";
 	/** Constant to identify LoginPanel */
 	private static final String LOGIN_PANEL = "LoginPanel";
-	/** Constant to identify StudentDirectoryPanel */
-	private static final String MORRISVILLE_PANEL = "MorrisvillePanel";
-	/** Constant to identify FacultyPanel */
-	private static final String SWEDEN_PANEL = "FacultyPanel";
-	/** Constant to identify CourseCatalogPanel */
-	private static final String REGISTRAR_PANEL = "RegistrarPanel";
+	/** Constant to identify VendorDirectoryPanel */
+	private static final String VENDOR_CUSTOMER_PANEL = "VendorPanel";
+	/** Constant to identify ResearchPanel */
+	private static final String RESEARCH_COMPANY_PANEL = "CustomerPanel";
+	/** Constant to identify AdministratorPanel */
+	private static final String ADMINISTRATOR_PANEL = "AdministratorPanel";
 	/** LoginPanel */
 	private LoginPanel pnlLogin;
-	/** RegistrarPanel */
-	private RegistrarPanel pnlRegistrar;
-	/** StudentPanel */
-	private MorrisvillePanel pnlStudent;
-	/** FacultyPanel */
-	private SwedenPanel pnlFaculty;
+	/** AdministratorPanel */
+	private AdministratorPanel pnlAdministrator;
+	/** VendorPanel */
+	private VendorPanel pnlVendor;
+	/** ResearchPanel */
+	private ResearchPanel pnlResearch;
 	/** CardLayout for GUI */
 	private CardLayout cardLayout;
 	/** Panel that will contain all of the application views */
 	private JPanel panel;
 	
 	/**
-	 * Constructs the PackSchedulerGUI and creates the menus and panels.
+	 * Constructs the GRSManager GUI and creates the menus and panels.
 	 */
 	public GRSManagerGUI() {
 		gui = new JFrame();
@@ -64,17 +63,17 @@ public class GRSManagerGUI {
 		gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		pnlLogin = new LoginPanel();
-		pnlRegistrar = new RegistrarPanel();
-		pnlStudent = new MorrisvillePanel();
-		pnlFaculty = new SwedenPanel();
+		pnlAdministrator = new AdministratorPanel();
+		pnlVendor = new VendorPanel();
+		pnlResearch = new ResearchPanel();
 		
 		panel = new JPanel();
 		cardLayout = new CardLayout();
 		panel.setLayout(cardLayout);
 		panel.add(pnlLogin, LOGIN_PANEL);
-		panel.add(pnlRegistrar, REGISTRAR_PANEL);
-		panel.add(pnlStudent, MORRISVILLE_PANEL);
-		panel.add(pnlFaculty, SWEDEN_PANEL);
+		panel.add(pnlAdministrator, ADMINISTRATOR_PANEL);
+		panel.add(pnlVendor, VENDOR_CUSTOMER_PANEL);
+		panel.add(pnlResearch, RESEARCH_COMPANY_PANEL);
 		cardLayout.show(panel, LOGIN_PANEL);
 		
 		Container c = gui.getContentPane();
@@ -93,7 +92,7 @@ public class GRSManagerGUI {
 	
 	/**
 	 * Creates a panel for user authentication into the system.
-	 * @author SarahHeckman
+	 * @author Arthur Vargas
 	 */
 	private class LoginPanel extends JPanel implements ActionListener {
 
@@ -200,14 +199,14 @@ public class GRSManagerGUI {
 				if (manager.login(id, password)) {
 					txtId.setText("");
 					txtPassword.setText("");
-					if (manager.getCurrentUser() instanceof Product) {
-						cardLayout.show(panel, MORRISVILLE_PANEL);
-						pnlStudent.updateTables();
+					if (manager.getCurrentUser() instanceof Employee && ma) {
+						cardLayout.show(panel, VENDOR_CUSTOMER_PANEL);
+						pnlVendor.updateTables();
 					} else if (manager.getCurrentUser() instanceof Employee) {
-						cardLayout.show(panel, SWEDEN_PANEL );
-						pnlFaculty.updateTables();
+						cardLayout.show(panel, RESEARCH_COMPANY_PANEL );
+						pnlResearch.updateTables();
 					} else {
-						cardLayout.show(panel, REGISTRAR_PANEL);
+						cardLayout.show(panel, ADMINISTRATOR_PANEL);
 					}
 				} else {
 					JOptionPane.showMessageDialog(this, "Invalid id and password.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -227,7 +226,7 @@ public class GRSManagerGUI {
 	 * Creates a panel for user authentication into the system.
 	 * @author SarahHeckman
 	 */
-	private class RegistrarPanel extends JPanel implements ActionListener {
+	private class AdministratorPanel extends JPanel implements ActionListener {
 
 		/** ID number used for object serialization. */
 		private static final long serialVersionUID = 1L;
@@ -262,7 +261,7 @@ public class GRSManagerGUI {
 		/** Button to logout */
 		private JButton btnLogout;
 		
-		public RegistrarPanel() {
+		public AdministratorPanel() {
 			super(new GridBagLayout());
 			
 			JPanel pnlButtons = new JPanel();
@@ -344,7 +343,7 @@ public class GRSManagerGUI {
 	 * Creates a panel for student registration.
 	 * @author SarahHeckman
 	 */
-	private class MorrisvillePanel extends JPanel implements ActionListener {
+	private class VendorPanel extends JPanel implements ActionListener {
 
 		/** ID number used for object serialization. */
 		private static final long serialVersionUID = 1L;
@@ -353,7 +352,7 @@ public class GRSManagerGUI {
 		/** StudentRegistrationPanel */
 		private MorrisvilleRegistrationPanel mvRegPanel;
 		
-		public MorrisvillePanel() {
+		public VendorPanel() {
 			super(new GridBagLayout());
 			
 			JPanel pnlButtons = new JPanel();
@@ -408,7 +407,7 @@ public class GRSManagerGUI {
 	 * Creates a panel for faculty to manage their classes
 	 * @author Sarah Heckman
 	 */
-	private class SwedenPanel extends JPanel implements ActionListener {
+	private class ResearchPanel extends JPanel implements ActionListener {
 
 		/** ID number used for object serialization. */
 		private static final long serialVersionUID = 1L;
@@ -419,7 +418,7 @@ public class GRSManagerGUI {
 		 * Temporary class for the FacultyPanel until we implement
 		 * that functionality.
 		 */
-		public SwedenPanel() {			
+		public ResearchPanel() {			
 			super(new GridBagLayout());
 			
 			JPanel pnlButtons = new JPanel();

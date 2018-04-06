@@ -258,17 +258,18 @@ public class LinkedListRecursive<E> {
 		 * @return true if an item is removed and false otherwise. 
 		 */
 		public boolean remove(E element){
-		if (next != null){
-			if (next.data.equals(element)){
+		if (next != null) {
+			if (next.data.equals(element)) {
 				next = next.next;
 				size--;
 				return true;
-			} else{
+			} else {
 				return next.remove(element);
 			}
 		}
-		return false;
+		    return false;
 		}
+		
 		
 		/**
 		 * Removes the item from the list that is located at the specified index. This method recursively traverses the list 

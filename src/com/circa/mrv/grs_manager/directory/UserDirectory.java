@@ -4,13 +4,18 @@
 package com.circa.mrv.grs_manager.directory;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import com.circa.mrv.grs_manager.io.UserRecordIO;
 import com.circa.mrv.grs_manager.util.LinkedAbstractList;
+import com.circa.mrv.grs_manager.user.Employee;
 import com.circa.mrv.grs_manager.user.User;
 
 /**
  * The userDirectory is a list of all users.
+ * 
  * @author Arthur Vargas
  */
 public class UserDirectory {
@@ -22,9 +27,10 @@ public class UserDirectory {
 	
 	/**
 	 * Constructs an empty userDirectory
+	 */ 
 	
 	public UserDirectory() {
-		
+		users = new LinkedAbstractList<User>(100);
 	}
 	
 	/**
@@ -63,6 +69,99 @@ public class UserDirectory {
 				return e;
 		}
 		return null;
+	}
+	
+	/**
+	 * Adds a user to the directory.  Returns true if the user is added and false if
+	 * the user is unable to be added because their id matches another user id.
+	 * 
+	 * This method also hashes the employee password for internal storage.
+	 * 
+	 * @param firstName employee first name
+	 * @param lastName employee last name
+	 * @param id employee id
+	 * @param email employee email
+	 * @param password employee password
+	 * @param repeatPassword employee repeated password
+	 * @return true if added
+	 */
+	public boolean addUser(String firstName, String lastName, String id, String email, String password, String repeatPassword) {
+		String hashPW = "";
+		String repeatHashPW = "";
+		if (password == null || repeatPassword == null || password.equals("") || repeatPassword.equals("")) {
+			throw new IllegalArgumentException("Invalid password");
+		}
+		try {
+			MessageDigest digest1 = MessageDigest.getInstance(HASH_ALGORITHM);
+			digest1.update(password.getBytes());
+			hashPW = new String(digest1.digest());
+			
+			MessageDigest digest2 = MessageDigest.getInstance(HASH_ALGORITHM);
+			digest2.update(repeatPassword.getBytes());
+			repeatHashPW = new String(digest2.digest());
+		} catch (NoSuchAlgorithmException e) {
+			throw new IllegalArgumentException("Cannot hash password");
+		}
+		
+		if (!hashPW.equals(repeatHashPW)) {
+			throw new IllegalArgumentException("Passwords do not match");
+		}
+		
+		//If an IllegalArgumentException is thrown, it's passed up from faculty
+		//to the GUI 
+		Employee employee = new Employee( firstName, lastName, id, email, hashPW );
+		
+		for (int i = 0; i < users.size(); i++) {
+			User s = users.get(i);
+			if (s.getId().equals(employee.getId())) {
+				return false;
+			}
+		}
+		return users.add(employee);
+	}
+	
+	/**
+	 * Removes the users with the given id from the list of user with the given id.
+	 * Returns true if the user is removed and false if the user is not in the list.
+	 * @param userId user id
+	 * @return true if removed
+	 */
+	public boolean removeUser(String userId) {
+		for (int i = 0; i < users.size(); i++) {
+			User s = users.get(i);
+			if (s.getId().equals(userId)) {
+				users.remove(i);
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Returns all users in the directory with a column for first name, last name, and id.
+	 * @return String array containing user first name, last name, and id.
+	 */
+	public String[][] getEmployeeDirectory() {
+		String [][] directory = new String[users.size()][3];
+		for (int i = 0; i < users.size(); i++) {
+			User s = users.get(i);
+			directory[i][0] = s.getFirstName();
+			directory[i][1] = s.getLastName();
+			directory[i][2] = s.getId();
+		}
+		return directory;
+	}
+	
+	/**
+	 * Saves all users in the directory to a file.
+	 * @param fileName name of file to save user to.
+	 */
+	public void saveUserDirectory(String fileName) {
+		try {
+			UserRecordIO.writeUserRecords(fileName, users);
+		} catch (IOException e) {
+			throw new IllegalArgumentException("Unable to write to file " + fileName);
+		}
 	}
 
 }

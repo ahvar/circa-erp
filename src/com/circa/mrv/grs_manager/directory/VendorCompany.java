@@ -28,6 +28,16 @@ public class VendorCompany extends Company {
 		
 	}
 
+	/**
+	 * Constructs a VendorCompany with a single bill-to location and the name of the company.
+	 * 
+	 * @param locations the different locations for the VendorCompany
+	 * @param name the name of the business 
+	 */
+	public VendorCompany(Location local, String name) {
+		super(local, name);
+		
+	}
 
 	
 

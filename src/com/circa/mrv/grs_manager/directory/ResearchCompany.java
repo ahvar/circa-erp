@@ -23,6 +23,13 @@ public class ResearchCompany extends Company {
 		setDevices();
 	}
 	
+	public ResearchCompany( Location local, String name ){
+		super(local, name);
+		setStudies(null);
+		setDevices();
+	}
+	
+	
 	/**
 	 * Sets the list of studies to the instance variable named 'studies'.
 	 * @param studies a list of studies

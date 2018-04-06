@@ -4,11 +4,12 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import com.circa.mrv.grs_manager.catalog.NioxCatalog;
-import com.circa.mrv.grs_manager.directory.CustomerDirectory;
 import com.circa.mrv.grs_manager.directory.ResearchCompany;
+import com.circa.mrv.grs_manager.directory.VendorCompany;
 import com.circa.mrv.grs_manager.directory.Company;
 import com.circa.mrv.grs_manager.directory.UserDirectory;
 import com.circa.mrv.grs_manager.directory.VendorDirectory;
+import com.circa.mrv.grs_manager.directory.CompanyDirectory;
 import com.circa.mrv.grs_manager.niox.Mino;
 import com.circa.mrv.grs_manager.product.list.ProductList;
 import com.circa.mrv.grs_manager.user.User;
@@ -28,12 +29,12 @@ public class GRSManager {
 	private NioxCatalog catalog;
 	/** Directory of employees for a vendor */
 	private VendorDirectory vendorDirectory;
-	/** Directory of employees for a customer */
-	private CustomerDirectory customerDirectory;
 	/** A company */
 	private Company company;
+	/** A company directory */
+	private CompanyDirectory companyDirectory;
 	/** A directory of employees */
-	private UserDirectory employeeDirectory;
+	private UserDirectory userDirectory;
 	/** The administrator user */
 	private User administrator;
 	/** The user currently logged into GRS Manager */
@@ -58,10 +59,10 @@ public class GRSManager {
 	
 	private GRSManager() {
 		catalog = new NioxCatalog();
+		companyDirectory = new CompanyDirectory();
 		vendorDirectory = new VendorDirectory();
 		administrator = new Administrator();
-		employeeDirectory = new UserDirectory();
-		customerDirectory = new CustomerDirectory();
+		userDirectory = new UserDirectory();
 	}
 	
 	/**
@@ -107,41 +108,47 @@ public class GRSManager {
 	 * @return true if the user is able to be logged in. False otherwise.
 	 */
 	public boolean login(String id, String password) {
-		if (currentUser != null)
-			   return false;
-		User u;
-		for(int i = 0; i < company.getLocations().size(); ++i )
-			if( ( u = company.getLocations().get(i).findEmployee(id, password) ) != null ) break;
-		if( this.company instanceof ResearchCompany )	
-			// open eRT panel
-		else if( this.company instanceof )
-		Employee s = customerDirectory.getEmployeeById(id);
-		Vendor m = vendorDirectory.getEmployeeById(id);
-		if (s == null && m == null && !(id.equals("administrator")))
-			throw new IllegalArgumentException ("User doesn't exist.");
-
+		
+		if (currentUser != null) return false;
+		User u = null;
+		
 		try {
+			
 			MessageDigest digest = MessageDigest.getInstance(HASH_ALGORITHM);
 			digest.update(password.getBytes());
 			String localHashPW = new String(digest.digest());
-			if ( this.company instanceof ResearchCompany && u != null && u.getPassword().equals(localHashPW) ||
-					this.company instanceof ProductList && u != null && u.getPassword().equals(localHashPW) ) {
-				currentUser = company.getEmployeeDirectory().getUserById(id);
-				return true;
-		    } else if (m != null && m.getPassword().equals(localHashPW)) {
-			    currentUser = m;
-			    return true;
-			} else if(s != null && s.getPassword().equals(localHashPW)){
-			    currentUser = s;
-			    return true;
-			} else if (administrator.getId().equals(id) && administrator.getPassword().equals(localHashPW)) {
-			    currentUser = administrator;
-			    return true;
-			}
-			} catch (NoSuchAlgorithmException e) {
-			   throw new IllegalArgumentException();
-			}   
-			  return false;
+			
+		    for(int i = 0; i < companyDirectory.getCompanylist().size(); i++ ) {
+		      	
+			  for(int j = 0; j < companyDirectory.getCompanylist().get(i).getLocations().size(); j++) {
+				  
+				 if( (u = companyDirectory.getCompanyAt(i).getLocations().get(j).findEmployee(id, password)) != null ) {
+					
+					if ( companyDirectory.getCompanyAt(i) instanceof VendorCompany ) {
+						company = companyDirectory.getCompanyAt(i);
+					} else if ( companyDirectory.getCompanyAt(i) instanceof ResearchCompany ) {
+						company = companyDirectory.getCompanyAt(i);
+					} else {
+						throw new IllegalArgumentException("Company not vendor or research.");
+					}
+					
+					if( u.getPassword().equals(localHashPW) ) {
+						currentUser = u;
+						return true;
+					}
+					
+				 }
+			  }
+		    }	
+		    
+	        if ( u == null && id.equals("administrator") && administrator.getPassword().equals(localHashPW) ) {
+	    	  currentUser = administrator;
+	        } 
+		  
+		} catch (NoSuchAlgorithmException e) {
+			throw new IllegalArgumentException("User does not exist.");
+		}
+		return true;				
 	}
 	
 	/**
@@ -160,33 +167,39 @@ public class GRSManager {
 	}
 	
 	/**
-	 * Clears the student directory and course catalog by creating new empty versions.
+	 * Clears the user directory and niox catalog by creating new empty versions.
 	 */
 	public void clearData() {
 		catalog.newNioxCatalog();
-		vendorDirectory.newStudentDirectory();
-		customerDirectory.newFacultyDirectory();
+		userDirectory.newUserDirectory();
+		
 	}
 	
 	/**
-	 * The Administrator class is a child class of user and contains information about the registrar user. It also creates the registrar user.
+	 * The Administrator class is a child class of user and contains information about the administrator user. 
+	 * It creates the administrator as the user.
+	 * 
 	 * @author Arthur Vargas
 	 */
 	private static class Administrator extends User {
 		
-		  private static final String FIRST_NAME = "Arthur";
-		  private static final String LAST_NAME = "Vargas";
-		 private static final String ID = "administrator";
-		 	private static final String EMAIL = "arthur.vargas@circassia.com";
+		private static final String FIRST_NAME = "Arthur";
+		
+		private static final String LAST_NAME = "Vargas";
+		
+		private static final String ID = "administrator";
+		
+		private static final String EMAIL = "arthur.vargas@circassia.com";
 		
 		/**
 		 * Create an adminisrator user with the user id of administrator and
 		 * password of 03ci27rca17.  Note that hard coding passwords in a 
-		 * project is HORRIBLY INSECURE, but it simplifies testing here.
+		 * project is BAD AND THIS MUST BE CHANGED AFTER TESTING IS COMPLETE.
 		 */
 		public Administrator() {
 			super(FIRST_NAME, LAST_NAME, ID, EMAIL, hashPW);
 		}
+		
 	}
 	
 	 /**
