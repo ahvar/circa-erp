@@ -32,7 +32,7 @@ import com.circa.mrv.grs_manager.manager.GRSManager;
  * 
  * @author Sarah Heckman
  */
-public class MorrisvilleDirectoryPanel extends JPanel implements ActionListener {
+public class VendorEmployeeDirectoryPanel extends JPanel implements ActionListener {
 	
 	/** ID used for object serialization */
 	private static final long serialVersionUID = 1L;
@@ -88,7 +88,7 @@ public class MorrisvilleDirectoryPanel extends JPanel implements ActionListener 
 	 * Constructs the StudentDirectoryGUI and sets up the GUI 
 	 * components.
 	 */
-	public MorrisvilleDirectoryPanel() {
+	public VendorEmployeeDirectoryPanel() {
 		super(new GridBagLayout());
 		
 		studentDirectory = GRSManager.getInstance().getVendorDirectory();

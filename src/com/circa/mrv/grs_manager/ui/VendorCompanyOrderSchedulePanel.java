@@ -25,17 +25,18 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 
 import com.circa.mrv.grs_manager.catalog.NioxCatalog;
-import com.circa.mrv.grs_manager.directory.Product;
+import com.circa.mrv.grs_manager.niox.Product;
 import com.circa.mrv.grs_manager.manager.GRSManager;
 import com.circa.mrv.grs_manager.niox.Mino;
-import com.circa.mrv.grs_manager.user.schedule.VendorSchedule;
+import com.circa.mrv.grs_manager.user.Employee;
+import com.circa.mrv.grs_manager.user.schedule.OrderSchedule;
 
 /**
- * Creates a user interface for students to register for classes.
+ * Creates a user interface for vendor employees to view order schedule and modify order status.
  * 
- * @author Sarah Heckman
+ * @author Arthur Vargas
  */
-public class MorrisvilleRegistrationPanel  extends JPanel implements ActionListener {
+public class VendorCompanyOrderSchedulePanel  extends JPanel implements ActionListener {
 	/** ID number used for object serialization. */
 	private static final long serialVersionUID = 1L;
 	/** Button for adding the selected course in the catalog to the schedule */
@@ -99,21 +100,21 @@ public class MorrisvilleRegistrationPanel  extends JPanel implements ActionListe
 	/** Label for Course Details open seats */
 	private JLabel lblOpenSeats = new JLabel("");
 	/** Current user */
-	private Product currentUser;
+	private Employee currentUser;
 	/** Course catalog */
 	private NioxCatalog catalog;
 	/** Current user's schedule */
-	private VendorSchedule schedule;
+	private OrderSchedule schedule;
 	
 	
 	/**
 	 * Creates the requirements list.
 	 */
-	public MorrisvilleRegistrationPanel() {
+	public VendorCompanyOrderSchedulePanel() {
 		super(new GridBagLayout());
 		
 		GRSManager manager = GRSManager.getInstance();
-		currentUser = (Product)manager.getCurrentUser();
+		currentUser = (Employee)manager.getCurrentUser();
 		catalog = manager.getNioxCatalog();
 		
 		//Set up the JPanel that will hold action buttons		
@@ -183,8 +184,8 @@ public class MorrisvilleRegistrationPanel  extends JPanel implements ActionListe
 			public void valueChanged(ListSelectionEvent e) {
 				String name = tableCatalog.getValueAt(tableCatalog.getSelectedRow(), 0).toString();
 				String section = tableCatalog.getValueAt(tableCatalog.getSelectedRow(), 1).toString();
-				Mino c = catalog.getProductFromCatalog(name, section);
-				updateCourseDetails(c);
+				Product c = catalog.getProductFromCatalog(name, section);
+				updateProductDetails(c);
 			}
 			
 		});
@@ -298,9 +299,9 @@ public class MorrisvilleRegistrationPanel  extends JPanel implements ActionListe
 				JOptionPane.showMessageDialog(this, "No course selected in the catalog.");
 			} else {
 				try {
-					if (!GRSManager.getInstance().enrollStudentInCourse(catalog.getProductFromCatalog(tableCatalog.getValueAt(row, 0).toString(), tableCatalog.getValueAt(row, 1).toString()))) {
-						JOptionPane.showMessageDialog(this, "Course cannot be added to schedule.");
-					}
+					//if (!GRSManager.getInstance().enrollStudentInCourse(catalog.getProductFromCatalog(tableCatalog.getValueAt(row, 0).toString(), tableCatalog.getValueAt(row, 1).toString()))) {
+						//JOptionPane.showMessageDialog(this, "Course cannot be added to schedule.");
+					//}
 				} catch (IllegalArgumentException iae) {
 					JOptionPane.showMessageDialog(this, iae.getMessage());
 				}
@@ -311,9 +312,9 @@ public class MorrisvilleRegistrationPanel  extends JPanel implements ActionListe
 			if (row == -1) {
 				JOptionPane.showMessageDialog(this, "No item selected in the schedule.");
 			} else {
-				if (!GRSManager.getInstance().dropStudentFromCourse(catalog.getProductFromCatalog(tableSchedule.getValueAt(row, 0).toString(), tableSchedule.getValueAt(row, 1).toString()))) {
-					JOptionPane.showMessageDialog(this, "Cannot drop student from " + tableSchedule.getValueAt(row, 0).toString());
-				}
+				//if (!GRSManager.getInstance().dropStudentFromCourse(catalog.getProductFromCatalog(tableSchedule.getValueAt(row, 0).toString(), tableSchedule.getValueAt(row, 1).toString()))) {
+					//JOptionPane.showMessageDialog(this, "Cannot drop student from " + tableSchedule.getValueAt(row, 0).toString());
+				//}
 			}
 			updateTables();
 		} else if (e.getSource() == btnReset) {
@@ -321,11 +322,11 @@ public class MorrisvilleRegistrationPanel  extends JPanel implements ActionListe
 			updateTables();
 		} else if (e.getSource() == btnSetScheduleTitle) {
 			try {
-				schedule.setTitle(txtScheduleTitle.getText()); 
+				//schedule.setTitle(txtScheduleTitle.getText()); 
 			} catch (IllegalArgumentException iae) {
 				JOptionPane.showMessageDialog(this, "Invalid title.");
 			}
-			borderSchedule.setTitle(schedule.getTitle());
+			//borderSchedule.setTitle(schedule.getTitle());
 		}
 		
 		this.repaint();
@@ -344,16 +345,16 @@ public class MorrisvilleRegistrationPanel  extends JPanel implements ActionListe
 	 * Updates the pnlCourseDetails with full information about the most
 	 * recently selected course.
 	 */
-	private void updateCourseDetails(Mino c) {
+	private void updateProductDetails(Product c) {
 		if (c != null) {
 			lblName.setText(c.getName());
-			lblSection.setText(c.getSection());
+			lblSection.setText(c.getPartNumber());
 			lblTitle.setText(c.getDescription());
-			lblInstructor.setText(c.getInstructorId());
-			lblCredits.setText("" + c.getCredits());
-			lblMeeting.setText(c.getMeetingString());
-			lblEnrollmentCap.setText("" + c.getCourseRoll().getCapacity());
-			lblOpenSeats.setText("" + c.getCourseRoll().getRemainingCapacity());
+			//lblInstructor.setText(c.getInstructorId());
+			lblCredits.setText("" + c.getPrice());
+			//lblMeeting.setText(c.getDeliveryDate());
+			//lblEnrollmentCap.setText("" + c.getCourseRoll().getCapacity());
+			//lblOpenSeats.setText("" + c.getProductRoll().getRemainingCapacity());
 		}
 	}
 	
@@ -430,22 +431,22 @@ public class MorrisvilleRegistrationPanel  extends JPanel implements ActionListe
 		}
 		
 		/**
-		 * Updates the given model with {@link Mino} information from the {@link WolfScheduler}.
+		 * Updates the given model with {@link Order} information from the {@link GRSManager}.
 		 */
 		private void updateData() {
 			if (isCatalog) {
 				data = catalog.getNioxCatalog();
 			} else {
-				currentUser = (Product)GRSManager.getInstance().getCurrentUser();
+				currentUser = (Employee)GRSManager.getInstance().getCurrentUser();
 				if (currentUser != null) {
-					schedule = currentUser.getSchedule();
-					txtScheduleTitle.setText(schedule.getTitle());
-					borderSchedule.setTitle(schedule.getTitle());
-					scrollSchedule.setToolTipText(schedule.getTitle());
-					data = schedule.getScheduledCourses();
+					//schedule = currentUser.getSchedule();
+					txtScheduleTitle.setText(schedule.getOrderSchedule().toString());
+					borderSchedule.setTitle(schedule.getOrderSchedule().toString());
+					scrollSchedule.setToolTipText(schedule.getOrderSchedule().toString());
+					data = schedule.getScheduledOrders();
 					
-					MorrisvilleRegistrationPanel.this.repaint();
-					MorrisvilleRegistrationPanel.this.validate();
+					VendorCompanyOrderSchedulePanel.this.repaint();
+					VendorCompanyOrderSchedulePanel.this.validate();
 				}
 			}
 		}

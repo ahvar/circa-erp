@@ -1,14 +1,15 @@
 package com.circa.mrv.grs_manager.user;
-import com.circa.mrv.grs_manager.util.LinkedAbstractList;
+import com.circa.mrv.grs_manager.user.schedule.OrderSchedule;
 import com.circa.mrv.grs_manager.document.Order;
 
 /**
- * Creates a employee object for a company directory when provided with their pertinent information.
+ * Creates an employee object for a company directory when provided with their pertinent information.
+ * 
  * @author Arthur Vargas
  */
 public class Employee extends User implements Comparable<Employee> {
-    /** Employee schedule */
-	private LinkedAbstractList<Order> schedule;
+    /** Employee order schedule */
+	private OrderSchedule schedule;
 	
 	private int maxOrders;
 	
@@ -32,7 +33,7 @@ public class Employee extends User implements Comparable<Employee> {
 	public Employee(String firstName, String lastName, String id, String email, String hashPW){
 			
 		super(firstName, lastName, id, email, hashPW); 
-		schedule = new LinkedAbstractList<Order>(10);
+		schedule = new OrderSchedule(getId());
 	}
 		
 		/**
@@ -46,7 +47,7 @@ public class Employee extends User implements Comparable<Employee> {
 		 * @param hashPW employee password
 		 * @param schedule the orders schedule for that employee
 		 */
-		public Employee(String firstName, String lastName, String id, String email, String hashPW, LinkedAbstractList<Order> schedule) {
+		public Employee(String firstName, String lastName, String id, String email, String hashPW, OrderSchedule schedule) {
 			this(firstName, lastName, id, email, hashPW);
 			this.schedule = schedule;
 		}
@@ -80,7 +81,7 @@ public class Employee extends User implements Comparable<Employee> {
 		@Override
 		public String toString() {
 			return getFirstName() + "," + getLastName() + "," + getId() + "," + getEmail() + "," + getPassword() + "," + "Total Orders: " + 
-		    schedule.size();
+		    schedule.getNumScheduledOrders();
 			
 		}
 		
@@ -137,7 +138,7 @@ public class Employee extends User implements Comparable<Employee> {
 		 * Gets the employee's schedule which contains the orders they have entered or have not processed.
 		 * @return schedule the order schedule for this employee.
 		 */
-		public LinkedAbstractList getSchedule() {
+		public OrderSchedule getSchedule() {
 			return schedule;
 		}
 		
@@ -162,7 +163,7 @@ public class Employee extends User implements Comparable<Employee> {
 		 * @return true if the employee exceeded the maximum number of orders
 		 */
 		public boolean isOverloaded(){
-			if (schedule.size() > maxOrders)
+			if (schedule.getNumScheduledOrders() > maxOrders)
 				return true;
 			return false;
 		}

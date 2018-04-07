@@ -23,77 +23,82 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 
 import com.circa.mrv.grs_manager.catalog.NioxCatalog;
-import com.circa.mrv.grs_manager.directory.CustomerDirectory;
+import com.circa.mrv.grs_manager.directory.CompanyDirectory;
 import com.circa.mrv.grs_manager.manager.GRSManager;
 import com.circa.mrv.grs_manager.niox.Mino;
 import com.circa.mrv.grs_manager.user.Employee;
+import com.circa.mrv.grs_manager.niox.Product;
+
 
 /**
- * Creates a user interface for a registrar to assign/remove faculty to/from
- * courses.
+ * Creates a user interface for a administrator to assign/remove employees from the system.
  * 
- * @author Sarah Heckman
+ * @author Arthur Vargas
  */
-public class InstructorAssignmentPanel  extends JPanel implements ActionListener {
+public class CompanyAssignmentPanel  extends JPanel implements ActionListener {
 	/** ID number used for object serialization. */
 	private static final long serialVersionUID = 1L;
-	/** Button for adding the selected faculty to the selected course as instructor */
-	private JButton btnAssignFacultyToCourse;
-	/** Button for removing the selected faculty from the selected course */
-	private JButton btnRemoveFacultyFromCourse;
-	/** Button for resetting the faculty schedule */
+	/** Button for adding the selected employees to the selected company */
+	private JButton btnAssignEmployeeToCompany;
+	/** Button for removing the selected employees from the selected company */
+	private JButton btnRemoveEmployeeFromCompany;
+	/** Button for resetting the employee's schedule */
 	private JButton btnReset;
-	/** JTable for displaying the catalog of Courses */
+	/** JTable for displaying the catalog of products */
 	private JTable tableCatalog;
-	/** JTable for displaying the directory of Faculty */
-	private JTable tableFaculty;
+	/** JTable for displaying the directory of employees */
+	private JTable tableEmployee;
 	/** TableModel for catalog */
-	private CourseCatalogTableModel catalogTableModel;
+	private ProductCatalogTableModel catalogTableModel;
 	/** TableModel for schedule */
-	private FacultyDirectoryTableModel facultyTableModel;
-	/** Panel for displaying Course Details */
-	private JPanel pnlCourseDetails;
-	/** Label for Course Details name title */
+	private EmployeeDirectoryTableModel employeeTableModel;
+	/** Panel for displaying Product Details */
+	private JPanel pnlProductDetails;
+	/** Label for Company Details name title */
 	private JLabel lblNameTitle = new JLabel("Customer: ");
-	/** Label for Course Details section title */
-	private JLabel lblSectionTitle = new JLabel("Study: ");
-	/** Label for Course Details title title */
-	private JLabel lblTitleTitle = new JLabel("Site: ");
-	/** Label for Course Details instructor title */
-	private JLabel lblInstructorTitle = new JLabel("Product: ");
-	/** Label for Course Details credit hours title */
-	private JLabel lblCreditsTitle = new JLabel("Price: ");
-	/** Label for Course Details meeting title */
-	private JLabel lblMeetingTitle = new JLabel("Delivery Date: ");
+	/** Label for Study Details section title */
+	private JLabel lblStudyTitle = new JLabel("Study: ");
+	/** Label for Site Details title title */
+	private JLabel lblSiteTitle = new JLabel("Site: ");
+	/** Label for Employee Details employee title */
+	private JLabel lblEmployeeTitle = new JLabel("Employee: ");
+	
+	
+	/** Label for ProductList Details credit hours title */
+	private JLabel lblPriceTitle = new JLabel("Price: ");
+	/** Label for Product delivery Date Details delivery title */
+	private JLabel lblDeliveryDateTitle = new JLabel("Delivery Date: ");
 	/** Label for Course Details enrollment cap title */
 	private JLabel lblEnrollmentCapTitle = new JLabel("Enrollment Cap: ");
 	/** Label for Course Details open seats title */
 	private JLabel lblOpenSeatsTitle = new JLabel("Open Seats: ");
-	/** Label for Course Details name */
+	/** Label for Product Details name */
 	private JLabel lblName = new JLabel("");
-	/** Label for Course Details section */
-	private JLabel lblSection = new JLabel("");
-	/** Label for Course Details title */
-	private JLabel lblTitle = new JLabel("");
-	/** Label for Course Details instructor */
-	private JLabel lblInstructor = new JLabel("");
-	/** Label for Course Details credit hours */
-	private JLabel lblCredits = new JLabel("");
-	/** Label for Course Details meeting */
-	private JLabel lblMeeting = new JLabel("");
-	/** Label for Course Details enrollment cap */
+	/** Label for Product Details part number */
+	private JLabel lblPartNumber = new JLabel("");
+	/** Label for Product Details description */
+	private JLabel lblDescription = new JLabel("");
+	/** Label for Product Details order entry employee */
+	private JLabel lblOrderEntryEmployee = new JLabel("");
+	/** Label for Product Details price */
+	private JLabel lblPrice = new JLabel("");
+	/** Label for Product Details delivery */
+	private JLabel lblDelivery = new JLabel("");
+	/** Label for Product Details enrollment cap */
 	private JLabel lblEnrollmentCap = new JLabel("");
-	/** Label for Course Details open seats */
-	private JLabel lblOpenSeats = new JLabel("");
-	/** Panel for displaying Faculty Details */
-	private JPanel pnlFacultyDetails;
-	/** Label for Faculty Details first name title */
+	/** Label for Product Details space on this product list */
+	private JLabel lblProductSpaces = new JLabel("");
+	
+	
+	/** Panel for displaying Order Entry Employee Details */
+	private JPanel pnlOrderEntryEmployeeDetails;
+	/** Label for Order Entry Employee Details first name title */
 	private JLabel lblFirstNameTitle = new JLabel("First Name: ");
-	/** Label for Faculty Details last name title */
+	/** Label for Order Entry Employee Details last name title */
 	private JLabel lblLastNameTitle = new JLabel("Last Name: ");
-	/** Label for Faculty Details id title */
-	private JLabel lblIdTitle = new JLabel("Id: ");
-	/** Label for Faculty Details email title */
+	/** Label for Order Entry Employee Details id title */
+	private JLabel lblIdTitle = new JLabel("Title: ");
+	/** Label for Order Entry Employee Details email title */
 	private JLabel lblEmailTitle = new JLabel("Email: ");
 	/** Label for Faculty Details max courses title*/
 	private JLabel lblMaxCourseTitle = new JLabel("Max Courses: ");
@@ -114,31 +119,31 @@ public class InstructorAssignmentPanel  extends JPanel implements ActionListener
 	/** Course catalog */
 	private NioxCatalog catalog;
 	/** Faculty directory */
-	private CustomerDirectory facultyDirectory;
+	private CompanyDirectory companyDirectory;
 	
 	
 	/**
 	 * Creates the requirements list.
 	 */
-	public InstructorAssignmentPanel() {
+	public CompanyAssignmentPanel() {
 		super(new GridBagLayout());
 		
 		GRSManager manager = GRSManager.getInstance();
 		catalog = manager.getNioxCatalog();
-		facultyDirectory = manager.getFacultyDirectory();
+		companyDirectory = manager.getCompanyDirectory();
 		
 		//Set up the JPanel that will hold action buttons		
-		btnAssignFacultyToCourse = new JButton("Assign Faculty to Course");
-		btnAssignFacultyToCourse.addActionListener(this);
-		btnRemoveFacultyFromCourse = new JButton("Remove Faculty from Course");
-		btnRemoveFacultyFromCourse.addActionListener(this);
-		btnReset = new JButton("Reset Faculty Schedule");
+		btnAssignEmployeeToCompany = new JButton("Assign Employee to Company");
+		btnAssignEmployeeToCompany.addActionListener(this);
+		btnRemoveEmployeeFromCompany = new JButton("Remove Employee from Company");
+		btnRemoveEmployeeFromCompany.addActionListener(this);
+		btnReset = new JButton("Reset Employee Schedule");
 		btnReset.addActionListener(this);
 		
 		JPanel pnlActions = new JPanel();
 		pnlActions.setLayout(new GridLayout(1, 3));
-		pnlActions.add(btnAssignFacultyToCourse);
-		pnlActions.add(btnRemoveFacultyFromCourse);
+		pnlActions.add(btnAssignEmployeeToCompany);
+		pnlActions.add(btnRemoveEmployeeFromCompany);
 		pnlActions.add(btnReset);
 		
 		Border lowerEtched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
@@ -147,7 +152,7 @@ public class InstructorAssignmentPanel  extends JPanel implements ActionListener
 		pnlActions.setToolTipText("Scheduler Actions");
 					
 		//Set up Catalog table
-		catalogTableModel = new CourseCatalogTableModel();
+		catalogTableModel = new ProductCatalogTableModel();
 		tableCatalog = new JTable(catalogTableModel) {
 			private static final long serialVersionUID = 1L;
 			
@@ -177,22 +182,22 @@ public class InstructorAssignmentPanel  extends JPanel implements ActionListener
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
 				String name = tableCatalog.getValueAt(tableCatalog.getSelectedRow(), 0).toString();
-				String section = tableCatalog.getValueAt(tableCatalog.getSelectedRow(), 1).toString();
-				Mino c = catalog.getProductFromCatalog(name, section);
-				updateCourseDetails(c);
+				String partNumber = tableCatalog.getValueAt(tableCatalog.getSelectedRow(), 1).toString();
+				Product c = catalog.getProductFromCatalog(name, partNumber);
+				updateProductDetails(c);
 			}
 			
 		});
 		
 		JScrollPane scrollCatalog = new JScrollPane(tableCatalog, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		
-		TitledBorder borderCatalog = BorderFactory.createTitledBorder(lowerEtched, "Course Catalog");
+		TitledBorder borderCatalog = BorderFactory.createTitledBorder(lowerEtched, "NIOX Catalog");
 		scrollCatalog.setBorder(borderCatalog);
-		scrollCatalog.setToolTipText("Course Catalog");
+		scrollCatalog.setToolTipText("NIOX Catalog");
 		
 		//Set up Faculty Directory table
-		facultyTableModel = new FacultyDirectoryTableModel();
-		tableFaculty = new JTable(facultyTableModel) {
+		employeeTableModel = new EmployeeDirectoryTableModel();
+		tableEmployee = new JTable(employeeTableModel) {
 			private static final long serialVersionUID = 1L;
 			
 			/**
@@ -213,87 +218,88 @@ public class InstructorAssignmentPanel  extends JPanel implements ActionListener
 				}
 			}
 		};
-		tableFaculty.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tableEmployee.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 //		tableFaculty.setPreferredScrollableViewportSize(new Dimension(500, 500));
-		tableFaculty.setFillsViewportHeight(true);
-		tableFaculty.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+		tableEmployee.setFillsViewportHeight(true);
+		tableEmployee.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
-				String id = tableFaculty.getValueAt(tableFaculty.getSelectedRow(), 2).toString();
-				Employee f = facultyDirectory.getEmployeeById(id);
-				updateFacultyDetails(f);
+				String id = tableEmployee.getValueAt(tableEmployee.getSelectedRow(), 2).toString();
+				Employee f = companyDirectory.getEmployeeById(id);
+				if(f == null) throw new IllegalArgumentException("Employee " + id + " not found.");
+				updateEmployeeDetails(f);
 			}
 			
 		});
 		
-		JScrollPane scrollFaculty = new JScrollPane(tableFaculty, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		JScrollPane scrollEmployees = new JScrollPane(tableEmployee, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 				
-		TitledBorder borderFaculty = BorderFactory.createTitledBorder(lowerEtched, "Faculty Directory");
-		scrollFaculty.setBorder(borderFaculty);
-		scrollFaculty.setToolTipText("Faculty Directory");
+		TitledBorder borderEmployee = BorderFactory.createTitledBorder(lowerEtched, "Employee Directory");
+		scrollEmployees.setBorder(borderEmployee);
+		scrollEmployees.setToolTipText("Employee Directory");
 		
 		
 		updateTables();
 		
 		//Set up the course details panel
-		pnlCourseDetails = new JPanel();
-		pnlCourseDetails.setLayout(new GridLayout(5, 1));
+		pnlProductDetails = new JPanel();
+		pnlProductDetails.setLayout(new GridLayout(5, 1));
 		JPanel pnlName = new JPanel(new GridLayout(1, 4));
 		pnlName.add(lblNameTitle);
 		pnlName.add(lblName);
-		pnlName.add(lblSectionTitle);
-		pnlName.add(lblSection);
+		pnlName.add(lblStudyTitle);
+		pnlName.add(lblPartNumber);
 		
 		JPanel pnlTitle = new JPanel(new GridLayout(1, 1));
-		pnlTitle.add(lblTitleTitle);
-		pnlTitle.add(lblTitle);
+		pnlTitle.add(lblSiteTitle);
+		pnlTitle.add(lblDescription);
 		
-		JPanel pnlInstructor = new JPanel(new GridLayout(1, 4));
-		pnlInstructor.add(lblInstructorTitle);
-		pnlInstructor.add(lblInstructor);
-		pnlInstructor.add(lblCreditsTitle);
-		pnlInstructor.add(lblCredits);
+		JPanel pnlEmployee = new JPanel(new GridLayout(1, 4));
+		pnlEmployee.add(lblEmployeeTitle);
+		pnlEmployee.add(lblOrderEntryEmployee);
+		pnlEmployee.add(lblPriceTitle);
+		pnlEmployee.add(lblPrice);
 		
-		JPanel pnlMeeting = new JPanel(new GridLayout(1, 1));
-		pnlMeeting.add(lblMeetingTitle);
-		pnlMeeting.add(lblMeeting);
+		JPanel pnlDelivery = new JPanel(new GridLayout(1, 1));
+		pnlDelivery.add(lblDeliveryDateTitle);
+		pnlDelivery.add(lblDelivery);
 		
 		JPanel pnlEnrollment = new JPanel(new GridLayout(1, 4));
 		pnlEnrollment.add(lblEnrollmentCapTitle);
 		pnlEnrollment.add(lblEnrollmentCap);
 		pnlEnrollment.add(lblOpenSeatsTitle);
-		pnlEnrollment.add(lblOpenSeats);
+		pnlEnrollment.add(lblProductSpaces);
 		
-		pnlCourseDetails.add(pnlName);
-		pnlCourseDetails.add(pnlTitle);
-		pnlCourseDetails.add(pnlInstructor);
-		pnlCourseDetails.add(pnlMeeting);
-		pnlCourseDetails.add(pnlEnrollment);
+		pnlProductDetails.add(pnlName);
+		pnlProductDetails.add(pnlTitle);
+		pnlProductDetails.add(pnlEmployee);
+		pnlProductDetails.add(pnlDelivery);
+		pnlProductDetails.add(pnlEnrollment);
 		
-		TitledBorder borderCourseDetails = BorderFactory.createTitledBorder(lowerEtched, "Course Details");
-		pnlCourseDetails.setBorder(borderCourseDetails);
-		pnlCourseDetails.setToolTipText("Course Details");
+		TitledBorder borderProductDetails = BorderFactory.createTitledBorder(lowerEtched, "Product Details");
+		pnlProductDetails.setBorder(borderProductDetails);
+		pnlProductDetails.setToolTipText("Product Details");
 		
 		//Set up faculty details panel
-		pnlFacultyDetails = new JPanel();
-		pnlFacultyDetails.setLayout(new GridLayout(6, 2));
-		pnlFacultyDetails.add(lblFirstNameTitle);
-		pnlFacultyDetails.add(lblFirstName);
-		pnlFacultyDetails.add(lblLastNameTitle);
-		pnlFacultyDetails.add(lblLastName);
-		pnlFacultyDetails.add(lblIdTitle);
-		pnlFacultyDetails.add(lblId);
-		pnlFacultyDetails.add(lblEmailTitle);
-		pnlFacultyDetails.add(lblEmail);
-		pnlFacultyDetails.add(lblMaxCourseTitle);
-		pnlFacultyDetails.add(lblMaxCourse);
-		pnlFacultyDetails.add(lblOverloadedTitle);
-		pnlFacultyDetails.add(lblOverloaded);
+		pnlOrderEntryEmployeeDetails = new JPanel();
+		pnlOrderEntryEmployeeDetails.setLayout(new GridLayout(6, 2));
+		pnlOrderEntryEmployeeDetails.add(lblFirstNameTitle);
+		pnlOrderEntryEmployeeDetails.add(lblFirstName);
+		pnlOrderEntryEmployeeDetails.add(lblLastNameTitle);
+		pnlOrderEntryEmployeeDetails.add(lblLastName);
+		pnlOrderEntryEmployeeDetails.add(lblIdTitle);
+		pnlOrderEntryEmployeeDetails.add(lblId);
+		pnlOrderEntryEmployeeDetails.add(lblEmailTitle);
+		pnlOrderEntryEmployeeDetails.add(lblEmail);
+		pnlOrderEntryEmployeeDetails.add(lblMaxCourseTitle);
+		pnlOrderEntryEmployeeDetails.add(lblMaxCourse);
+		pnlOrderEntryEmployeeDetails.add(lblOverloadedTitle);
+		pnlOrderEntryEmployeeDetails.add(lblOverloaded);
 		
-		TitledBorder borderFacultyDetails = BorderFactory.createTitledBorder(lowerEtched, "Faculty Details");
-		pnlFacultyDetails.setBorder(borderFacultyDetails);
-		pnlFacultyDetails.setToolTipText("Faculty Details");
+		TitledBorder borderEmployeeDetails = BorderFactory.createTitledBorder(lowerEtched, "Employee Details");
+		pnlOrderEntryEmployeeDetails.setBorder(borderEmployeeDetails);
+		pnlOrderEntryEmployeeDetails.setToolTipText("Employee Details");
 		
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 0;
@@ -314,7 +320,7 @@ public class InstructorAssignmentPanel  extends JPanel implements ActionListener
 		c.weighty = 1;
 		c.anchor = GridBagConstraints.LINE_START;
 		c.fill = GridBagConstraints.BOTH;
-		add(scrollFaculty, c);
+		add(scrollEmployees, c);
 		
 		c.gridx = 0;
 		c.gridy = 2;
@@ -332,7 +338,7 @@ public class InstructorAssignmentPanel  extends JPanel implements ActionListener
 		c.weighty = 1;
 		c.anchor = GridBagConstraints.LINE_START;
 		c.fill = GridBagConstraints.BOTH;
-		add(pnlCourseDetails, c);
+		add(pnlProductDetails, c);
 		
 		c.gridx = 1;
 		c.gridy = 3;
@@ -341,7 +347,7 @@ public class InstructorAssignmentPanel  extends JPanel implements ActionListener
 		c.weighty = 1;
 		c.anchor = GridBagConstraints.LINE_START;
 		c.fill = GridBagConstraints.BOTH;
-		add(pnlFacultyDetails, c);
+		add(pnlOrderEntryEmployeeDetails, c);
 	}
 
 	/**
@@ -349,52 +355,52 @@ public class InstructorAssignmentPanel  extends JPanel implements ActionListener
 	 * @param e user event that triggers an action.
 	 */
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == btnAssignFacultyToCourse) {
+		if (e.getSource() == btnAssignEmployeeToCompany) {
 			int catalogRow = tableCatalog.getSelectedRow();
-			int facultyRow = tableFaculty.getSelectedRow();
+			int employeeRow = tableEmployee.getSelectedRow();
 			if (catalogRow == -1) {
-				JOptionPane.showMessageDialog(this, "No course selected in the catalog.");
-			} else if (facultyRow == -1) {
+				JOptionPane.showMessageDialog(this, "No product selected in the catalog.");
+			} else if (employeeRow == -1) {
 				JOptionPane.showMessageDialog(this, "No faculty selected in the directory.");
 			} else {
 				try {
-					Mino c = catalog.getProductFromCatalog(tableCatalog.getValueAt(catalogRow, 0).toString(), tableCatalog.getValueAt(catalogRow, 1).toString());
-					Employee f = facultyDirectory.getEmployeeById(tableFaculty.getValueAt(facultyRow, 2).toString());
+					Product c = catalog.getProductFromCatalog(tableCatalog.getValueAt(catalogRow, 0).toString(), tableCatalog.getValueAt(catalogRow, 1).toString());
+					Employee f = companyDirectory.getEmployeeById(tableEmployee.getValueAt(employeeRow, 2).toString());
 					
-					if (!GRSManager.getInstance().addFacultyToCourse(c, f)) {
-						JOptionPane.showMessageDialog(this, "Course cannot be added to faculty's schedule.");
-					}
-					updateCourseDetails(c);
-					updateFacultyDetails(f);
+					//if (!GRSManager.getInstance().addFacultyToCourse(c, f)) {
+						//JOptionPane.showMessageDialog(this, "Course cannot be added to faculty's schedule.");
+					//}
+					updateProductDetails(c);
+					updateEmployeeDetails(f);
 				} catch (IllegalArgumentException iae) {
 					JOptionPane.showMessageDialog(this, iae.getMessage());
 				}
 			}
 			updateTables();
-		} else if (e.getSource() == btnRemoveFacultyFromCourse) {
+		} else if (e.getSource() == btnRemoveEmployeeFromCompany) {
 			int catalogRow = tableCatalog.getSelectedRow();
-			int facultyRow = tableFaculty.getSelectedRow();
+			int facultyRow = tableEmployee.getSelectedRow();
 			if (catalogRow == -1) {
 				JOptionPane.showMessageDialog(this, "No course selected in the catalog.");
 			} else if (facultyRow == -1) {
 				JOptionPane.showMessageDialog(this, "No faculty selected in the directory.");
 			} else {
-				Mino c = catalog.getProductFromCatalog(tableCatalog.getValueAt(catalogRow, 0).toString(), tableCatalog.getValueAt(catalogRow, 1).toString());
-				Employee f = facultyDirectory.getEmployeeById(tableFaculty.getValueAt(facultyRow, 2).toString());
+				Product c = catalog.getProductFromCatalog(tableCatalog.getValueAt(catalogRow, 0).toString(), tableCatalog.getValueAt(catalogRow, 1).toString());
+				Employee f = companyDirectory.getEmployeeById(tableEmployee.getValueAt(facultyRow, 2).toString());
 				
-				if (!GRSManager.getInstance().removeFacultyFromCourse(c, f)) {
-					JOptionPane.showMessageDialog(this, "Course cannot be removed from faculty's schedule.");
-				}
-				updateCourseDetails(c);
-				updateFacultyDetails(f);
+				//if (!GRSManager.getInstance().removeFacultyFromCourse(c, f)) {
+					//JOptionPane.showMessageDialog(this, "Course cannot be removed from faculty's schedule.");
+				//}
+				updateProductDetails(c);
+				updateEmployeeDetails(f);
 			}
 			updateTables();
 		} else if (e.getSource() == btnReset) {
-			int facultyRow = tableFaculty.getSelectedRow();
+			int facultyRow = tableEmployee.getSelectedRow();
 			if (facultyRow == -1) {
 				JOptionPane.showMessageDialog(this, "No faculty selected in the directory.");
 			} else {
-				Employee f = facultyDirectory.getEmployeeById(tableFaculty.getValueAt(facultyRow, 2).toString());
+				Employee f = companyDirectory.getEmployeeById(tableEmployee.getValueAt(facultyRow, 2).toString());
 				GRSManager.getInstance().resetFacultySchedule(f);
 				updateTables();
 			}
@@ -409,33 +415,33 @@ public class InstructorAssignmentPanel  extends JPanel implements ActionListener
 	 */
 	public void updateTables() {
 		catalogTableModel.updateData();
-		facultyTableModel.updateData();
+		employeeTableModel.updateData();
 	}
 	
 	/**
-	 * Updates the pnlCourseDetails with full information about the most
-	 * recently selected course.
-	 * @param c most recently selected course
+	 * Updates the pnlProductDetails with full information about the most
+	 * recently added product.
+	 * @param c most recently add product
 	 */
-	private void updateCourseDetails(Mino c) {
+	private void updateProductDetails(Product c) {
 		if (c != null) {
 			lblName.setText(c.getName());
-			lblSection.setText(c.getSection());
-			lblTitle.setText(c.getDescription());
-			lblInstructor.setText(c.getInstructorId());
-			lblCredits.setText("" + c.getCredits());
-			lblMeeting.setText(c.getMeetingString());
-			lblEnrollmentCap.setText("" + c.getCourseRoll().getCapacity());
-			lblOpenSeats.setText("" + c.getCourseRoll().getRemainingCapacity());
+			lblPartNumber.setText(c.getPartNumber());
+			lblDescription.setText(c.getDescription());
+			lblOrderEntryEmployee.setText(c.getName());
+			lblPrice.setText("" + c.getPrice());
+			//lblDelivery.setText(c.getMeetingString());
+			//lblEnrollmentCap.setText("" + c.getCourseRoll().getCapacity());
+			//lblProductSpaces.setText("" + c.getCourseRoll().getRemainingCapacity());
 		}
 	}
 	
 	/**
-	 * Updates the pnlFacultyDetails with full information about the most
-	 * recently selected faculty.
-	 * @param f most recently selected faculty
+	 * Updates the pnlEmployeeDetails with full information about the most
+	 * recently selected employee.
+	 * @param f most recently selected employee
 	 */
-	private void updateFacultyDetails(Employee f) {
+	private void updateEmployeeDetails(Employee f) {
 		if (f != null) {
 			lblFirstName.setText(f.getFirstName());
 			lblLastName.setText(f.getLastName());
@@ -447,11 +453,11 @@ public class InstructorAssignmentPanel  extends JPanel implements ActionListener
 	}
 	
 	/**
-	 * {@link CourseCatalogTableModel} is the object underlying the {@link JTable} object that displays
+	 * {@link ProductCatalogTableModel} is the object underlying the {@link JTable} object that displays
 	 * the list of Courses to the user.
-	 * @author Sarah Heckman
+	 * @author Arthur Vargas
 	 */
-	private class CourseCatalogTableModel extends AbstractTableModel {
+	private class ProductCatalogTableModel extends AbstractTableModel {
 		
 		/** ID number used for object serialization. */
 		private static final long serialVersionUID = 1L;
@@ -461,10 +467,10 @@ public class InstructorAssignmentPanel  extends JPanel implements ActionListener
 		private Object [][] data;
 		
 		/**
-		 * Constructs the {@link CourseCatalogTableModel} by requesting the latest information
+		 * Constructs the {@link ProductCatalogTableModel} by requesting the latest information
 		 * from the {@link RequirementTrackerModel}.
 		 */
-		public CourseCatalogTableModel() {
+		public ProductCatalogTableModel() {
 			updateData();
 		}
 
@@ -524,11 +530,11 @@ public class InstructorAssignmentPanel  extends JPanel implements ActionListener
 	}
 	
 	/**
-	 * {@link FacultyDirectoryTableModel} is the object underlying the {@link JTable} object that displays
-	 * the list of Faculty to the system.
-	 * @author Sarah Heckman
+	 * {@link EmployeeDirectoryTableModel} is the object underlying the {@link JTable} object that displays
+	 * the list of Employees to the system.
+	 * @author Arthur Vargas
 	 */
-	private class FacultyDirectoryTableModel extends AbstractTableModel {
+	private class EmployeeDirectoryTableModel extends AbstractTableModel {
 		
 		/** ID number used for object serialization. */
 		private static final long serialVersionUID = 1L;
@@ -538,10 +544,10 @@ public class InstructorAssignmentPanel  extends JPanel implements ActionListener
 		private Object [][] data;
 		
 		/**
-		 * Constructs the {@link FacultyDirectoryTableModel} by requesting the latest information
+		 * Constructs the {@link EmployeeDirectoryTableModel} by requesting the latest information
 		 * from the {@link RequirementTrackerModel}.
 		 */
-		public FacultyDirectoryTableModel() {
+		public EmployeeDirectoryTableModel() {
 			updateData();
 		}
 
@@ -596,7 +602,7 @@ public class InstructorAssignmentPanel  extends JPanel implements ActionListener
 		 * Updates the given model with {@link Employee} information from the {@link CustomerDirectory}.
 		 */
 		public void updateData() {
-			data = facultyDirectory.getFacultyDirectory();
+			data = companyDirectory.getCompanyDirectory();
 		}
 	}
 

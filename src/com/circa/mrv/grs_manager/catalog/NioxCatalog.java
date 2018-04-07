@@ -107,9 +107,27 @@ public class NioxCatalog {
 		}
 		return false;
 	}
+	
 	/**
-	 * Gets a product from the catalog that is specified by the passed name and section. If the passed values match a product
-	 * on the catalog, the product is returned. 
+	 * Removes a product from the catalog if the product's name and part number match the passed values.
+	 * @param name the name of the name of the product to remove
+	 * @param part number the part number of the product to remove
+	 * @return True if the course was removed 
+	 */
+	public boolean removeProductFromCatalog(String name, String partNumber){
+		
+		for (int i = 0; i < catalog.size(); i++) {
+			if (catalog.get(i).getName().equals(name) && catalog.get(i).getDescription().equals(partNumber) && 
+					catalog.get(i).getPartNumber().equals(partNumber)) {
+				catalog.remove(i);
+				return true;
+			}
+		}
+		return false;
+	}
+	/**
+	 * Gets a product from the catalog that is specified by the passed name, description, and part number. 
+	 * If the passed values match a product on the catalog, the product is returned. 
 	 * 
 	 * @param name the name of the product to get
 	 * @param desc the section of the product to get
@@ -124,6 +142,26 @@ public class NioxCatalog {
 		}
 		return null;
 	}
+	
+	/**
+	 * Gets a product from the catalog that is specified by the passed name and part number. 
+	 * If the passed values match a product on the catalog, the product is returned. 
+	 * 
+	 * @param name the name of the product to get
+	 * @param pn the part number of the product to get
+	 * @return c the product that matches the passed name and section. Returns null if no match existed.
+	 */
+	public Product getProductFromCatalog(String name, String pn){	
+		for (int i = 0; i < catalog.size(); i++) {
+			if (catalog.get(i).getName().equals(name) && catalog.get(i).getPartNumber().equals(pn) &&
+					catalog.get(i).getPartNumber().equals(pn))
+				return new Component(catalog.get(i).getName(), catalog.get(i).getDescription(), catalog.get(i).getPartNumber());
+		}
+		return null;
+	}
+	
+	
+	
 	/**
 	 * Gets the full product catalog which is stored as a 2D array. The rows of the array are individual products and the 
 	 * columns of the array are the description and part number 

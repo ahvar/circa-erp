@@ -16,8 +16,8 @@ public class Kit extends Product {
 	/**
 	 * 
 	 */
-	public Kit(String description, String partNumber, LinkedListRecursive<Component> cmps) {
-		super(description,partNumber);
+	public Kit(String name, String description, String partNumber, LinkedListRecursive<Component> cmps) {
+		super(name, description,partNumber);
 		setCmps(cmps);
 	}
 

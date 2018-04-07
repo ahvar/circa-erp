@@ -29,9 +29,9 @@ import com.circa.mrv.grs_manager.catalog.NioxCatalog;
 import com.circa.mrv.grs_manager.manager.GRSManager;
 
 /**
- * Creates a user interface for working with the CourseCatalog.
+ * Creates a user interface for working with the ProductCatalog.
  * 
- * @author Sarah Heckman
+ * @author Arthur Vargas
  */
 public class ProductCatalogPanel extends JPanel implements ActionListener {
 	
@@ -39,25 +39,27 @@ public class ProductCatalogPanel extends JPanel implements ActionListener {
 	private static final long serialVersionUID = 1L;
 
 	/** Button for resetting the catalog */
-	private JButton btnNewCourseCatalog;
+	private JButton btnNewProductCatalog;
 	/** Button for resetting the catalog */
-	private JButton btnLoadCourseCatalog;
+	private JButton btnLoadProductCatalog;
 	/** Button for displaying the final catalog */
-	private JButton btnSaveCourseCatalog;
-	/** JTable for displaying the catalog of Courses */
-	private JTable tableCourseCatalog;
+	private JButton btnSaveProductCatalog;
+	/** JTable for displaying the catalog of Products */
+	private JTable tableProductCatalog;
 	/** Scroll pane for table */
-	private JScrollPane scrollCourseCatalog;
-	/** TableModel for catalog of Courses */
-	private CourseCatalogTableModel courseCatalogTableModel;
+	private JScrollPane scrollProductCatalog;
+	/** TableModel for catalog of Products */
+	private ProductCatalogTableModel productCatalogTableModel;
 	/** JLabel for name */
 	private JLabel lblName;
-	/** JLabel for title */
-	private JLabel lblTitle;
-	/** JLabel for section */
-	private JLabel lblSection;
-	/** JLabel for credits */
-	private JLabel lblCredits;
+	/** JLabel for description */
+	private JLabel lblDescription;
+	/** JLabel for part number */
+	private JLabel lblPartNumber;
+	/** JLabel for price */
+	private JLabel lblPrice;
+	
+	
 	/** JLabel for instructorId */
 	private JLabel lblInstructorId;
 	/** JLabel for enrollmentCap */
@@ -71,9 +73,9 @@ public class ProductCatalogPanel extends JPanel implements ActionListener {
 	/** JTextField for name */
 	private JTextField txtName;
 	/** JTextField for title */
-	private JTextField txtTitle;
+	private JTextField txtDescription;
 	/** JTextField for section */
-	private JTextField txtSection;
+	private JTextField txtPrice;
 	/** JTextField for instructorId */
 	private JTextField txtInstructorId;
 	/** JTextField for enrollmentCap */
@@ -105,14 +107,14 @@ public class ProductCatalogPanel extends JPanel implements ActionListener {
 	/** Drop down for credits */
 	private JComboBox<Integer> comboCredits;
 	/** Button for adding a course */
-	private JButton btnAddCourse;
+	private JButton btnAddProduct;
 	/** Button for removing the selected Course from the catalog */
-	private JButton btnRemoveCourse;
+	private JButton btnRemoveProduct;
 	/** Reference to CourseCatalog */
 	private NioxCatalog catalog;
 	
 	/**
-	 * Constructs the CourseCatalogPanel and sets up the GUI 
+	 * Constructs the ProductCatalogPanel and sets up the GUI 
 	 * components.
 	 */
 	public ProductCatalogPanel() {
@@ -121,18 +123,18 @@ public class ProductCatalogPanel extends JPanel implements ActionListener {
 		catalog = GRSManager.getInstance().getNioxCatalog();
 		
 		//Set up Catalog buttons
-		btnNewCourseCatalog = new JButton("New Course Catalog");
-		btnNewCourseCatalog.addActionListener(this);
-		btnLoadCourseCatalog = new JButton("Load Course Catalog");
-		btnLoadCourseCatalog.addActionListener(this);
-		btnSaveCourseCatalog = new JButton("Save Course Catalog");
-		btnSaveCourseCatalog.addActionListener(this);
+		btnNewProductCatalog = new JButton("New Product Catalog");
+		btnNewProductCatalog.addActionListener(this);
+		btnLoadProductCatalog = new JButton("Load Product Catalog");
+		btnLoadProductCatalog.addActionListener(this);
+		btnSaveProductCatalog = new JButton("Save Product Catalog");
+		btnSaveProductCatalog.addActionListener(this);
 		
 		JPanel pnlCatalogButton = new JPanel();
 		pnlCatalogButton.setLayout(new GridLayout(1, 3));
-		pnlCatalogButton.add(btnNewCourseCatalog);
-		pnlCatalogButton.add(btnLoadCourseCatalog);
-		pnlCatalogButton.add(btnSaveCourseCatalog);
+		pnlCatalogButton.add(btnNewProductCatalog);
+		pnlCatalogButton.add(btnLoadProductCatalog);
+		pnlCatalogButton.add(btnSaveProductCatalog);
 		
 		Border lowerEtched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
 		TitledBorder border = BorderFactory.createTitledBorder(lowerEtched, "Catalog Buttons");
@@ -140,43 +142,43 @@ public class ProductCatalogPanel extends JPanel implements ActionListener {
 		pnlCatalogButton.setToolTipText("Catalog Buttons");
 		
 		//Set up Catalog table
-		courseCatalogTableModel = new CourseCatalogTableModel();
-		tableCourseCatalog = new JTable(courseCatalogTableModel);
-		tableCourseCatalog.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		tableCourseCatalog.setPreferredScrollableViewportSize(new Dimension(500, 500));
-		tableCourseCatalog.setFillsViewportHeight(true);
+		productCatalogTableModel = new ProductCatalogTableModel();
+		tableProductCatalog = new JTable(productCatalogTableModel);
+		tableProductCatalog.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tableProductCatalog.setPreferredScrollableViewportSize(new Dimension(500, 500));
+		tableProductCatalog.setFillsViewportHeight(true);
 		
-		scrollCourseCatalog = new JScrollPane(tableCourseCatalog, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		scrollProductCatalog = new JScrollPane(tableProductCatalog, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		
-		border = BorderFactory.createTitledBorder(lowerEtched, "Course Catalog");
-		scrollCourseCatalog.setBorder(border);
-		scrollCourseCatalog.setToolTipText("Course Catalog");
+		border = BorderFactory.createTitledBorder(lowerEtched, "Product Catalog");
+		scrollProductCatalog.setBorder(border);
+		scrollProductCatalog.setToolTipText("Product Catalog");
 		
 		//Set up Course buttons
-		btnAddCourse = new JButton("Add Course");
-		btnAddCourse.addActionListener(this);
-		btnRemoveCourse = new JButton("Remove Course");
-		btnRemoveCourse.addActionListener(this);
+		btnAddProduct = new JButton("Add Product");
+		btnAddProduct.addActionListener(this);
+		btnRemoveProduct = new JButton("Remove Product");
+		btnRemoveProduct.addActionListener(this);
 		
-		JPanel pnlCourseButtons = new JPanel();
-		pnlCourseButtons.setLayout(new GridLayout(1, 2));
-		pnlCourseButtons.add(btnAddCourse);
-		pnlCourseButtons.add(btnRemoveCourse);
+		JPanel pnlProductButtons = new JPanel();
+		pnlProductButtons.setLayout(new GridLayout(1, 2));
+		pnlProductButtons.add(btnAddProduct);
+		pnlProductButtons.add(btnRemoveProduct);
 		
-		border = BorderFactory.createTitledBorder(lowerEtched, "Course Controls");
-		pnlCourseButtons.setBorder(border);
-		pnlCourseButtons.setToolTipText("Course Controls");
+		border = BorderFactory.createTitledBorder(lowerEtched, "Product Controls");
+		pnlProductButtons.setBorder(border);
+		pnlProductButtons.setToolTipText("Product Controls");
 		
 		//Set up Course form
-		lblName = new JLabel("Course Name");
-		lblTitle = new JLabel("Course Title");
-		lblSection = new JLabel("Section");
-		lblCredits = new JLabel("Credits");
+		lblName = new JLabel("Product Name");
+		lblDescription = new JLabel("Product Description");
+		lblPartNumber = new JLabel("Part Number");
+		lblPrice = new JLabel("Price");
 		lblInstructorId = new JLabel("Instructor Id");
 		lblEnrollmentCap = new JLabel("Enrollment Cap");
 		txtName = new JTextField(20);
-		txtTitle = new JTextField(20);
-		txtSection = new JTextField(20);
+		txtDescription = new JTextField(20);
+		txtPrice = new JTextField(20);
 		txtInstructorId = new JTextField(20);
 		txtEnrollmentCap = new JTextField(20);
 		comboCredits = new JComboBox<Integer>();
@@ -284,28 +286,28 @@ public class ProductCatalogPanel extends JPanel implements ActionListener {
 		pnlTime.add(pnlStartTime);
 		pnlTime.add(pnlEndTime);
 		
-		JPanel pnlCourseForm = new JPanel();
-		pnlCourseForm.setLayout(new GridLayout(8, 2));
-		pnlCourseForm.add(lblName);
-		pnlCourseForm.add(txtName);
-		pnlCourseForm.add(lblTitle);
-		pnlCourseForm.add(txtTitle);
-		pnlCourseForm.add(lblSection);
-		pnlCourseForm.add(txtSection);
-		pnlCourseForm.add(lblCredits);
-		pnlCourseForm.add(comboCredits);
-		pnlCourseForm.add(lblInstructorId);
-		pnlCourseForm.add(txtInstructorId);
-		pnlCourseForm.add(lblEnrollmentCap);
-		pnlCourseForm.add(txtEnrollmentCap);
-		pnlCourseForm.add(pnlStartTime);
-		pnlCourseForm.add(pnlEndTime);
-		pnlCourseForm.add(lblMeetingDays);
-		pnlCourseForm.add(pnlDays);
+		JPanel pnlProductForm = new JPanel();
+		pnlProductForm.setLayout(new GridLayout(8, 2));
+		pnlProductForm.add(lblName);
+		pnlProductForm.add(txtName);
+		pnlProductForm.add(lblDescription);
+		pnlProductForm.add(txtDescription);
+		pnlProductForm.add(lblPartNumber);
+		pnlProductForm.add(txtPrice);
+		pnlProductForm.add(lblPrice);
+		pnlProductForm.add(comboCredits);
+		pnlProductForm.add(lblInstructorId);
+		pnlProductForm.add(txtInstructorId);
+		pnlProductForm.add(lblEnrollmentCap);
+		pnlProductForm.add(txtEnrollmentCap);
+		pnlProductForm.add(pnlStartTime);
+		pnlProductForm.add(pnlEndTime);
+		pnlProductForm.add(lblMeetingDays);
+		pnlProductForm.add(pnlDays);
 		
-		border = BorderFactory.createTitledBorder(lowerEtched, "Course Information");
-		pnlCourseForm.setBorder(border);
-		pnlCourseForm.setToolTipText("Course Information");
+		border = BorderFactory.createTitledBorder(lowerEtched, "Product Information");
+		pnlProductForm.setBorder(border);
+		pnlProductForm.setToolTipText("Product Information");
 		
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 0;
@@ -322,7 +324,7 @@ public class ProductCatalogPanel extends JPanel implements ActionListener {
 		c.weighty = 1;
 		c.anchor = GridBagConstraints.LINE_START;
 		c.fill = GridBagConstraints.BOTH;
-		this.add(scrollCourseCatalog, c);
+		this.add(scrollProductCatalog, c);
 		
 		c.gridx = 0;
 		c.gridy = 2;
@@ -330,7 +332,7 @@ public class ProductCatalogPanel extends JPanel implements ActionListener {
 		c.weighty = .5;
 		c.anchor = GridBagConstraints.LINE_START;
 		c.fill = GridBagConstraints.BOTH;
-		this.add(pnlCourseButtons, c);
+		this.add(pnlProductButtons, c);
 		
 		c.gridx = 0;
 		c.gridy = 3;
@@ -338,40 +340,40 @@ public class ProductCatalogPanel extends JPanel implements ActionListener {
 		c.weighty = 1;
 		c.anchor = GridBagConstraints.LINE_START;
 		c.fill = GridBagConstraints.BOTH;
-		this.add(pnlCourseForm, c);
+		this.add(pnlProductForm, c);
 		
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == btnLoadCourseCatalog) {
+		if (e.getSource() == btnLoadProductCatalog) {
 			String fileName = getFileName(true);
 			try {
 				catalog.loadProductsFromFile(fileName);
-				courseCatalogTableModel.updateData();
-				scrollCourseCatalog.revalidate();
-				scrollCourseCatalog.repaint();
-				courseCatalogTableModel.fireTableDataChanged();
+				productCatalogTableModel.updateData();
+				scrollProductCatalog.revalidate();
+				scrollProductCatalog.repaint();
+				productCatalogTableModel.fireTableDataChanged();
 			} catch (IllegalArgumentException iae) {
 				JOptionPane.showMessageDialog(this, iae.getMessage());
 			}
-		} else if (e.getSource() == btnSaveCourseCatalog) {
+		} else if (e.getSource() == btnSaveProductCatalog) {
 			String fileName = getFileName(false);
 			try {
-				catalog.saveCourseCatalog(fileName);
+				catalog.saveProductCatalog(fileName);
 			} catch (IllegalArgumentException iae) {
 				JOptionPane.showMessageDialog(this, iae.getMessage());
 			}
-		} else if (e.getSource() == btnNewCourseCatalog) {
-			catalog.newProductCatalog();
-			courseCatalogTableModel.updateData();
-			scrollCourseCatalog.revalidate();
-			scrollCourseCatalog.repaint();
-			courseCatalogTableModel.fireTableDataChanged();
-		} else if (e.getSource() == btnAddCourse) {
+		} else if (e.getSource() == btnNewProductCatalog) {
+			catalog.newNioxCatalog();
+			productCatalogTableModel.updateData();
+			scrollProductCatalog.revalidate();
+			scrollProductCatalog.repaint();
+			productCatalogTableModel.fireTableDataChanged();
+		} else if (e.getSource() == btnAddProduct) {
 			String name = txtName.getText();
-			String title = txtTitle.getText();
-			String section = txtSection.getText();
+			String description = txtDescription.getText();
+			String partNumber = txtPrice.getText();
 			String instructorId = txtInstructorId.getText();
 			int enrollmentCap = 0;
 			try {
@@ -379,13 +381,13 @@ public class ProductCatalogPanel extends JPanel implements ActionListener {
 			} catch (NumberFormatException nfe) {
 				JOptionPane.showMessageDialog(this, "Enrollment capacity must be a number between 10 and 250.");
 			}
-			int credits = 0;
+			int price = 0;
 			int creditsIdx = comboCredits.getSelectedIndex();
 			if (creditsIdx == -1) {
 				JOptionPane.showMessageDialog(this, "The weekly repeat is invalid.");
 				return;
 			}
-			credits = comboCredits.getItemAt(creditsIdx);
+			price = comboCredits.getItemAt(creditsIdx);
 			String meetingDays = "";
 			if (cbMonday.isSelected()) {
 				meetingDays += "M";
@@ -451,30 +453,30 @@ public class ProductCatalogPanel extends JPanel implements ActionListener {
 			}
 			
 			try {
-				if (catalog.addProductToCatalog(name, title, section, credits, instructorId, enrollmentCap, meetingDays, startTime, endTime)) {
+				if (catalog.addProductToCatalog(name, description, partNumber, price))/* instructorId, enrollmentCap, meetingDays, startTime, endTime))*/ {
 					txtName.setText("");
-					txtTitle.setText("");
-					txtSection.setText("");
+					txtDescription.setText("");
+					txtPrice.setText("");
 					txtInstructorId.setText("");
 				} else {
-					JOptionPane.showMessageDialog(this, "Course already in system.");
+					JOptionPane.showMessageDialog(this, "Product already in system.");
 				}
 			} catch (IllegalArgumentException iae) {
 				JOptionPane.showMessageDialog(this, iae.getMessage());
 			}
-			courseCatalogTableModel.updateData();
-		} else if (e.getSource() == btnRemoveCourse) {
-			int row = tableCourseCatalog.getSelectedRow();
+			productCatalogTableModel.updateData();
+		} else if (e.getSource() == btnRemoveProduct) {
+			int row = tableProductCatalog.getSelectedRow();
 			if (row == -1) {
 				JOptionPane.showMessageDialog(this, "No course selected.");
 			} else {
 				try {
-					catalog.removeProductFromCatalog(courseCatalogTableModel.getValueAt(row, 0).toString(), courseCatalogTableModel.getValueAt(row, 1).toString());
+					catalog.removeProductFromCatalog(productCatalogTableModel.getValueAt(row, 0).toString(), productCatalogTableModel.getValueAt(row, 1).toString());
 				} catch (ArrayIndexOutOfBoundsException aioobe) {
 					JOptionPane.showMessageDialog(this, "No course selected.");
 				}
 			}
-			courseCatalogTableModel.updateData();
+			productCatalogTableModel.updateData();
 		}
 		
 		this.validate();
@@ -492,7 +494,7 @@ public class ProductCatalogPanel extends JPanel implements ActionListener {
 		fc.setApproveButtonText("Select");
 		int returnVal = Integer.MIN_VALUE;
 		if (chooserType) {
-			fc.setDialogTitle("Load Course Catalog");
+			fc.setDialogTitle("Load Product Catalog");
 			returnVal = fc.showOpenDialog(this);
 		} else {
 			fc.setDialogTitle("Save Schedule");
@@ -507,24 +509,24 @@ public class ProductCatalogPanel extends JPanel implements ActionListener {
 	}
 	
 	/**
-	 * {@link CourseCatalogTableModel} is the object underlying the {@link JTable} object that displays
+	 * {@link ProductCatalogTableModel} is the object underlying the {@link JTable} object that displays
 	 * the list of Courses to the user.
-	 * @author Sarah Heckman
+	 * @author Arthur Vargas
 	 */
-	private class CourseCatalogTableModel extends AbstractTableModel {
+	private class ProductCatalogTableModel extends AbstractTableModel {
 		
 		/** ID number used for object serialization. */
 		private static final long serialVersionUID = 1L;
 		/** Column names for the table */
-		private String [] columnNames = {"Name", "Section", "Title", "Meeting Information", "Open Seats"};
+		private String [] columnNames = {"Name", "Part Number", "Description", "Meeting Information", "Open Seats"};
 		/** Data stored in the table */
 		private Object [][] data;
 		
 		/**
-		 * Constructs the {@link CourseCatalogTableModel} by requesting the latest information
+		 * Constructs the {@link ProductCatalogTableModel} by requesting the latest information
 		 * from the {@link RequirementTrackerModel}.
 		 */
-		public CourseCatalogTableModel() {
+		public ProductCatalogTableModel() {
 			updateData();
 		}
 

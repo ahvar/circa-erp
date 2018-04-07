@@ -507,7 +507,7 @@ public class RegistrationManagerTest {
 		    }
 		    
 		    CustomerSchedule f1Sch = f1.getSchedule();
-		    assertEquals(0, f1Sch.getNumScheduledCourses());
+		    assertEquals(0, f1Sch.getNumScheduledOrders());
 		    String[][] schf1Array = f1Sch.getScheduledCourses();
 		    assertEquals(0, schf1Array.length);
 		    

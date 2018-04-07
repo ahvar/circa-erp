@@ -143,6 +143,70 @@ public class Order extends Document {
 		this.status = status;
 	}
 	
+	/**
+	 * Returns a string array of the order number and creator id
+	 * @return numbers an array of the order numbers 
+	 */
+	public String[] getShortDisplay() {
+		String[] orderString = { String.valueOf(getNumber()), getUserId() };
+		return orderString;
+	}
+
+	/**
+	 * Generate the hash code for an order.
+	 * @return result the hash code
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((delivery == null) ? 0 : delivery.hashCode());
+		result = prime * result + ((product == null) ? 0 : product.hashCode());
+		result = prime * result + ((status == null) ? 0 : status.hashCode());
+		result = prime * result + ((statusDate == null) ? 0 : statusDate.hashCode());
+		result = prime * result + (int) (trackingNum ^ (trackingNum >>> 32));
+		return result;
+	}
+
+	/**
+	 * Evalutes for equality between this Order and the object parameter
+	 * @param obj the object to test for equality
+	 * @return true if the object parameter is equal to this Order
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (!(obj instanceof Order))
+			return false;
+		Order other = (Order) obj;
+		if (delivery == null) {
+			if (other.delivery != null)
+				return false;
+		} else if (!delivery.equals(other.delivery))
+			return false;
+		if (product == null) {
+			if (other.product != null)
+				return false;
+		} else if (!product.equals(other.product))
+			return false;
+		if (status == null) {
+			if (other.status != null)
+				return false;
+		} else if (!status.equals(other.status))
+			return false;
+		if (statusDate == null) {
+			if (other.statusDate != null)
+				return false;
+		} else if (!statusDate.equals(other.statusDate))
+			return false;
+		if (trackingNum != other.trackingNum)
+			return false;
+		return true;
+	}
+
 
 	
 }

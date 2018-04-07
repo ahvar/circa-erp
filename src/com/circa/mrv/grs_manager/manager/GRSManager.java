@@ -14,7 +14,8 @@ import com.circa.mrv.grs_manager.niox.Mino;
 import com.circa.mrv.grs_manager.product.list.ProductList;
 import com.circa.mrv.grs_manager.user.User;
 import com.circa.mrv.grs_manager.user.Employee;
-import com.circa.mrv.grs_manager.user.schedule.VendorSchedule;
+import com.circa.mrv.grs_manager.user.schedule.OrderSchedule;
+import com.circa.mrv.grs_manager.document.Order;
 
  /**
  * The grs manager class handles users of the grs manager. It allows users to log in and out by verifying their credentials, it contains 
@@ -167,6 +168,14 @@ public class GRSManager {
 	}
 	
 	/**
+	 * Gets the current company in the system
+	 * @return the company in the system
+	 */
+	public Company getCompany() {
+		return company;
+	}
+	
+	/**
 	 * Clears the user directory and niox catalog by creating new empty versions.
 	 */
 	public void clearData() {
@@ -202,70 +211,57 @@ public class GRSManager {
 		
 	}
 	
-	 /**
-	 * Returns true if the logged in student can enroll in the given course.
-	 * @param c Course to enroll in
+	/**
+	 * Returns true if the order is added to the employee's order schedule.
+	 * Only an employee of a research company or the GRS manager administrator can drop an order from the schedule.
+	 * @param o order the order to be added to the employee's (current user's) schedule
 	 * @return true if enrolled
+	 * @throws IllegalArgumentException if current user is null or company is not a research company
 	 */
-	public boolean enrollStudentInCourse(Mino c) {
-	    if (currentUser == null || !(currentUser instanceof Vendor)) {
+	public boolean addOrderToSchedule(Order o) {
+	    if (currentUser == null || !(company instanceof ResearchCompany)) {
 	        throw new IllegalArgumentException("Illegal Action");
 	    }
 	    try {
-	        Vendor s = (Vendor)currentUser;
-	        //Schedule schedule = s.getSchedule();
-	        ProductList roll = c.getCourseRoll();
+	        Employee s = (Employee)currentUser;
 	        
-	        if (s.canAdd(c) && roll.canAdd(s)) {
-	            //schedule.addCourseToSchedule(c);
-	            roll.add(s);
-	            return true;
-	        }
+	        return s.getSchedule().getOrderSchedule().add(o);
 	        
 	    } catch (IllegalArgumentException e) {
 	        return false;
 	    }
-	    return false;
 	}
 
 	/**
-	 * Returns true if the logged in student can drop the given course.
-	 * @param c Course to drop
+	 * Returns true if the order is dropped from the employee's schedule.
+	 * Only an employee of a research company or the GRS Manager administrator can drop an order from the schedule.
+	 * @param o order to drop
 	 * @return true if dropped
 	 */
-	public boolean dropStudentFromCourse(Mino c) {
-	    if (currentUser == null || !(currentUser instanceof Vendor)) {
+	public boolean dropOrderFromSchedule(Order o) {
+	    if (currentUser == null || !(company instanceof ResearchCompany)) {
 	        throw new IllegalArgumentException("Illegal Action");
 	    }
 	    try {
-	        Vendor s = (Vendor)currentUser;
-	        c.getCourseRoll().drop(s);
-	        return s.getSchedule().removeCourseFromSchedule(c);
+	        Employee e = (Employee)currentUser;
+	        return e.getSchedule().removeOrderFromSchedule(o);
 	    } catch (IllegalArgumentException e) {
 	        return false; 
 	    }
 	}
 
 	/**
-	 * Resets the logged in student's schedule by dropping them
-	 * from every course and then resetting the schedule.
+	 * Resets the order schedule by dropping every order it contains.
+	 * Only an employee or the GRS Manager administrator can reset an order schedule
 	 */
 	public void resetSchedule() {
-	    if (currentUser == null || !(currentUser instanceof Vendor)) {
+	    if (currentUser == null || !(company instanceof ResearchCompany)) {
 	        throw new IllegalArgumentException("Illegal Action");
 	    }
-	    try {
-	        Vendor s = (Vendor)currentUser;
-	        VendorSchedule schedule = s.getSchedule();
-	        String [][] scheduleArray = schedule.getScheduledCourses();
-	        for (int i = 0; i < scheduleArray.length; i++) {
-	            Mino c = catalog.getCourseFromCatalog(scheduleArray[i][0], scheduleArray[i][1]);
-	            c.getCourseRoll().drop(s);
-	        }
-	        schedule.resetSchedule();
-	    } catch (IllegalArgumentException e) {
-	        //do nothing 
-	    }
+	    
+	    Employee e = (Employee)currentUser;
+	    e.getSchedule().resetSchedule();
+
 	}
 	
 	/**
@@ -276,50 +272,50 @@ public class GRSManager {
 	 * @return true if the faculty is added to the course, false otherwise.
 	 * @throws IllegalArgumentException if a user other than the registrar tries to add the faculty.
 	 */
-	public boolean addFacultyToCourse(Mino course, Employee faculty){
+	public boolean addFacultyToCourse(Order course, Employee faculty){
 		if (currentUser == null || !currentUser.equals(administrator))
 			throw new IllegalArgumentException("Illegal Action");
 		if (currentUser != null && currentUser.equals(administrator) && faculty.canAdd(course)){
-				faculty.getSchedule().addCourseToSchedule(course);
+				faculty.getSchedule().addOrderToSchedule(course);
 				return true;
 		}
 		return false;
 	}
 	
 	/**
-	 * Removes the passed faculty from the passed course if the user is the registrar.
-	 * @param course The course to remove the faculty from
-	 * @param faculty The faculty to remove the course from
-	 * @return true if the faculty is removed from the course, false otherwise.
-	 * @throws IllegalArgumentException if a user other than the registrar tries to remove the faculty.
+	 * Removes the order from the passed employee's schedule if the user is the GRS Manager administrator.
+	 * @param order the order to remove the employee's schedule
+	 * @param employee the employee whose schedule order will be removed from
+	 * @return true if the order is removed from the employee schedule, false otherwise.
+	 * @throws IllegalArgumentException if a user other than GRS Manager administrator tries to remove the order.
 	 */
-	public boolean removeFacultyFromCourse(Mino course, Employee faculty){
+	public boolean removeOrderFromSchedule(Order order, Employee employee){
 		if (currentUser == null || !currentUser.equals(administrator))
 			throw new IllegalArgumentException("Illegal Action");
 		if (currentUser != null && currentUser.equals(administrator)){
-			faculty.getSchedule().removeCourseFromSchedule(course);
+			employee.getSchedule().removeOrderFromSchedule(order);
 			return true;
 		}
 		return false;
 	}
 	
 	/**
-	 * Resets the passed faculty's schedule if the user is the registrar. 
-	 * @param faculty The faculty whose schedule is to be reset. 
-	 * @throws IllegalArgumentException if a user other than the registrar tries to reset the schedule.
+	 * Resets the passed employee's schedule if the user is GRS Manager administrator. 
+	 * @param employee the employee whose schedule is to be reset. 
+	 * @throws IllegalArgumentException if a user other than GRS Manager administrator tries to reset the schedule.
 	 */
-	public void resetFacultySchedule(Employee faculty){
+	public void resetFacultySchedule(Employee employee){
 		if (currentUser != null && currentUser.equals(administrator)){
-			faculty.getSchedule().resetSchedule();
+			employee.getSchedule().resetSchedule();
 		} else
 			throw new IllegalArgumentException("Illegal Action");
 	}
 	
 	/**
-	 * Gets the faculty Directory
-	 * @return facultyDirectory The directory of the faculty. 
+	 * Gets the company Directory
+	 * @return companyDirectory The directory of the company. 
 	 */
-	public CustomerDirectory getFacultyDirectory(){
-		return customerDirectory;
+	public CompanyDirectory getCompanyDirectory(){
+		return companyDirectory;
 	}
 }

@@ -6,6 +6,7 @@ import java.io.IOException;
 import com.circa.mrv.grs_manager.io.CompanyRecordIO;
 import com.circa.mrv.grs_manager.location.Location;
 import com.circa.mrv.grs_manager.util.LinkedListRecursive;
+import com.circa.mrv.grs_manager.user.Employee;
 
 /**
  * Maintains a directory of all companies.
@@ -139,6 +140,26 @@ public class CompanyDirectory {
 				return companyDirectory.get(i);
 		}
 		return null;
+	}
+	
+	/**
+	 * Searches all of the locations in all of the companies in the directory and returns the employee
+	 * whose id matches the string passed into getEmployeeById() method. If no employee is found matching this id
+	 * getEmployeeById() returns null.
+	 * 
+	 * @param id the unique id for this employee
+	 * @return the employee whose id matches the id parameter
+	 */
+	public Employee getEmployeeById(String id) {
+      for(int i = 0; i < companyDirectory.size(); i++) {
+	    for(int j = 0; j < companyDirectory.get(i).getLocations().size(); j++) {
+		  for(int k = 0; k < companyDirectory.get(i).getLocations().get(j).getEmployees().size(); k++) {		
+		    if(companyDirectory.get(i).getLocations().get(j).getEmployees().get(k).getId().equals(id)) 
+		    	return companyDirectory.get(i).getLocations().get(j).getEmployees().get(k);
+		  }
+		}
+	  }
+      return null;
 	}
 	
 }

@@ -52,7 +52,7 @@ public class FacultyScheduleTest {
 	public void testFacultySchedule() {
 		CustomerSchedule schedule = new CustomerSchedule("sesmith5");
 		assertEquals("Schedule should start with a length of 0, but did not.", 0, schedule.getScheduledCourses().length);	
-		assertEquals("Schedule should start with zero courses, but did not.", 0, schedule.getNumScheduledCourses());
+		assertEquals("Schedule should start with zero courses, but did not.", 0, schedule.getNumScheduledOrders());
 	}
 	
 	/**
@@ -72,7 +72,7 @@ public class FacultyScheduleTest {
 		assertEquals("Added CSC216-001 to schedule.  Value at [0][1] should be 001, but was not.", "001", actSchedule[0][1]);
 		assertEquals("Added CSC216-001 to schedule.  Value at [0][2] should be Programming Concepts - Java, but was not.", "Programming Concepts - Java", actSchedule[0][2]);
 		assertEquals("Added CSC216-001 to schedule.  Value at [0][3] should be TH 1:30PM-2:45PM, but was not.", "TH 1:30PM-2:45PM", actSchedule[0][3]);
-		assertEquals("Added CSC216-001 to schedule.  getNumScheduledCourses() should return 1, but did not.", 1, schedule.getNumScheduledCourses());
+		assertEquals("Added CSC216-001 to schedule.  getNumScheduledCourses() should return 1, but did not.", 1, schedule.getNumScheduledOrders());
 		assertEquals("Added CSC216-001 to schedule. Instructor should now be sesmith5, but was not.", "sesmith5", course.getInstructorId());
 		assertFalse("After adding 1 course when max courses is 2, faculty is not overloaded, but returned true", f.isOverloaded());
 		
@@ -83,7 +83,7 @@ public class FacultyScheduleTest {
 			fail("Added CSC216-001 to schedule.  Cannot add CSC216-002 to schedule, but was able to.");
 		} catch (IllegalArgumentException e) {
 			assertEquals("Already assigned CSC216", e.getMessage());
-			assertEquals("Added CSC216-001 to schedule.  getNumScheduledCourses() should return 1, but did not.", 1, schedule.getNumScheduledCourses());
+			assertEquals("Added CSC216-001 to schedule.  getNumScheduledCourses() should return 1, but did not.", 1, schedule.getNumScheduledOrders());
 		}
 		
 		//Attempt to add a null course
@@ -92,7 +92,7 @@ public class FacultyScheduleTest {
 			fail("Added null to schedule.  Cannot add null to schedule, but was able to.");
 		} catch (NullPointerException e) {
 			assertEquals("Added CSC216-001 to schedule. Attempting to add a null course shouldn't change the schedule. Length of getScheduledCourses() should be 1, but was not.", 1, actSchedule.length);
-			assertEquals("Added CSC216-001 to schedule.  getNumScheduledCourses() should return 1, but did not.", 1, schedule.getNumScheduledCourses());
+			assertEquals("Added CSC216-001 to schedule.  getNumScheduledCourses() should return 1, but did not.", 1, schedule.getNumScheduledOrders());
 		}
 		
 		//Add another course
@@ -108,7 +108,7 @@ public class FacultyScheduleTest {
 		assertEquals("Added CSC216-001 and CSC226-001 to schedule.  Value at [1][1] should be 001, but was not.", "001", actSchedule[1][1]);
 		assertEquals("Added CSC216-001 and CSC226-001 to schedule.  Value at [1][2] should be , but was not.", "Discrete Mathematics for Computer Scientists", actSchedule[1][2]);
 		assertEquals("Added CSC216-001 and CSC226-001 to schedule.  Value at [1][3] should be TH 1:30PM-2:45PM, but was not.", "MWF 9:35AM-10:25AM", actSchedule[1][3]);
-		assertEquals("Added CSC216-001 and CSC226-001 to schedule.  getNumScheduledCourses() should return 2, but did not.", 2, schedule.getNumScheduledCourses());
+		assertEquals("Added CSC216-001 and CSC226-001 to schedule.  getNumScheduledCourses() should return 2, but did not.", 2, schedule.getNumScheduledOrders());
 		assertEquals("Added CSC216-001 and CSC226-001 to schedule. CSC226-001 instructor should now be sesmith5, but was not.", "sesmith5", csc226.getInstructorId());
 		assertFalse("After adding 2 courses when max courses is 2, faculty is not overloaded, but returned true", f.isOverloaded());
 		
@@ -118,7 +118,7 @@ public class FacultyScheduleTest {
 			fail("Added conflicting course to schedule.  Cannot add conflict to schedule, but was able to.");
 		} catch (IllegalArgumentException e) {
 			assertEquals("Added CSC216-001 and CSC226-001 to schedule. Attempting to add a CSC116-001 course shouldn't change the schedule. Length of getScheduledCourses() should be 2, but was not.", 2, actSchedule.length);
-			assertEquals("Added CSC216-001 and CSC226-001 to schedule.  getNumScheduledCourses() should return 2, but did not.", 2, schedule.getNumScheduledCourses());
+			assertEquals("Added CSC216-001 and CSC226-001 to schedule.  getNumScheduledCourses() should return 2, but did not.", 2, schedule.getNumScheduledOrders());
 			assertNull("Added CSC216-001 and CSC226-001 to schedule.  Attempting to add CSC116-001 (conflicting) shouldn't work and the instructor should remain null, but did not.", catalog.getProductFromCatalog("CSC116", "001").getInstructorId());
 		}
 		
@@ -158,7 +158,7 @@ public class FacultyScheduleTest {
 		schedule.addCourseToSchedule(csc216);
 		schedule.addCourseToSchedule(csc226);
 		schedule.addCourseToSchedule(csc116);
-		assertEquals("Added CSC216-001, CSC226-001, CSC116-002 to schedule.  getNumScheduledCourses() should return 3, but did not.", 3, schedule.getNumScheduledCourses());
+		assertEquals("Added CSC216-001, CSC226-001, CSC116-002 to schedule.  getNumScheduledCourses() should return 3, but did not.", 3, schedule.getNumScheduledOrders());
 		assertEquals("Schedule.removeCourseFromSchedule() - Added CSC216-001, CSC226-001, and CSC116-002 as setup for remove test.", 3, schedule.getScheduledCourses().length);
 		assertEquals("Added CSC216-001, CSC226-001, CSC116-002 to schedule. CSC216-001 should have instructor id sesmith5, but did not.", "sesmith5", csc216.getInstructorId());
 		assertEquals("Added CSC216-001, CSC226-001, CSC116-002 to schedule. CSC226-001 should have instructor id sesmith5, but did not.", "sesmith5", csc226.getInstructorId());

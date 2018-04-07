@@ -19,6 +19,8 @@ import javax.swing.JTextField;
 
 import com.circa.mrv.grs_manager.manager.GRSManager;
 import com.circa.mrv.grs_manager.user.Employee;
+import com.circa.mrv.grs_manager.directory.VendorCompany;
+import com.circa.mrv.grs_manager.directory.ResearchCompany;
 
 /**
  * Main GUI for GRS Manager project.  It controls authentication
@@ -199,10 +201,10 @@ public class GRSManagerGUI {
 				if (manager.login(id, password)) {
 					txtId.setText("");
 					txtPassword.setText("");
-					if (manager.getCurrentUser() instanceof Employee && ma) {
+					if (manager.getCurrentUser() instanceof Employee && manager.getCompany() instanceof VendorCompany) {
 						cardLayout.show(panel, VENDOR_CUSTOMER_PANEL);
 						pnlVendor.updateTables();
-					} else if (manager.getCurrentUser() instanceof Employee) {
+					} else if (manager.getCurrentUser() instanceof Employee && manager.getCompany() instanceof ResearchCompany) {
 						cardLayout.show(panel, RESEARCH_COMPANY_PANEL );
 						pnlResearch.updateTables();
 					} else {
@@ -224,40 +226,40 @@ public class GRSManagerGUI {
 	
 	/**
 	 * Creates a panel for user authentication into the system.
-	 * @author SarahHeckman
+	 * @author Arthur Vargas
 	 */
 	private class AdministratorPanel extends JPanel implements ActionListener {
 
 		/** ID number used for object serialization. */
 		private static final long serialVersionUID = 1L;
-		/** Constant to identify StudentDirectoryPanel */
-		private static final String MORRISVILLE_DIRECTORY_PANEL = "MorrisvilleDirectoryPanel";
-		/** Constant to identify FacultyDirectoryPanel */
-		private static final String SWEDEN_DIRECTORY_PANEL = "SwedenDirectoryPanel";
-		/** Constant to identify CourseCatalog */
+		/** Constant to identify VendorDirectoryPanel */
+		private static final String VENDOR_DIRECTORY_PANEL = "VendorDirectoryPanel";
+		/** Constant to identify ResearchDirectoryPanel */
+		private static final String RESEARCH_DIRECTORY_PANEL = "ResearchDirectoryPanel";
+		/** Constant to identify ProductCatalog */
 		private static final String PRODUCT_CATALOG_PANEL = "ProductCatalogPanel";
 		/** Constant to identify InstructorAssignmentPanel */
-		private static final String INSTRUCTOR_ASSIGNMENT_PANEL = "InstructorAssignmentPanel";
-		/** StudentDirectoryPanel */
-		private MorrisvilleDirectoryPanel pnlMorrisvilleDirectory;
-		/** FacultyDirectoryPanel */
-		private SwedenDirectoryPanel pnlSwedenDirectory;
-		/** CourseCatalogPanel */
+		private static final String COMPANY_ASSIGNMENT_PANEL = "CompanyAssignmentPanel";
+		/** VendorEmployeeDirectoryPanel */
+		private VendorEmployeeDirectoryPanel pnlVendorEmployeeDirectory;
+		/** ResearchEmployeeDirectoryPanel */
+		private ResearchEmployeeDirectoryPanel pnlResearchEmployeeDirectory;
+		/** ProductCatalogPanel */
 		private ProductCatalogPanel pnlCatalog;
-		/** InstructorAssignmentPanel */
-		private InstructorAssignmentPanel pnlInstructorAssignment;
-		/** CardLayout for the RegistrarPanel */
-		private CardLayout rCardLayout;
-		/** Panel for the RegistrarPanel */
-		private JPanel rPanel;
-		/** Button for the StudentDirectory functionality */
-		private JButton btnMorrisvilleDirectory;
-		/** Button for the FacultyDirectory functionality */
-		private JButton btnSwedenDirectory;
-		/** Button for the CourseCatalog functionality */
+		/** CompanyAssignmentPanel */
+		private CompanyAssignmentPanel pnlCompanyAssignment;
+		/** CardLayout for the AdministratorPanel */
+		private CardLayout aCardLayout;
+		/** Panel for the AdministratorPanel */
+		private JPanel aPanel;
+		/** Button for the VendorEmployeeDirectory functionality */
+		private JButton btnVendorEmployeeDirectory;
+		/** Button for the ResearchCompanyDirectory functionality */
+		private JButton btnResearchCompanyDirectory;
+		/** Button for the ProductCatalog functionality */
 		private JButton btnProductCatalog;
-		/** Button for InstructorAssignment functionality */
-		private JButton btnInstructorAssignment;
+		/** Button for CompanyAssignment functionality */
+		private JButton btnCompanyAssignment;
 		/** Button to logout */
 		private JButton btnLogout;
 		
@@ -266,34 +268,34 @@ public class GRSManagerGUI {
 			
 			JPanel pnlButtons = new JPanel();
 			pnlButtons.setLayout(new GridLayout(1, 4));
-			btnMorrisvilleDirectory = new JButton("Morrisville Directory");
-			btnMorrisvilleDirectory.addActionListener(this);
-			btnSwedenDirectory = new JButton("Sweden Directory");
-			btnSwedenDirectory.addActionListener(this);
+			btnVendorEmployeeDirectory = new JButton("Vendor Employee Directory");
+			btnVendorEmployeeDirectory.addActionListener(this);
+			btnResearchCompanyDirectory = new JButton("Research Employee Directory");
+			btnResearchCompanyDirectory.addActionListener(this);
 			btnProductCatalog = new JButton("Product Catalog");
 			btnProductCatalog.addActionListener(this);
-			btnInstructorAssignment = new JButton("Faculty Assignment");
-			btnInstructorAssignment.addActionListener(this);
+			btnCompanyAssignment = new JButton("Company Assignment");
+			btnCompanyAssignment.addActionListener(this);
 			btnLogout = new JButton("Logout");
 			btnLogout.addActionListener(this);
-			pnlButtons.add(btnMorrisvilleDirectory);
-			pnlButtons.add(btnSwedenDirectory);
+			pnlButtons.add(btnVendorEmployeeDirectory);
+			pnlButtons.add(btnResearchCompanyDirectory);
 			pnlButtons.add(btnProductCatalog);
-			pnlButtons.add(btnInstructorAssignment);
+			pnlButtons.add(btnCompanyAssignment);
 			pnlButtons.add(btnLogout);
 			
-			rPanel = new JPanel();
-			rCardLayout = new CardLayout();
-			rPanel.setLayout(rCardLayout);
-			pnlMorrisvilleDirectory = new MorrisvilleDirectoryPanel();
-			pnlSwedenDirectory = new SwedenDirectoryPanel();
+			aPanel = new JPanel();
+			aCardLayout = new CardLayout();
+			aPanel.setLayout(aCardLayout);
+			pnlVendorEmployeeDirectory = new VendorEmployeeDirectoryPanel();
+			pnlResearchEmployeeDirectory = new ResearchEmployeeDirectoryPanel();
 			pnlCatalog = new ProductCatalogPanel();
-			pnlInstructorAssignment = new InstructorAssignmentPanel();
-			rPanel.add(pnlMorrisvilleDirectory, MORRISVILLE_DIRECTORY_PANEL);
-			rPanel.add(pnlSwedenDirectory, SWEDEN_DIRECTORY_PANEL);
-			rPanel.add(pnlCatalog, PRODUCT_CATALOG_PANEL);
-			rPanel.add(pnlInstructorAssignment, INSTRUCTOR_ASSIGNMENT_PANEL);
-			rCardLayout.show(rPanel, MORRISVILLE_DIRECTORY_PANEL);
+			pnlCompanyAssignment = new CompanyAssignmentPanel();
+			aPanel.add(pnlVendorEmployeeDirectory, VENDOR_DIRECTORY_PANEL);
+			aPanel.add(pnlResearchEmployeeDirectory, RESEARCH_DIRECTORY_PANEL);
+			aPanel.add(pnlCatalog, PRODUCT_CATALOG_PANEL);
+			aPanel.add(pnlCompanyAssignment, COMPANY_ASSIGNMENT_PANEL);
+			aCardLayout.show(aPanel, VENDOR_DIRECTORY_PANEL);
 			
 //			scrollRPanel = new JScrollPane(rPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 			
@@ -313,7 +315,7 @@ public class GRSManagerGUI {
 			c.weighty = 1;
 			c.anchor = GridBagConstraints.FIRST_LINE_START;
 			c.fill = GridBagConstraints.BOTH;
-			add(rPanel, c);
+			add(aPanel, c);
 		}
 		
 		/**
@@ -322,15 +324,15 @@ public class GRSManagerGUI {
 		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if (e.getSource() == btnMorrisvilleDirectory) {
-				rCardLayout.show(rPanel, MORRISVILLE_DIRECTORY_PANEL); 
-			} else if (e.getSource() == btnSwedenDirectory) {
-				rCardLayout.show(rPanel, SWEDEN_DIRECTORY_PANEL);
+			if (e.getSource() == btnVendorEmployeeDirectory) {
+				aCardLayout.show(aPanel, VENDOR_DIRECTORY_PANEL); 
+			} else if (e.getSource() == btnResearchCompanyDirectory) {
+				aCardLayout.show(aPanel, RESEARCH_DIRECTORY_PANEL);
 			} else if (e.getSource() == btnProductCatalog) {
-				rCardLayout.show(rPanel, PRODUCT_CATALOG_PANEL);
-			} else if (e.getSource() == btnInstructorAssignment) {
-				rCardLayout.show(rPanel, INSTRUCTOR_ASSIGNMENT_PANEL);
-				pnlInstructorAssignment.updateTables();
+				aCardLayout.show(aPanel, PRODUCT_CATALOG_PANEL);
+			} else if (e.getSource() == btnCompanyAssignment) {
+				aCardLayout.show(aPanel, COMPANY_ASSIGNMENT_PANEL);
+				pnlCompanyAssignment.updateTables();
 			} else if (e.getSource() == btnLogout) {
 				GRSManager.getInstance().logout();
 				cardLayout.show(panel, LOGIN_PANEL);
@@ -340,8 +342,8 @@ public class GRSManagerGUI {
 	}
 	
 	/**
-	 * Creates a panel for student registration.
-	 * @author SarahHeckman
+	 * Creates a panel for vendor company to view order schedule.
+	 * @author Arthur Vargas
 	 */
 	private class VendorPanel extends JPanel implements ActionListener {
 
@@ -349,8 +351,8 @@ public class GRSManagerGUI {
 		private static final long serialVersionUID = 1L;
 		/** Button to logout */
 		private JButton btnLogout;
-		/** StudentRegistrationPanel */
-		private MorrisvilleRegistrationPanel mvRegPanel;
+		/** VendorCompanyOrderSchedulePanel */
+		private VendorCompanyOrderSchedulePanel vcOrdSchPanel;
 		
 		public VendorPanel() {
 			super(new GridBagLayout());
@@ -361,7 +363,7 @@ public class GRSManagerGUI {
 			btnLogout.addActionListener(this);
 			pnlButtons.add(btnLogout);
 			
-			mvRegPanel = new MorrisvilleRegistrationPanel();
+			vcOrdSchPanel = new VendorCompanyOrderSchedulePanel();
 			
 			GridBagConstraints c = new GridBagConstraints();
 			c.gridx = 0;
@@ -379,7 +381,7 @@ public class GRSManagerGUI {
 			c.weighty = 1;
 			c.anchor = GridBagConstraints.FIRST_LINE_START;
 			c.fill = GridBagConstraints.BOTH;
-			add(mvRegPanel, c);
+			add(vcOrdSchPanel, c);
 		}
 		
 		/**
@@ -398,14 +400,14 @@ public class GRSManagerGUI {
 		 * Updates tables
 		 */
 		public void updateTables() {
-			mvRegPanel.updateTables();
+			vcOrdSchPanel.updateTables();
 		}
 		
 	}
 	
 	/**
-	 * Creates a panel for faculty to manage their classes
-	 * @author Sarah Heckman
+	 * Creates a panel for research company employees to manage their orders
+	 * @author Arthur Vargas
 	 */
 	private class ResearchPanel extends JPanel implements ActionListener {
 
@@ -413,7 +415,7 @@ public class GRSManagerGUI {
 		private static final long serialVersionUID = 1L;
 		/** Button to logout */
 		private JButton btnLogout;
-		private SwedenSchedulePanel swedSchedulePanel;
+		private ResearchCompanyOrderSchedulePanel rcOrdSchPanel;
 		/**
 		 * Temporary class for the FacultyPanel until we implement
 		 * that functionality.
@@ -427,7 +429,7 @@ public class GRSManagerGUI {
 			btnLogout.addActionListener(this);
 			pnlButtons.add(btnLogout);
 			
-			swedSchedulePanel = new SwedenSchedulePanel();
+			rcOrdSchPanel = new ResearchCompanyOrderSchedulePanel();
 			
 			GridBagConstraints c = new GridBagConstraints();
 			c.gridx = 0;
@@ -445,7 +447,7 @@ public class GRSManagerGUI {
 			c.weighty = 1;
 			c.anchor = GridBagConstraints.FIRST_LINE_START;
 			c.fill = GridBagConstraints.BOTH;
-			add(swedSchedulePanel, c);
+			add(rcOrdSchPanel, c);
 		}
 		
 		/**
@@ -464,7 +466,7 @@ public class GRSManagerGUI {
 		 * Updates tables
 		 */
 		public void updateTables() {
-			swedSchedulePanel = new SwedenSchedulePanel();
+			rcOrdSchPanel = new ResearchCompanyOrderSchedulePanel();
 		}
 	}
 

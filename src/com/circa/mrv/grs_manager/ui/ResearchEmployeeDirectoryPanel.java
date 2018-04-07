@@ -25,15 +25,16 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.AbstractTableModel;
 
-import com.circa.mrv.grs_manager.directory.CustomerDirectory;
+import com.circa.mrv.grs_manager.directory.CompanyDirectory;
 import com.circa.mrv.grs_manager.manager.GRSManager;
+import com.circa.mrv.grs_manager.location.ResearchSite;
 
 /**
  * Creates a user interface for working with the FacultyDirectory.
  * 
- * @author Sarah Heckman
+ * @author ArthurVargas
  */
-public class SwedenDirectoryPanel extends JPanel implements ActionListener {
+public class ResearchEmployeeDirectoryPanel extends JPanel implements ActionListener {
 	
 	/** ID used for object serialization */
 	private static final long serialVersionUID = 1L;
@@ -83,16 +84,16 @@ public class SwedenDirectoryPanel extends JPanel implements ActionListener {
 	/** Button for removing the selected Faculty from the directory */
 	private JButton btnRemoveFaculty;
 	/** Reference to FacultyDirectory */
-	private CustomerDirectory facultyDirectory;
+	private CompanyDirectory facultyDirectory;
 	
 	/**
 	 * Constructs the FacultyDirectoryPanel and sets up the GUI 
 	 * components.
 	 */
-	public SwedenDirectoryPanel() {
+	public ResearchEmployeeDirectoryPanel() {
 		super(new GridBagLayout());
 		
-		facultyDirectory = GRSManager.getInstance().getFacultyDirectory();
+		facultyDirectory = GRSManager.getInstance().getCompanyDirectory();
 		
 		//Set up Directory buttons
 		btnNewFacultyList = new JButton("New Faculty Directory");
@@ -222,7 +223,7 @@ public class SwedenDirectoryPanel extends JPanel implements ActionListener {
 		if (e.getSource() == btnLoadFacultyList) {
 			String fileName = getFileName(true);
 			try {
-				facultyDirectory.loadEmployeeFromFile(fileName);
+				facultyDirectory.loadCompanyFromFile(fileName);
 				facultyDirectoryTableModel.updateData();
 				scrollFacultyDirectory.revalidate();
 				scrollFacultyDirectory.repaint();
@@ -233,12 +234,12 @@ public class SwedenDirectoryPanel extends JPanel implements ActionListener {
 		} else if (e.getSource() == btnSaveFacultyList) {
 			String fileName = getFileName(false);
 			try {
-				facultyDirectory.saveFacultyDirectory(fileName);
+				facultyDirectory.saveCompanyDirectory(fileName);
 			} catch (IllegalArgumentException iae) {
 				JOptionPane.showMessageDialog(this, iae.getMessage());
 			}
 		} else if (e.getSource() == btnNewFacultyList) {
-			facultyDirectory.newFacultyDirectory();
+			facultyDirectory.newCompanyDirectory();
 			facultyDirectoryTableModel.updateData();
 			scrollFacultyDirectory.revalidate();
 			scrollFacultyDirectory.repaint();
@@ -269,7 +270,7 @@ public class SwedenDirectoryPanel extends JPanel implements ActionListener {
 			}
 			
 			try {
-				if (facultyDirectory.addFaculty(firstName, lastName, id, email, pwString, repeatPWString, maxCourses)) {
+				if (facultyDirectory.addCompany(firstName, new ResearchSite("a1","c","nc","usa",123,"name",1) ) /*lastName, id, email, pwString, repeatPWString, maxCourses)*/) {
 					txtFirstName.setText("");
 					txtLastName.setText("");
 					txtId.setText("");
@@ -290,7 +291,7 @@ public class SwedenDirectoryPanel extends JPanel implements ActionListener {
 				JOptionPane.showMessageDialog(this, "No faculty selected.");
 			} else {
 				try {
-					facultyDirectory.removeFaculty(tableFacultyDirectory.getValueAt(row, 2).toString());
+					facultyDirectory.removeCompany(tableFacultyDirectory.getValueAt(row, 2).toString());
 				} catch (ArrayIndexOutOfBoundsException aioobe) {
 					JOptionPane.showMessageDialog(this, "No faculty selected.");
 				}
@@ -400,7 +401,7 @@ public class SwedenDirectoryPanel extends JPanel implements ActionListener {
 		 * Updates the given model with {@link Employee} information from the {@link CustomerDirectory}.
 		 */
 		public void updateData() {
-			data = facultyDirectory.getFacultyDirectory();
+			data = facultyDirectory.getCompanyDirectory();
 		}
 	}
 
