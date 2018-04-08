@@ -8,7 +8,7 @@ import java.io.IOException;
 
 import com.circa.mrv.grs_manager.io.ProductRecordIO;
 import com.circa.mrv.grs_manager.niox.Component;
-import com.circa.mrv.grs_manager.niox.Mino;
+
 import com.circa.mrv.grs_manager.niox.Product;
 import com.circa.mrv.grs_manager.util.LinkedListRecursive;
 

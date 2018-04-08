@@ -6,7 +6,7 @@ import java.util.Scanner;
 import com.circa.mrv.grs_manager.user.Employee;
 import com.circa.mrv.grs_manager.user.User;
 import com.circa.mrv.grs_manager.util.LinkedAbstractList;
-import com.circa.mrv.grs_manager.document.*;
+import com.circa.mrv.grs_manager.user.schedule.OrderSchedule;
 
 import java.io.*;
 
@@ -127,7 +127,7 @@ public class UserRecordIO {
 				else{
 					//item count is 6
 					//if 5 strings and int then 6 construtor can be used
-					user = new Employee(lineScanner.next(), lineScanner.next(), lineScanner.next(), lineScanner.next(), lineScanner.next(), new LinkedAbstractList<Order>(10) );
+					user = new Employee(lineScanner.next(), lineScanner.next(), lineScanner.next(), lineScanner.next(), lineScanner.next(), new OrderSchedule() );
 					}	
 			} catch (Exception e){
 				//skip

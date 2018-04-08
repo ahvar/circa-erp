@@ -2,7 +2,7 @@ package com.circa.mrv.grs_manager.user.schedule;
 
 import com.circa.mrv.grs_manager.document.Order;
 import com.circa.mrv.grs_manager.niox.ConflictException;
-import com.circa.mrv.grs_manager.niox.Mino;
+
 import com.circa.mrv.grs_manager.util.LinkedListRecursive;
 
 /**
@@ -23,6 +23,14 @@ public class OrderSchedule {
 	public OrderSchedule(String employeeId) {
 		schedule = new LinkedListRecursive<Order>();
 		this.employeeId = employeeId;
+	}
+	
+	/**
+	 * Constructs and OrderSchedule with an empty list of orders and empty employee id.
+	 */
+	public OrderSchedule() {
+		schedule = new LinkedListRecursive<Order>();
+		employeeId = "";
 	}
 	
 	/**

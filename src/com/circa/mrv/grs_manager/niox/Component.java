@@ -23,6 +23,7 @@ public class Component extends Product implements Consumable {
 	/**
 	 * Constructs a component with a description, part number, price, package date, serial number, and product
 	 * generation.
+	 * 
 	 * @param the name of the product
 	 * @param desc the description of the component
 	 * @param pn the part number

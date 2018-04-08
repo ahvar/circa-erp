@@ -8,9 +8,7 @@ import com.circa.mrv.grs_manager.directory.ResearchCompany;
 import com.circa.mrv.grs_manager.directory.VendorCompany;
 import com.circa.mrv.grs_manager.directory.Company;
 import com.circa.mrv.grs_manager.directory.UserDirectory;
-import com.circa.mrv.grs_manager.directory.VendorDirectory;
 import com.circa.mrv.grs_manager.directory.CompanyDirectory;
-import com.circa.mrv.grs_manager.niox.Mino;
 import com.circa.mrv.grs_manager.product.list.ProductList;
 import com.circa.mrv.grs_manager.user.User;
 import com.circa.mrv.grs_manager.user.Employee;
@@ -29,7 +27,7 @@ public class GRSManager {
 	/** Catalog of NIOX Products */
 	private NioxCatalog catalog;
 	/** Directory of employees for a vendor */
-	private VendorDirectory vendorDirectory;
+	private CompanyDirectory vendorDirectory;
 	/** A company */
 	private Company company;
 	/** A company directory */
@@ -61,7 +59,7 @@ public class GRSManager {
 	private GRSManager() {
 		catalog = new NioxCatalog();
 		companyDirectory = new CompanyDirectory();
-		vendorDirectory = new VendorDirectory();
+	
 		administrator = new Administrator();
 		userDirectory = new UserDirectory();
 	}
@@ -84,14 +82,6 @@ public class GRSManager {
 	 */
 	public NioxCatalog getNioxCatalog() {
 		return catalog;
-	}
-	
-	/**
-	 * gets the student directory that was created
-	 * @return the student directory
-	 */
-	public VendorDirectory getVendorDirectory() {
-		return vendorDirectory;
 	}
 	
 	/**

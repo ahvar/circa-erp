@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import com.circa.mrv.grs_manager.io.CompanyRecordIO;
 import com.circa.mrv.grs_manager.location.Location;
+import com.circa.mrv.grs_manager.location.BillTo;
 import com.circa.mrv.grs_manager.util.LinkedListRecursive;
 import com.circa.mrv.grs_manager.user.Employee;
 
@@ -76,6 +77,26 @@ public class CompanyDirectory {
 			throw new IllegalArgumentException("This company already exists. Contact administrator to setup new company.");
 		else if(name.contains(Company.cir)) return companyDirectory.add(new VendorCompany(local, name));
 		else if(name.contains(Company.ert)) return companyDirectory.add(new ResearchCompany(local,name));
+		return false;
+
+	}
+	
+	/**
+	 * Adds a company with the name specified in the name parameter and a billing/office location defined
+	 * by the address information passed into the corresponding parameters.  Returns true if the company is 
+	 * added and false if the company is unable to be added because their name and address match another company. 
+	 * Throws an IAE if the company is not a current GRS customer.
+	 * 
+	 * @param name the name of the company
+	 * @param local a bill-to location
+	 * @return true if added
+	 * @throws IllegalArgumentException if the company is not eRT or Circassia.
+	 */
+	public boolean addCompany(String name, String add1, String city, String state, String zip, String country) {
+		if(!name.equals(Company.cir) || !name.equals(Company.ert)) 
+			throw new IllegalArgumentException("This company already exists. Contact administrator to setup new company.");
+		else if(name.contains(Company.cir)) return companyDirectory.add(new VendorCompany(new BillTo(add1,city,state,country,zip), name));
+		else if(name.contains(Company.ert)) return companyDirectory.add(new ResearchCompany(new BillTo(add1,city,state,country,zip),name));
 		return false;
 
 	}

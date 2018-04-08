@@ -25,6 +25,7 @@ public class Accessory extends Component implements Consumable {
 	 * Constructs an instance of accessory with a description (e.g. Test Kit 100), a part number, a price, and the 
 	 * number of tests the accessory contains.
 	 * 
+	 * @param name the name of the accessory
 	 * @param description the accessory description
 	 * @param partNumber the accessory part number
 	 * @param price the price of the accessory
@@ -34,9 +35,9 @@ public class Accessory extends Component implements Consumable {
 	 * @param generation the product generation
 	 * @param size the number of tests on the accessory
 	 */
-	public Accessory(String description, String partNumber, double price, long serial, Calendar packageDate, 
+	public Accessory(String name, String description, String partNumber, double price, long serial, Calendar packageDate, 
 			Calendar installDate, String generation, int size) {
-		super(description,partNumber, price, packageDate,serial,generation);
+		super(name, description,partNumber, price, packageDate,serial,generation);
 		setSize(size);
 		setInstall(install);
 	}

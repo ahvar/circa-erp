@@ -27,7 +27,6 @@ import javax.swing.table.AbstractTableModel;
 import com.circa.mrv.grs_manager.catalog.NioxCatalog;
 import com.circa.mrv.grs_manager.niox.Product;
 import com.circa.mrv.grs_manager.manager.GRSManager;
-import com.circa.mrv.grs_manager.niox.Mino;
 import com.circa.mrv.grs_manager.user.Employee;
 import com.circa.mrv.grs_manager.user.schedule.OrderSchedule;
 

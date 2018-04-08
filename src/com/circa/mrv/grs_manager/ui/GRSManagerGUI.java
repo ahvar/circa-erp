@@ -31,14 +31,14 @@ public class GRSManagerGUI {
 	
 	/** JFrame for the GUI */
 	private static JFrame gui;
-	/** GRSManagerGUI title */
+	/** GRSManagerGUI title */	
 	private static final String APP_TITLE = "GRS Manager";
 	/** Constant to identify LoginPanel */
 	private static final String LOGIN_PANEL = "LoginPanel";
 	/** Constant to identify VendorDirectoryPanel */
-	private static final String VENDOR_CUSTOMER_PANEL = "VendorPanel";
+	private static final String VENDOR_COMPANY_PANEL = "VendorPanel";
 	/** Constant to identify ResearchPanel */
-	private static final String RESEARCH_COMPANY_PANEL = "CustomerPanel";
+	private static final String RESEARCH_COMPANY_PANEL = "ResearchPanel";
 	/** Constant to identify AdministratorPanel */
 	private static final String ADMINISTRATOR_PANEL = "AdministratorPanel";
 	/** LoginPanel */
@@ -74,7 +74,7 @@ public class GRSManagerGUI {
 		panel.setLayout(cardLayout);
 		panel.add(pnlLogin, LOGIN_PANEL);
 		panel.add(pnlAdministrator, ADMINISTRATOR_PANEL);
-		panel.add(pnlVendor, VENDOR_CUSTOMER_PANEL);
+		panel.add(pnlVendor, VENDOR_COMPANY_PANEL);
 		panel.add(pnlResearch, RESEARCH_COMPANY_PANEL);
 		cardLayout.show(panel, LOGIN_PANEL);
 		
@@ -202,7 +202,7 @@ public class GRSManagerGUI {
 					txtId.setText("");
 					txtPassword.setText("");
 					if (manager.getCurrentUser() instanceof Employee && manager.getCompany() instanceof VendorCompany) {
-						cardLayout.show(panel, VENDOR_CUSTOMER_PANEL);
+						cardLayout.show(panel, VENDOR_COMPANY_PANEL);
 						pnlVendor.updateTables();
 					} else if (manager.getCurrentUser() instanceof Employee && manager.getCompany() instanceof ResearchCompany) {
 						cardLayout.show(panel, RESEARCH_COMPANY_PANEL );
@@ -240,6 +240,7 @@ public class GRSManagerGUI {
 		private static final String PRODUCT_CATALOG_PANEL = "ProductCatalogPanel";
 		/** Constant to identify InstructorAssignmentPanel */
 		private static final String COMPANY_ASSIGNMENT_PANEL = "CompanyAssignmentPanel";
+		
 		/** VendorEmployeeDirectoryPanel */
 		private VendorEmployeeDirectoryPanel pnlVendorEmployeeDirectory;
 		/** ResearchEmployeeDirectoryPanel */
@@ -252,6 +253,7 @@ public class GRSManagerGUI {
 		private CardLayout aCardLayout;
 		/** Panel for the AdministratorPanel */
 		private JPanel aPanel;
+		
 		/** Button for the VendorEmployeeDirectory functionality */
 		private JButton btnVendorEmployeeDirectory;
 		/** Button for the ResearchCompanyDirectory functionality */
@@ -406,7 +408,7 @@ public class GRSManagerGUI {
 	}
 	
 	/**
-	 * Creates a panel for research company employees to manage their orders
+	 * Creates a panel of the current order schedule for research companies
 	 * @author Arthur Vargas
 	 */
 	private class ResearchPanel extends JPanel implements ActionListener {
@@ -417,7 +419,7 @@ public class GRSManagerGUI {
 		private JButton btnLogout;
 		private ResearchCompanyOrderSchedulePanel rcOrdSchPanel;
 		/**
-		 * Temporary class for the FacultyPanel until we implement
+		 * Temporary class for the ResearchPanel until we implement
 		 * that functionality.
 		 */
 		public ResearchPanel() {			

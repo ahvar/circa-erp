@@ -24,8 +24,8 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.AbstractTableModel;
 
-import com.circa.mrv.grs_manager.directory.VendorDirectory;
 import com.circa.mrv.grs_manager.manager.GRSManager;
+import com.circa.mrv.grs_manager.directory.CompanyDirectory;
 
 /**
  * Creates a user interface for working with the StudentDirectory.
@@ -82,7 +82,7 @@ public class VendorEmployeeDirectoryPanel extends JPanel implements ActionListen
 	/** Button for removing the selected Course from the schedule */
 	private JButton btnRemoveStudent;
 	/** Reference to StudentDirectory */
-	private VendorDirectory studentDirectory;
+	private CompanyDirectory studentDirectory;
 	
 	/**
 	 * Constructs the StudentDirectoryGUI and sets up the GUI 
@@ -91,7 +91,7 @@ public class VendorEmployeeDirectoryPanel extends JPanel implements ActionListen
 	public VendorEmployeeDirectoryPanel() {
 		super(new GridBagLayout());
 		
-		studentDirectory = GRSManager.getInstance().getVendorDirectory();
+		studentDirectory = GRSManager.getInstance().getCompanyDirectory();
 		
 		//Set up Directory buttons
 		btnNewStudentList = new JButton("New Student Directory");
@@ -217,7 +217,7 @@ public class VendorEmployeeDirectoryPanel extends JPanel implements ActionListen
 		if (e.getSource() == btnLoadStudentList) {
 			String fileName = getFileName(true);
 			try {
-				studentDirectory.loadStudentsFromFile(fileName);
+				studentDirectory.loadCompanyFromFile(fileName);
 				studentDirectoryTableModel.updateData();
 				scrollStudentDirectory.revalidate();
 				scrollStudentDirectory.repaint();
@@ -228,12 +228,12 @@ public class VendorEmployeeDirectoryPanel extends JPanel implements ActionListen
 		} else if (e.getSource() == btnSaveStudentList) {
 			String fileName = getFileName(false);
 			try {
-				studentDirectory.saveStudentDirectory(fileName);
+				studentDirectory.saveCompanyDirectory(fileName);
 			} catch (IllegalArgumentException iae) {
 				JOptionPane.showMessageDialog(this, iae.getMessage());
 			}
 		} else if (e.getSource() == btnNewStudentList) {
-			studentDirectory.newStudentDirectory();
+			studentDirectory.newCompanyDirectory();
 			studentDirectoryTableModel.updateData();
 			scrollStudentDirectory.revalidate();
 			scrollStudentDirectory.repaint();
@@ -264,7 +264,7 @@ public class VendorEmployeeDirectoryPanel extends JPanel implements ActionListen
 			}
 			
 			try {
-				if (studentDirectory.addStudent(firstName, lastName, id, email, pwString, repeatPWString, maxCredits)) {
+				if (studentDirectory.addCompany(firstName, lastName, id, email, pwString, repeatPWString)) {
 					txtFirstName.setText("");
 					txtLastName.setText("");
 					txtId.setText("");
@@ -285,7 +285,7 @@ public class VendorEmployeeDirectoryPanel extends JPanel implements ActionListen
 				JOptionPane.showMessageDialog(this, "No student selected.");
 			} else {
 				try {
-					studentDirectory.removeStudent(tableStudentDirectory.getValueAt(row, 2).toString());
+					studentDirectory.removeCompany(tableStudentDirectory.getValueAt(row, 2).toString());
 				} catch (ArrayIndexOutOfBoundsException aioobe) {
 					JOptionPane.showMessageDialog(this, "No student selected.");
 				}
@@ -395,7 +395,7 @@ public class VendorEmployeeDirectoryPanel extends JPanel implements ActionListen
 		 * Updates the given model with {@link Product} information from the {@link VendorDirectory}.
 		 */
 		public void updateData() {
-			data = studentDirectory.getStudentDirectory();
+			data = studentDirectory.getCompanyDirectory();
 		}
 	}
 

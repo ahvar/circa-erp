@@ -9,10 +9,9 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-import com.circa.mrv.grs_manager.directory.CustomerDirectory;
+import com.circa.mrv.grs_manager.directory.CompanyDirectory;
 import com.circa.mrv.grs_manager.manager.GRSManager;
 import com.circa.mrv.grs_manager.niox.Component;
-import com.circa.mrv.grs_manager.niox.Mino;
 import com.circa.mrv.grs_manager.niox.Product;
 import com.circa.mrv.grs_manager.util.LinkedListRecursive;
 
