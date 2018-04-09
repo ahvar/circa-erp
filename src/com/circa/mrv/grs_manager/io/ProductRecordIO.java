@@ -42,7 +42,7 @@ public class ProductRecordIO {
 			try {
 				if( ( !products.add( ProductRecordIO.readLine( fileReader.nextLine() ) ) ) ) 
 					throw new IllegalArgumentException("Duplicate"); 
-		
+			    
 					// add to records
 
 					//boolean duplicate = false;
@@ -62,6 +62,7 @@ public class ProductRecordIO {
 			}
 		}
 		fileReader.close();
+		System.out.println(products.size());
 		return products;
 	}
 
@@ -74,7 +75,7 @@ public class ProductRecordIO {
 	 */
 	private static Product readLine(String nextLine) {
 		Scanner word = new Scanner(nextLine);
-		Component c = new Component(word.next(), word.next(), word.next(), 0.0);
+		Component c = new Component(word.next(),word.next(),word.next());
 		word.close();
 		return c;
 		

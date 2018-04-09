@@ -239,7 +239,7 @@ public class GRSManagerGUI {
 		/** Constant to identify ProductCatalog */
 		private static final String PRODUCT_CATALOG_PANEL = "ProductCatalogPanel";
 		/** Constant to identify InstructorAssignmentPanel */
-		private static final String COMPANY_ASSIGNMENT_PANEL = "CompanyAssignmentPanel";
+		private static final String COMPANY_ASSIGNMENT_PANEL = "Company Assignment Panel";
 		
 		/** VendorEmployeeDirectoryPanel */
 		private VendorEmployeeDirectoryPanel pnlVendorEmployeeDirectory;

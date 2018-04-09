@@ -43,6 +43,7 @@ public class NioxCatalog {
 	public void loadProductsFromFile(String fileName) {
 		try {
 			catalog = ProductRecordIO.readProductRecords(fileName);
+			System.out.println(catalog.size());
 		} catch (FileNotFoundException e) {
 			throw new IllegalArgumentException("Unable to read file " + fileName);
 		}

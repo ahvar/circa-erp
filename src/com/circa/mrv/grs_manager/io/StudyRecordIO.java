@@ -21,7 +21,8 @@ import com.circa.mrv.grs_manager.util.LinkedAbstractList;
  * @author Arthur  Vargas
  */
 public class StudyRecordIO {
-	private static final String STUDY_RECORDS = "test-files/eRTStudyRecords.txt";
+	private static final String UNFORMATTED_TITLES = "test-files/unformatted_titles.txt";
+	private static final String FORMATTED_TITLES = "test-files/formatted_titles.txt";
 	
 	/**
 	 * Reads in a master file containing all data for a particular GRS customer. 
@@ -39,7 +40,7 @@ public class StudyRecordIO {
     	LinkedAbstractList<String> titles = new LinkedAbstractList<String>(100);
     	FileReader fr = new FileReader(filename);
     	BufferedReader reader = new BufferedReader(fr);
-    	PrintStream pw = new PrintStream(STUDY_RECORDS);
+    	PrintStream pw = new PrintStream(FORMATTED_TITLES);
     	
     	int x;
     	char c;
@@ -89,7 +90,6 @@ public class StudyRecordIO {
 
     	}
     	reader.close();
-    	
     	
     	return titles;
     	

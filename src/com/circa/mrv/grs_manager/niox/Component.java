@@ -19,6 +19,8 @@ public class Component extends Product implements Consumable {
 	private long serial;
 	/** Product generation */
 	private String generation;
+	/** Notes about this specific component */
+	private String note;
 	
 	/**
 	 * Constructs a component with a description, part number, price, package date, serial number, and product
@@ -66,6 +68,8 @@ public class Component extends Product implements Consumable {
 		setSerial(0);
 		setGeneration(null);
 	}
+	
+	public Component(){super("","","");}
 	
 
 	/**
@@ -139,6 +143,19 @@ public class Component extends Product implements Consumable {
 			
 	}
 
+	/**
+	 * @return the note
+	 */
+	public String getNote() {
+		return note;
+	}
+
+	/**
+	 * @param note the note to set
+	 */
+	public void setNote(String note) {
+		this.note = note;
+	}
 
 	/**
 	 * Generates the hashcode for an instance of component.

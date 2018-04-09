@@ -59,7 +59,6 @@ public class ProductCatalogPanel extends JPanel implements ActionListener {
 	/** JLabel for price */
 	private JLabel lblPrice;
 	
-	
 	/** JLabel for instructorId */
 	private JLabel lblInstructorId;
 	/** JLabel for enrollmentCap */
@@ -578,7 +577,7 @@ public class ProductCatalogPanel extends JPanel implements ActionListener {
 		}
 		
 		/**
-		 * Updates the given model with {@link Mino} information from the {@link NioxCatalog}.
+		 * Updates the given model with {@link NIOX} information from the {@link NioxCatalog}.
 		 */
 		public void updateData() {
 			data = catalog.getNioxCatalog();

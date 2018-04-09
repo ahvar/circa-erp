@@ -38,7 +38,7 @@ import com.circa.mrv.grs_manager.user.schedule.OrderSchedule;
 public class VendorCompanyOrderSchedulePanel  extends JPanel implements ActionListener {
 	/** ID number used for object serialization. */
 	private static final long serialVersionUID = 1L;
-	/** Button for adding the selected course in the catalog to the schedule */
+	/** Button for adding the selected product in the catalog to the schedule */
 	private JButton btnAddCourse;
 	/** Button for removing the selected Course from the schedule */
 	private JButton btnRemoveCourse;
