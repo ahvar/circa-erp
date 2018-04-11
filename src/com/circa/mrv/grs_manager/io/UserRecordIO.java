@@ -31,38 +31,23 @@ public class UserRecordIO {
 	public static LinkedAbstractList<User> readUserRecords(String fileName) throws FileNotFoundException {
 		
 		Scanner fileReader = new Scanner(new FileInputStream(fileName));
-		//set new scanner to read file
-		LinkedAbstractList<User> employeeList = new LinkedAbstractList<User>(100);
-		//set new linked list	
+		
+		LinkedAbstractList<User> employeeList = new LinkedAbstractList<User>(10);
+		
 	    while (fileReader.hasNextLine()) {
 	        try {
 	            User employee = processUser(fileReader.nextLine());
-	            //set a new faculty object to returned faculty
                 if (employee == null){
-                	//checks if returned faculty was null (record was invalid)
-                	//line was invalid
                   	throw new IllegalArgumentException("Invalid line");
                 }	
-	            boolean duplicate = false;
+	            
 	            for (int i = 0; i < employeeList.size(); i++) {
-	            	//loop through list to check for duplicates
-	                User e = employeeList.get(i);
-	                if (employee == null){
-	                	//checks if returned faculty was null (record was invalid)
-	                	//line was invalid
-	                	duplicate = true;
-	                	throw new IllegalArgumentException("Invalid line");
-	                }	
-	                else if (employee.getId().equals(e.getId())) {
-	                	//check for duplicates
-	                    //it's a duplicate
-	                    duplicate = true;
-	                	throw new IllegalArgumentException("Employee already in system");
+	                if (employeeList.get(i).getId().equals(employee.getId())) {
+	                	System.err.println("Employee " + employee.getId() + " already in system.");
+	                    continue;
 	                }
 	            }
-	            if (!duplicate) {
-	                employeeList.add(employeeList.size(), employee);
-	            }
+	            employeeList.add(employee);
 	        } catch (IllegalArgumentException e) {
 	            //skip the line
 	        }
@@ -72,72 +57,17 @@ public class UserRecordIO {
 		return employeeList;
 	}
 	/**
-	 * recieves a single employee record and processes it. it counts the items in the record to determine
-	 * if the record is invalid. it limits valid records to 5 or 6
-	 * items. if the record is deemed valid, it passes the items to the employee constructor. 
+	 * recieves a single employee record and processes it. 
+	 * if the record is deemed valid, it passes the items to the employee constructor. 
 	 * @param line the passed line. one employee record from the file.
 	 * @return employee created employee object or null employee object if the line was invalid. 
 	 */
 	private static User processUser(String line){
-			User user = null;
-			int itemCount = 0;
-			//scanner to use for counting items on line
-			Scanner lineCounter = new Scanner(line);
-			//set delimiter for ease of scanning
-			lineCounter.useDelimiter(",");
-			
-			//scanner to use for assigning items after verification
-			Scanner lineScanner = new Scanner(line);
-			lineScanner.useDelimiter(",");	
-			
-			try{
-				while (lineCounter.hasNext()){
-					
-					if (itemCount == 4 && lineCounter.hasNextInt()){
-						//if the 5th item is an int the record is invalid
-						//defective line
-						//returns null faculty
-						lineCounter.close();
-						lineScanner.close();
-						return user;
-
-					}
-					else{
-					lineCounter.next();
-					//count of items
-					itemCount++;
-
-					}
-				}
-				
-				if(itemCount < 5 || itemCount > 6){
-					//if too short or too long
-					//defective line
-					lineScanner.close();
-					lineCounter.close();
-					return user;
-					//null
-				}
-				
-				else if(itemCount == 5){
-					//if 5 strings then 5 string constructor can be used
-					
-					user = new Employee(lineScanner.next(), lineScanner.next(), lineScanner.next(), lineScanner.next(), lineScanner.next());
-				}
-				else{
-					//item count is 6
-					//if 5 strings and int then 6 construtor can be used
-					user = new Employee(lineScanner.next(), lineScanner.next(), lineScanner.next(), lineScanner.next(), lineScanner.next(), new OrderSchedule() );
-					}	
-			} catch (Exception e){
-				//skip
-			}
-			
-		lineScanner.close();
-		lineCounter.close();
-		
-		return user;
-		//returns faculty null or otherwise for verification
+		if(line == null || line.equals(""))
+			return null;
+		Scanner s = new Scanner(line);
+        Employee e = new Employee(s.next(),s.next(),s.next(),s.next(),s.next());
+		return e;
 	}
 	
 	/**

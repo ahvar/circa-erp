@@ -109,9 +109,9 @@ public class GRSManager {
 			digest.update(password.getBytes());
 			String localHashPW = new String(digest.digest());
 			
-		    for(int i = 0; i < companyDirectory.getCompanylist().size(); i++ ) {
+		    for(int i = 0; i < companyDirectory.getCompanyList().size(); i++ ) {
 		      	
-			  for(int j = 0; j < companyDirectory.getCompanylist().get(i).getLocations().size(); j++) {
+			  for(int j = 0; j < companyDirectory.getCompanyList().get(i).getLocations().size(); j++) {
 				  
 				 if( (u = companyDirectory.getCompanyAt(i).getLocations().get(j).findEmployee(id, password)) != null ) {
 					
@@ -120,7 +120,7 @@ public class GRSManager {
 					} else if ( companyDirectory.getCompanyAt(i) instanceof ResearchCompany ) {
 						company = companyDirectory.getCompanyAt(i);
 					} else {
-						throw new IllegalArgumentException("Company not vendor or research.");
+						throw new IllegalArgumentException("User must be a vendor or a research company.");
 					}
 					
 					if( u.getPassword().equals(localHashPW) ) {
@@ -130,16 +130,20 @@ public class GRSManager {
 					
 				 }
 			  }
+			  
 		    }	
 		    
 	        if ( u == null && id.equals("administrator") && administrator.getPassword().equals(localHashPW) ) {
 	    	  currentUser = administrator;
-	        } 
+	    	  return true;
+	        } else {
+	        	throw new IllegalArgumentException("User does not exist");
+	        }
 		  
 		} catch (NoSuchAlgorithmException e) {
 			throw new IllegalArgumentException("User does not exist.");
 		}
-		return true;				
+						
 	}
 	
 	/**
@@ -273,6 +277,26 @@ public class GRSManager {
 	}
 	
 	/**
+	 * Adds the passed employee to the location at position 'i' of the company's location list if the currentUser
+	 * is the administrator and position 'i' is valid.
+	 *  
+	 * @param c The company to add the employee to
+	 * @param e The employee to add 
+	 * @param i the position of the location in company's list to which employee will be added
+	 * @return true if the employee is added to the company location, false otherwise.
+	 * @throws IllegalArgumentException if a user other than the administrator tries to add the employee.
+	 */
+	public boolean addEmployeeToCompany(Company c, Employee e, int i){
+		if (currentUser == null || !currentUser.equals(administrator))
+			throw new IllegalArgumentException("Illegal Action");
+		if (currentUser != null && currentUser.equals(administrator) && i < c.getLocations().size()){
+			c.getLocations().get(i).getEmployees().add(e);
+				return true;
+		}
+		return false;
+	}
+	
+	/**
 	 * Removes the order from the passed employee's schedule if the user is the GRS Manager administrator.
 	 * @param order the order to remove the employee's schedule
 	 * @param employee the employee whose schedule order will be removed from
@@ -285,6 +309,38 @@ public class GRSManager {
 		if (currentUser != null && currentUser.equals(administrator)){
 			employee.getSchedule().removeOrderFromSchedule(order);
 			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Removes the employee from the passed company's location where this employee is located. 
+	 * This action can only be completed by the GRS administrator. If the user is not the GRS Manager administrator,
+	 * an IllegalArgumentException is thrown.
+	 * 
+	 * @param e the employee to remove
+	 * @param c the company whose schedule order will be removed from
+	 * @return true if the employee is removed from the company location, false otherwise.
+	 * @throws IllegalArgumentException if a user other than GRS Manager administrator tries to remove the order.
+	 */
+	public boolean removeEmployeeFromCompany(Company c, Employee employee){
+		if (currentUser == null || !currentUser.equals(administrator))
+			throw new IllegalArgumentException("Illegal Action");
+		if (currentUser != null && currentUser.equals(administrator)){
+			
+			for(int i = 0; i < c.getLocations().size(); i++) {
+				
+				if(c.getLocations().get(i).getEmployees() == null) continue;
+				
+				for(int j = 0; j < c.getLocations().get(i).getEmployees().size(); j++) {
+				    
+					if(c.getLocations().get(i).getEmployees().get(j).getId().equals(employee.getId())) {
+				    	c.getLocations().get(i).getEmployees().remove(j);
+				    	return true;
+				    }
+				}
+					
+			}
 		}
 		return false;
 	}
@@ -307,5 +363,13 @@ public class GRSManager {
 	 */
 	public CompanyDirectory getCompanyDirectory(){
 		return companyDirectory;
+	}
+	
+	/**
+	 * Retursn the user directory
+	 * @return userDirectory the directory of GRS Manager users
+	 */
+	public UserDirectory getUserDirectory() {
+		return userDirectory;
 	}
 }

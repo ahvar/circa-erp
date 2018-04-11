@@ -25,12 +25,14 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.AbstractTableModel;
 
 import com.circa.mrv.grs_manager.manager.GRSManager;
+import com.circa.mrv.grs_manager.directory.Company;
 import com.circa.mrv.grs_manager.directory.CompanyDirectory;
+import com.circa.mrv.grs_manager.directory.UserDirectory;
 
 /**
- * Creates a user interface for working with the StudentDirectory.
+ * Creates a user interface for working with the VendorCompanyEmployeeDirectory.
  * 
- * @author Sarah Heckman
+ * @author Arthur Vargas
  */
 public class VendorEmployeeDirectoryPanel extends JPanel implements ActionListener {
 	
@@ -38,17 +40,17 @@ public class VendorEmployeeDirectoryPanel extends JPanel implements ActionListen
 	private static final long serialVersionUID = 1L;
 
 	/** Button for resetting the directory */
-	private JButton btnNewStudentList;
-	/** Button for resetting the directory */
-	private JButton btnLoadStudentList;
+	private JButton btnNewEmployeeList;
+	/** Button for loading a new directory */
+	private JButton btnLoadEmployeeList;
 	/** Button for displaying the final directory */
-	private JButton btnSaveStudentList;
-	/** JTable for displaying the directory of Students */
-	private JTable tableStudentDirectory;
+	private JButton btnSaveEmployeeList;
+	/** JTable for displaying the directory of Employees */
+	private JTable tableEmployeeDirectory;
 	/** Scroll pane for table */
-	private JScrollPane scrollStudentDirectory;
-	/** TableModel for directory of Students */
-	private StudentDirectoryTableModel studentDirectoryTableModel;
+	private JScrollPane scrollEmployeeDirectory;
+	/** TableModel for directory of Employees */
+	private EmployeeDirectoryTableModel employeeDirectoryTableModel;
 	/** JLabel for firstName */
 	private JLabel lblFirstName;
 	/** JLabel for lastName */
@@ -61,8 +63,10 @@ public class VendorEmployeeDirectoryPanel extends JPanel implements ActionListen
 	private JLabel lblPassword;
 	/** JLabel for repeat password */
 	private JLabel lblRepeatPassword;
+	
 	/** JLabel for maxCredits */
 	private JLabel lblMaxCredits;
+	
 	/** JTextField for firstName */
 	private JTextField txtFirstName;
 	/** JTextField for lastName */
@@ -75,37 +79,43 @@ public class VendorEmployeeDirectoryPanel extends JPanel implements ActionListen
 	private JPasswordField txtPassword;
 	/** JPasswordField for repeat password */
 	private JPasswordField txtRepeatPassword;
+	
 	/** JTextField for maxCredits */
 	private JTextField txtMaxCredits;
-	/** Button for adding the selected course in the catalog to the schedule */
-	private JButton btnAddStudent;
-	/** Button for removing the selected Course from the schedule */
-	private JButton btnRemoveStudent;
-	/** Reference to StudentDirectory */
-	private CompanyDirectory studentDirectory;
+	
+	/** Button for adding the selected employee in the catalog to the schedule */
+	private JButton btnAddEmployee;
+	/** Button for removing the selected employee from the schedule */
+	private JButton btnRemoveEmployee;
+	/** Reference to EmployeeDirectory */
+	private UserDirectory userDirectory;
+	/** Reference to CompanyDirectory */
+	private CompanyDirectory companyDirectory;
+
 	
 	/**
-	 * Constructs the StudentDirectoryGUI and sets up the GUI 
+	 * Constructs the EmployeeDirectoryGUI and sets up the GUI 
 	 * components.
 	 */
 	public VendorEmployeeDirectoryPanel() {
 		super(new GridBagLayout());
 		
-		studentDirectory = GRSManager.getInstance().getCompanyDirectory();
+		userDirectory = GRSManager.getInstance().getUserDirectory();
+		companyDirectory = GRSManager.getInstance().getCompanyDirectory();
 		
 		//Set up Directory buttons
-		btnNewStudentList = new JButton("New Student Directory");
-		btnNewStudentList.addActionListener(this);
-		btnLoadStudentList = new JButton("Load Student Directory");
-		btnLoadStudentList.addActionListener(this);
-		btnSaveStudentList = new JButton("Save Student Directory");
-		btnSaveStudentList.addActionListener(this);
+		btnNewEmployeeList = new JButton("New Employee Directory");
+		btnNewEmployeeList.addActionListener(this);
+		btnLoadEmployeeList = new JButton("Load Employee Directory");
+		btnLoadEmployeeList.addActionListener(this);
+		btnSaveEmployeeList = new JButton("Save Employee Directory");
+		btnSaveEmployeeList.addActionListener(this);
 		
 		JPanel pnlDirectoryButton = new JPanel();
 		pnlDirectoryButton.setLayout(new GridLayout(1, 3));
-		pnlDirectoryButton.add(btnNewStudentList);
-		pnlDirectoryButton.add(btnLoadStudentList);
-		pnlDirectoryButton.add(btnSaveStudentList);
+		pnlDirectoryButton.add(btnNewEmployeeList);
+		pnlDirectoryButton.add(btnLoadEmployeeList);
+		pnlDirectoryButton.add(btnSaveEmployeeList);
 		
 		Border lowerEtched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
 		TitledBorder boarder = BorderFactory.createTitledBorder(lowerEtched, "Directory Buttons");
@@ -113,32 +123,32 @@ public class VendorEmployeeDirectoryPanel extends JPanel implements ActionListen
 		pnlDirectoryButton.setToolTipText("Directory Buttons");
 		
 		//Set up Directory table
-		studentDirectoryTableModel = new StudentDirectoryTableModel();
-		tableStudentDirectory = new JTable(studentDirectoryTableModel);
-		tableStudentDirectory.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		tableStudentDirectory.setPreferredScrollableViewportSize(new Dimension(500, 500));
-		tableStudentDirectory.setFillsViewportHeight(true);
+		employeeDirectoryTableModel = new EmployeeDirectoryTableModel();
+		tableEmployeeDirectory = new JTable(employeeDirectoryTableModel);
+		tableEmployeeDirectory.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tableEmployeeDirectory.setPreferredScrollableViewportSize(new Dimension(500, 500));
+		tableEmployeeDirectory.setFillsViewportHeight(true);
 		
-		scrollStudentDirectory = new JScrollPane(tableStudentDirectory, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		scrollEmployeeDirectory = new JScrollPane(tableEmployeeDirectory, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		
-		boarder = BorderFactory.createTitledBorder(lowerEtched, "Student Directory");
-		scrollStudentDirectory.setBorder(boarder);
-		scrollStudentDirectory.setToolTipText("Student Directory");
+		boarder = BorderFactory.createTitledBorder(lowerEtched, "Employee Directory");
+		scrollEmployeeDirectory.setBorder(boarder);
+		scrollEmployeeDirectory.setToolTipText("Employee Directory");
 		
 		//Set up Student buttons
-		btnAddStudent = new JButton("Add Student");
-		btnAddStudent.addActionListener(this);
-		btnRemoveStudent = new JButton("Remove Student");
-		btnRemoveStudent.addActionListener(this);
+		btnAddEmployee = new JButton("Add Employee");
+		btnAddEmployee.addActionListener(this);
+		btnRemoveEmployee = new JButton("Remove Employee");
+		btnRemoveEmployee.addActionListener(this);
 		
-		JPanel pnlStudentButtons = new JPanel();
-		pnlStudentButtons.setLayout(new GridLayout(1, 2));
-		pnlStudentButtons.add(btnAddStudent);
-		pnlStudentButtons.add(btnRemoveStudent);
+		JPanel pnlEmployeeButtons = new JPanel();
+		pnlEmployeeButtons.setLayout(new GridLayout(1, 2));
+		pnlEmployeeButtons.add(btnAddEmployee);
+		pnlEmployeeButtons.add(btnRemoveEmployee);
 		
-		boarder = BorderFactory.createTitledBorder(lowerEtched, "Student Controls");
-		pnlStudentButtons.setBorder(boarder);
-		pnlStudentButtons.setToolTipText("StudentControls");
+		boarder = BorderFactory.createTitledBorder(lowerEtched, "Employee Controls");
+		pnlEmployeeButtons.setBorder(boarder);
+		pnlEmployeeButtons.setToolTipText("EmployeeControls");
 		
 		//Set up Student form
 		lblFirstName = new JLabel("First Name");
@@ -156,26 +166,26 @@ public class VendorEmployeeDirectoryPanel extends JPanel implements ActionListen
 		txtRepeatPassword = new JPasswordField(20);
 		txtMaxCredits = new JTextField(20);
 		
-		JPanel pnlStudentForm = new JPanel();
-		pnlStudentForm.setLayout(new GridLayout(7, 2));
-		pnlStudentForm.add(lblFirstName);
-		pnlStudentForm.add(txtFirstName);
-		pnlStudentForm.add(lblLastName);
-		pnlStudentForm.add(txtLastName);
-		pnlStudentForm.add(lblId);
-		pnlStudentForm.add(txtId);
-		pnlStudentForm.add(lblEmail);
-		pnlStudentForm.add(txtEmail);
-		pnlStudentForm.add(lblPassword);
-		pnlStudentForm.add(txtPassword);
-		pnlStudentForm.add(lblRepeatPassword);
-		pnlStudentForm.add(txtRepeatPassword);
-		pnlStudentForm.add(lblMaxCredits);
-		pnlStudentForm.add(txtMaxCredits);
+		JPanel pnlEmployeeForm = new JPanel();
+		pnlEmployeeForm.setLayout(new GridLayout(7, 2));
+		pnlEmployeeForm.add(lblFirstName);
+		pnlEmployeeForm.add(txtFirstName);
+		pnlEmployeeForm.add(lblLastName);
+		pnlEmployeeForm.add(txtLastName);
+		pnlEmployeeForm.add(lblId);
+		pnlEmployeeForm.add(txtId);
+		pnlEmployeeForm.add(lblEmail);
+		pnlEmployeeForm.add(txtEmail);
+		pnlEmployeeForm.add(lblPassword);
+		pnlEmployeeForm.add(txtPassword);
+		pnlEmployeeForm.add(lblRepeatPassword);
+		pnlEmployeeForm.add(txtRepeatPassword);
+		pnlEmployeeForm.add(lblMaxCredits);
+		pnlEmployeeForm.add(txtMaxCredits);
 		
-		boarder = BorderFactory.createTitledBorder(lowerEtched, "Student Information");
-		pnlStudentForm.setBorder(boarder);
-		pnlStudentForm.setToolTipText("Student Information");
+		boarder = BorderFactory.createTitledBorder(lowerEtched, "Employee Information");
+		pnlEmployeeForm.setBorder(boarder);
+		pnlEmployeeForm.setToolTipText("Employee Information");
 		
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 0;
@@ -192,7 +202,7 @@ public class VendorEmployeeDirectoryPanel extends JPanel implements ActionListen
 		c.weighty = 1;
 		c.anchor = GridBagConstraints.LINE_START;
 		c.fill = GridBagConstraints.BOTH;
-		this.add(scrollStudentDirectory, c);
+		this.add(scrollEmployeeDirectory, c);
 		
 		c.gridx = 0;
 		c.gridy = 2;
@@ -200,7 +210,7 @@ public class VendorEmployeeDirectoryPanel extends JPanel implements ActionListen
 		c.weighty = .5;
 		c.anchor = GridBagConstraints.LINE_START;
 		c.fill = GridBagConstraints.BOTH;
-		this.add(pnlStudentButtons, c);
+		this.add(pnlEmployeeButtons, c);
 		
 		c.gridx = 0;
 		c.gridy = 3;
@@ -208,37 +218,39 @@ public class VendorEmployeeDirectoryPanel extends JPanel implements ActionListen
 		c.weighty = 1;
 		c.anchor = GridBagConstraints.LINE_START;
 		c.fill = GridBagConstraints.BOTH;
-		this.add(pnlStudentForm, c);
+		this.add(pnlEmployeeForm, c);
 		
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == btnLoadStudentList) {
+		if (e.getSource() == btnLoadEmployeeList) {
 			String fileName = getFileName(true);
 			try {
-				studentDirectory.loadCompanyFromFile(fileName);
-				studentDirectoryTableModel.updateData();
-				scrollStudentDirectory.revalidate();
-				scrollStudentDirectory.repaint();
-				studentDirectoryTableModel.fireTableDataChanged();
+				userDirectory.loadUsersFromFile(fileName);
+				//this will create problem if user loads multiple employee directory files. 
+				companyDirectory.addCompany("Circassia Pharmaceuticals", "5151 McCrimmon Parkway","Suite 260","Morrisville","NC","27560","USA");
+				employeeDirectoryTableModel.updateData();
+				scrollEmployeeDirectory.revalidate();
+				scrollEmployeeDirectory.repaint();
+				employeeDirectoryTableModel.fireTableDataChanged();
 			} catch (IllegalArgumentException iae) {
 				JOptionPane.showMessageDialog(this, iae.getMessage());
 			}
-		} else if (e.getSource() == btnSaveStudentList) {
+		} else if (e.getSource() == btnSaveEmployeeList) {
 			String fileName = getFileName(false);
 			try {
-				studentDirectory.saveCompanyDirectory(fileName);
+				userDirectory.saveUserDirectory(fileName);
 			} catch (IllegalArgumentException iae) {
 				JOptionPane.showMessageDialog(this, iae.getMessage());
 			}
-		} else if (e.getSource() == btnNewStudentList) {
-			studentDirectory.newCompanyDirectory();
-			studentDirectoryTableModel.updateData();
-			scrollStudentDirectory.revalidate();
-			scrollStudentDirectory.repaint();
-			studentDirectoryTableModel.fireTableDataChanged();
-		} else if (e.getSource() == btnAddStudent) {
+		} else if (e.getSource() == btnNewEmployeeList) {
+			userDirectory.newUserDirectory();
+			employeeDirectoryTableModel.updateData();
+			scrollEmployeeDirectory.revalidate();
+			scrollEmployeeDirectory.repaint();
+			employeeDirectoryTableModel.fireTableDataChanged();
+		} else if (e.getSource() == btnAddEmployee) {
 			String firstName = txtFirstName.getText();
 			String lastName = txtLastName.getText();
 			String id = txtId.getText();
@@ -249,7 +261,7 @@ public class VendorEmployeeDirectoryPanel extends JPanel implements ActionListen
 			try {
 				maxCredits = Integer.parseInt(txtMaxCredits.getText());
 			} catch (NumberFormatException nfe) {
-				JOptionPane.showMessageDialog(this, "Max credits must be a positive number between 3 and 18.");
+				JOptionPane.showMessageDialog(this, "Price must be a positive number between 3 and 18.");
 				return;
 			}
 			
@@ -264,7 +276,7 @@ public class VendorEmployeeDirectoryPanel extends JPanel implements ActionListen
 			}
 			
 			try {
-				if (studentDirectory.addCompany(firstName, lastName, id, email, pwString, repeatPWString)) {
+				if (userDirectory.addUser(firstName, lastName, id, email, pwString, repeatPWString)) {
 					txtFirstName.setText("");
 					txtLastName.setText("");
 					txtId.setText("");
@@ -272,25 +284,34 @@ public class VendorEmployeeDirectoryPanel extends JPanel implements ActionListen
 					txtPassword.setText("");
 					txtRepeatPassword.setText("");
 					txtMaxCredits.setText("");
+					
+					Company c = null;
+					for(int i = 0; i < companyDirectory.getCompanyList().size(); i++) {
+					  	if(companyDirectory.getCompanyList().get(i).getName().equals("Circassia Pharmaceuticals"))
+					  		c = companyDirectory.getCompanyList().get(i);
+					}
+					if (c == null) companyDirectory.addCompany("Circassia Pharmaceuticals","5151 McCrimmon Parkway","Suite 260","Morrisville","NC","27560","USA");
+					
 				} else {
-					JOptionPane.showMessageDialog(this, "Student already in system.");
+					JOptionPane.showMessageDialog(this, "Employee already in system.");
 				}
 			} catch (IllegalArgumentException iae) {
 				JOptionPane.showMessageDialog(this, iae.getMessage());
 			}
-			studentDirectoryTableModel.updateData();
-		} else if (e.getSource() == btnRemoveStudent) {
-			int row = tableStudentDirectory.getSelectedRow();
+			employeeDirectoryTableModel.updateData();
+			
+		} else if (e.getSource() == btnRemoveEmployee) {
+			int row = tableEmployeeDirectory.getSelectedRow();
 			if (row == -1) {
-				JOptionPane.showMessageDialog(this, "No student selected.");
+				JOptionPane.showMessageDialog(this, "No employee selected.");
 			} else {
 				try {
-					studentDirectory.removeCompany(tableStudentDirectory.getValueAt(row, 2).toString());
+					userDirectory.removeUser(tableEmployeeDirectory.getValueAt(row, 2).toString());
 				} catch (ArrayIndexOutOfBoundsException aioobe) {
-					JOptionPane.showMessageDialog(this, "No student selected.");
+					JOptionPane.showMessageDialog(this, "No employee selected.");
 				}
 			}
-			studentDirectoryTableModel.updateData();
+			employeeDirectoryTableModel.updateData();
 		}
 		
 		this.validate();
@@ -323,24 +344,24 @@ public class VendorEmployeeDirectoryPanel extends JPanel implements ActionListen
 	}
 	
 	/**
-	 * {@link StudentDirectoryTableModel} is the object underlying the {@link JTable} object that displays
+	 * {@link EmployeeDirectoryTableModel} is the object underlying the {@link JTable} object that displays
 	 * the list of Students to the user.
-	 * @author Sarah Heckman
+	 * @author Arthur Vargas
 	 */
-	private class StudentDirectoryTableModel extends AbstractTableModel {
+	private class EmployeeDirectoryTableModel extends AbstractTableModel {
 		
 		/** ID number used for object serialization. */
 		private static final long serialVersionUID = 1L;
 		/** Column names for the table */
-		private String [] columnNames = {"First Name", "Last Name", "Student ID"};
+		private String [] columnNames = {"First Name", "Last Name", "Employee ID"};
 		/** Data stored in the table */
 		private Object [][] data;
 		
 		/**
-		 * Constructs the {@link StudentDirectoryTableModel} by requesting the latest information
+		 * Constructs the {@link EmployeeDirectoryTableModel} by requesting the latest information
 		 * from the {@link RequirementTrackerModel}.
 		 */
-		public StudentDirectoryTableModel() {
+		public EmployeeDirectoryTableModel() {
 			updateData();
 		}
 
@@ -395,7 +416,7 @@ public class VendorEmployeeDirectoryPanel extends JPanel implements ActionListen
 		 * Updates the given model with {@link Product} information from the {@link VendorDirectory}.
 		 */
 		public void updateData() {
-			data = studentDirectory.getCompanyDirectory();
+			data = userDirectory.getEmployeeDirectory();
 		}
 	}
 

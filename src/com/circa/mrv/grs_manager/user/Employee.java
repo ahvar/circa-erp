@@ -80,7 +80,7 @@ public class Employee extends User implements Comparable<Employee> {
 		 */
 		@Override
 		public String toString() {
-			return getFirstName() + "," + getLastName() + "," + getId() + "," + getEmail() + "," + getPassword() + "," + "Total Orders: " + 
+			return getFirstName() + " " + getLastName() + " " + getId() + " " + getEmail() + " " + getPassword() + " " + "Total Orders: " + 
 		    schedule.getNumScheduledOrders();
 			
 		}

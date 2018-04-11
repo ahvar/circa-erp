@@ -20,6 +20,8 @@ public abstract class Location {
 	private String city;
 	/** The state or province */
 	private String state;
+	/** The zip code */
+	private String zip;
 	/** The location's country */
 	private String country;
 	/** A list of employees at this location */
@@ -135,6 +137,24 @@ public abstract class Location {
 	}
 	
 	
+	
+	
+	/**
+	 * Returns the zip code
+	 * @return the zip
+	 */
+	public String getZip() {
+		return zip;
+	}
+
+	/**
+	 * Sets the zip code
+	 * @param zip the zip to set
+	 */
+	public void setZip(String zip) {
+		this.zip = zip;
+	}
+
 	/**
 	 * Returns a list of employees at this location.
 	 * @return the employees

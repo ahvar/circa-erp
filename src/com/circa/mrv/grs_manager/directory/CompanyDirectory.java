@@ -30,6 +30,20 @@ public class CompanyDirectory {
 	}
 	
 	/**
+	 * Creates a new company directory with a single bill to location in the company directory's list.
+	 * @param name the name of the company
+	 * @param add1 the street address of the company
+	 * @param add2 the suite or bldg number for the company
+	 * @param city the city the company is in
+	 * @param state the state the company is in
+	 * @param zip the zip code for the compnay
+	 * @param country the country where the company is located
+	 */
+	public CompanyDirectory(String name,String add1,String add2,String city,String state,String zip,String country) {
+		addCompany(name,add1,add2,city,state,zip,country);
+	}
+	
+	/**
 	 * Creates an empty company directory.  All companies in the previous
 	 * list are lost unless saved by the user.
 	 */
@@ -87,8 +101,12 @@ public class CompanyDirectory {
 	 * added and false if the company is unable to be added because their name and address match another company. 
 	 * Throws an IAE if the company is not a current GRS customer.
 	 * 
-	 * @param name the name of the company
-	 * @param local a bill-to location
+	 * @param name 
+	 * @param add1
+	 * @param city
+	 * @param state
+	 * @param zip
+	 * @param country
 	 * @return true if added
 	 * @throws IllegalArgumentException if the company is not eRT or Circassia.
 	 */
@@ -97,6 +115,31 @@ public class CompanyDirectory {
 			throw new IllegalArgumentException("This company already exists. Contact administrator to setup new company.");
 		else if(name.contains(Company.cir)) return companyDirectory.add(new VendorCompany(new BillTo(add1,city,state,country,zip), name));
 		else if(name.contains(Company.ert)) return companyDirectory.add(new ResearchCompany(new BillTo(add1,city,state,country,zip),name));
+		return false;
+
+	}
+	
+	/**
+	 * Adds a company with the name specified in the name parameter and a billing/office location defined
+	 * by the address information passed into the corresponding parameters.  Returns true if the company is 
+	 * added and false if the company is unable to be added because their name and address match another company. 
+	 * Throws an IAE if the company is not a current GRS customer.
+	 * 
+	 * @param name 
+	 * @param add1
+	 * @param add2
+	 * @param city
+	 * @param state
+	 * @param zip
+	 * @param country
+	 * @return true if added
+	 * @throws IllegalArgumentException if the company is not eRT or Circassia.
+	 */
+	public boolean addCompany(String name, String add1, String add2, String city, String state, String zip, String country) {
+		if(!name.equals(Company.cir) && !name.equals(Company.ert)) 
+			throw new IllegalArgumentException("This company already exists. Contact administrator to setup new company.");
+		else if(name.equals(Company.cir)) return companyDirectory.add(new VendorCompany(new BillTo(add1,city,state,country,zip), name));
+		else if(name.equals(Company.ert)) return companyDirectory.add(new ResearchCompany(new BillTo(add1,city,state,country,zip),name));
 		return false;
 
 	}
@@ -121,7 +164,7 @@ public class CompanyDirectory {
 	 * Returns a list with all companies in the GRS Manager 
 	 * @return companyDirectory the list of companies in GRS
 	 */
-	public LinkedListRecursive<Company> getCompanylist() {
+	public LinkedListRecursive<Company> getCompanyList() {
 		return companyDirectory;
 	}
 	/**
@@ -129,11 +172,18 @@ public class CompanyDirectory {
 	 * @return String array containing company's name and address info.
 	 */
 	public String[][] getCompanyDirectory() {
-		String [][] directory = new String[companyDirectory.size()][2];
+		String [][] directory = new String[companyDirectory.size()][6];
 		for (int i = 0; i < companyDirectory.size(); i++) {
-			Company s = companyDirectory.get(i);
-			directory[i][0] = s.getName();
-			directory[i][1] = s.getLocations().toString();
+			for(int j = 0; j < companyDirectory.get(i).getLocations().size(); j++) {
+				if(companyDirectory.get(i).getLocations().get(j) instanceof BillTo) 
+					directory[i][0] = companyDirectory.get(i).getName();
+				    directory[i][1] = companyDirectory.get(i).getLocations().get(j).getAddress1();
+				    directory[i][2] = companyDirectory.get(i).getLocations().get(j).getAddress2();
+				    directory[i][3] = companyDirectory.get(i).getLocations().get(j).getCity();
+				    directory[i][4] = companyDirectory.get(i).getLocations().get(j).getState();
+				    directory[i][5] = companyDirectory.get(i).getLocations().get(j).getZip();
+				    directory[i][6] = companyDirectory.get(i).getLocations().get(j).getCountry();
+			}
 		}
 		return directory;
 	}
@@ -159,6 +209,23 @@ public class CompanyDirectory {
 		for (int i = 0 ; i < companyDirectory.size() ; i++){
 			if (companyDirectory.get(i).getName().equals(name))
 				return companyDirectory.get(i);
+		}
+		return null;
+	}
+	
+	/**
+	 * Gets the company, name, from the directory if the company name matches one in the directory. 
+	 * @param name the  name of the company 
+	 * @param add1 the street address of company bill to
+	 * @return the company. If no match is found, null is returned. 
+	 */
+	public Company getCompanyByNameAndStreet(String name, String add1) {
+		for (int i = 0 ; i < companyDirectory.get(i).getLocations().size() ; i++){
+			for(int j = 0; j < companyDirectory.get(i).getLocations().size(); j++)
+			    if ( companyDirectory.get(i).getLocations().get(j) instanceof BillTo )
+			    	if(companyDirectory.get(i).getLocations().get(j).getAddress1().equals(add1) &&
+			    			companyDirectory.get(i).getName().equals(name))
+			    		return companyDirectory.get(i);
 		}
 		return null;
 	}
