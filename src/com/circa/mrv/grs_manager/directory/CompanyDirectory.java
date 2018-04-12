@@ -139,9 +139,8 @@ public class CompanyDirectory {
 		if(!name.equals(Company.cir) && !name.equals(Company.ert)) 
 			throw new IllegalArgumentException("This company already exists. Contact administrator to setup new company.");
 		else if(name.equals(Company.cir)) return companyDirectory.add(new VendorCompany(new BillTo(add1,city,state,country,zip), name));
-		else if(name.equals(Company.ert)) return companyDirectory.add(new ResearchCompany(new BillTo(add1,city,state,country,zip),name));
+		else if(name.equals(Company.ert)) return companyDirectory.add(new ResearchCompany(name,add1,add2,city,state,country,zip));
 		return false;
-
 	}
 	
 	/**

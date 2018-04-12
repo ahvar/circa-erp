@@ -35,6 +35,21 @@ public abstract class Company {
     	locations.add(new BillTo(add1,city,state,country, zip));
     	setName(name);
     }
+    
+    /**
+     * Initializes the field locations instance variable to contain the location information passed into the 
+     * constructor. A BillTo location is created and added to the list of locations for a company constructed
+     * with the name passed into the parameter.
+     * 
+     * Sets the name of the business to parameter name.
+     * @param location a location for the company
+     * @param name the name of the company
+     */
+    public Company(String name, String add1, String add2, String city, String state, String country, String zip) {
+    	locations = new LinkedListRecursive<Location>();
+    	locations.add(new BillTo(add1,add2,city,state,country,zip));
+    	setName(name);
+    }
      
     /**
      * Initializes the field locations instance variable for Company and adds the parameter local.

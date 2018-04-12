@@ -58,6 +58,7 @@ public class LinkedListRecursive<E> {
 		if(size == 0){
 			front = new ListNode(element, front);
 			size++;
+			if(front == null) System.out.println("front == null");
 			return true;
 		}
 		front.add(element);

@@ -25,14 +25,16 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.AbstractTableModel;
 
+import com.circa.mrv.grs_manager.directory.Company;
 import com.circa.mrv.grs_manager.directory.CompanyDirectory;
+import com.circa.mrv.grs_manager.directory.UserDirectory;
 import com.circa.mrv.grs_manager.manager.GRSManager;
 import com.circa.mrv.grs_manager.location.ResearchSite;
 
 /**
- * Creates a user interface for working with the FacultyDirectory.
+ * Creates a user interface for working with the ResearchEmployeeDirectory.
  * 
- * @author ArthurVargas
+ * @author Arthur Vargas
  */
 public class ResearchEmployeeDirectoryPanel extends JPanel implements ActionListener {
 	
@@ -40,17 +42,17 @@ public class ResearchEmployeeDirectoryPanel extends JPanel implements ActionList
 	private static final long serialVersionUID = 1L;
 
 	/** Button for resetting the directory */
-	private JButton btnNewFacultyList;
-	/** Button for resetting the directory */
-	private JButton btnLoadFacultyList;
+	private JButton btnNewResearchEmployeeList;
+	/** Button for loading a new directory */
+	private JButton btnLoadResearchEmployeeList;
 	/** Button for saving the final directory */
-	private JButton btnSaveFacultyList;
-	/** JTable for displaying the directory of Faculty */
-	private JTable tableFacultyDirectory;
+	private JButton btnSaveResearchEmployeeList;
+	/** JTable for displaying the directory of employees */
+	private JTable tableResearchEmployeeDirectory;
 	/** Scroll pane for table */
-	private JScrollPane scrollFacultyDirectory;
-	/** TableModel for directory of Faculty */
-	private FacultyDirectoryTableModel facultyDirectoryTableModel;
+	private JScrollPane scrollResearchEmployeeDirectory;
+	/** TableModel for directory of employees */
+	private ResearchEmployeeDirectoryTableModel researchEmployeeDirectoryTableModel;
 	/** JLabel for firstName */
 	private JLabel lblFirstName;
 	/** JLabel for lastName */
@@ -63,8 +65,8 @@ public class ResearchEmployeeDirectoryPanel extends JPanel implements ActionList
 	private JLabel lblPassword;
 	/** JLabel for repeat password */
 	private JLabel lblRepeatPassword;
-	/** JLabel for maxCourses */
-	private JLabel lblMaxCourses;
+	/** JLabel for maxOrders */
+	private JLabel lblMaxOrders;
 	/** JTextField for firstName */
 	private JTextField txtFirstName;
 	/** JTextField for lastName */
@@ -77,37 +79,40 @@ public class ResearchEmployeeDirectoryPanel extends JPanel implements ActionList
 	private JPasswordField txtPassword;
 	/** JPasswordField for repeat password */
 	private JPasswordField txtRepeatPassword;
-	/** JTextField for maxCourses */
-	private JComboBox<Integer> comboMaxCourses;
-	/** Button for adding a new Faculty */
-	private JButton btnAddFaculty;
-	/** Button for removing the selected Faculty from the directory */
-	private JButton btnRemoveFaculty;
-	/** Reference to FacultyDirectory */
-	private CompanyDirectory facultyDirectory;
+	/** JTextField for maxOrders */
+	private JComboBox<Integer> comboMaxOrders;
+	/** Button for adding a new research employee */
+	private JButton btnAddResearchEmployee;
+	/** Button for removing the selected employee from the directory */
+	private JButton btnRemoveResearchEmployee;
+	/** Reference to UserDirectory */
+	private UserDirectory userDirectory;
+	/** Reference to CompanyDirectory */
+	private CompanyDirectory companyDirectory;
 	
 	/**
-	 * Constructs the FacultyDirectoryPanel and sets up the GUI 
+	 * Constructs the ResearchEmployeeDirectoryPanel and sets up the GUI 
 	 * components.
 	 */
 	public ResearchEmployeeDirectoryPanel() {
 		super(new GridBagLayout());
 		
-		facultyDirectory = GRSManager.getInstance().getCompanyDirectory();
+		userDirectory = GRSManager.getInstance().getUserDirectory();
+		companyDirectory = GRSManager.getInstance().getCompanyDirectory();
 		
 		//Set up Directory buttons
-		btnNewFacultyList = new JButton("New Faculty Directory");
-		btnNewFacultyList.addActionListener(this);
-		btnLoadFacultyList = new JButton("Load Faculty Directory");
-		btnLoadFacultyList.addActionListener(this);
-		btnSaveFacultyList = new JButton("Save Faculty Directory");
-		btnSaveFacultyList.addActionListener(this);
+		btnNewResearchEmployeeList = new JButton("New Employee Directory");
+		btnNewResearchEmployeeList.addActionListener(this);
+		btnLoadResearchEmployeeList = new JButton("Load Employee Directory");
+		btnLoadResearchEmployeeList.addActionListener(this);
+		btnSaveResearchEmployeeList = new JButton("Save Employee Directory");
+		btnSaveResearchEmployeeList.addActionListener(this);
 		
 		JPanel pnlDirectoryButton = new JPanel();
 		pnlDirectoryButton.setLayout(new GridLayout(1, 3));
-		pnlDirectoryButton.add(btnNewFacultyList);
-		pnlDirectoryButton.add(btnLoadFacultyList);
-		pnlDirectoryButton.add(btnSaveFacultyList);
+		pnlDirectoryButton.add(btnNewResearchEmployeeList);
+		pnlDirectoryButton.add(btnLoadResearchEmployeeList);
+		pnlDirectoryButton.add(btnSaveResearchEmployeeList);
 		
 		Border lowerEtched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
 		TitledBorder boarder = BorderFactory.createTitledBorder(lowerEtched, "Directory Buttons");
@@ -115,32 +120,32 @@ public class ResearchEmployeeDirectoryPanel extends JPanel implements ActionList
 		pnlDirectoryButton.setToolTipText("Directory Buttons");
 		
 		//Set up Directory table
-		facultyDirectoryTableModel = new FacultyDirectoryTableModel();
-		tableFacultyDirectory = new JTable(facultyDirectoryTableModel);
-		tableFacultyDirectory.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		tableFacultyDirectory.setPreferredScrollableViewportSize(new Dimension(500, 500));
-		tableFacultyDirectory.setFillsViewportHeight(true);
+		researchEmployeeDirectoryTableModel = new ResearchEmployeeDirectoryTableModel();
+		tableResearchEmployeeDirectory = new JTable(researchEmployeeDirectoryTableModel);
+		tableResearchEmployeeDirectory.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tableResearchEmployeeDirectory.setPreferredScrollableViewportSize(new Dimension(500, 500));
+		tableResearchEmployeeDirectory.setFillsViewportHeight(true);
 		
-		scrollFacultyDirectory = new JScrollPane(tableFacultyDirectory, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		scrollResearchEmployeeDirectory = new JScrollPane(tableResearchEmployeeDirectory, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		
-		boarder = BorderFactory.createTitledBorder(lowerEtched, "Faculty Directory");
-		scrollFacultyDirectory.setBorder(boarder);
-		scrollFacultyDirectory.setToolTipText("Faculty Directory");
+		boarder = BorderFactory.createTitledBorder(lowerEtched, "Employee Directory");
+		scrollResearchEmployeeDirectory.setBorder(boarder);
+		scrollResearchEmployeeDirectory.setToolTipText("Employee Directory");
 		
 		//Set up Faculty buttons
-		btnAddFaculty = new JButton("Add Faculty");
-		btnAddFaculty.addActionListener(this);
-		btnRemoveFaculty = new JButton("Remove Faculty");
-		btnRemoveFaculty.addActionListener(this);
+		btnAddResearchEmployee = new JButton("Add Employee");
+		btnAddResearchEmployee.addActionListener(this);
+		btnRemoveResearchEmployee = new JButton("Remove Employee");
+		btnRemoveResearchEmployee.addActionListener(this);
 		
-		JPanel pnlFacultyButtons = new JPanel();
-		pnlFacultyButtons.setLayout(new GridLayout(1, 2));
-		pnlFacultyButtons.add(btnAddFaculty);
-		pnlFacultyButtons.add(btnRemoveFaculty);
+		JPanel pnlResearchEmployeeButtons = new JPanel();
+		pnlResearchEmployeeButtons.setLayout(new GridLayout(1, 2));
+		pnlResearchEmployeeButtons.add(btnAddResearchEmployee);
+		pnlResearchEmployeeButtons.add(btnRemoveResearchEmployee);
 		
-		boarder = BorderFactory.createTitledBorder(lowerEtched, "Faculty Controls");
-		pnlFacultyButtons.setBorder(boarder);
-		pnlFacultyButtons.setToolTipText("Faculty Controls");
+		boarder = BorderFactory.createTitledBorder(lowerEtched, "Employee Controls");
+		pnlResearchEmployeeButtons.setBorder(boarder);
+		pnlResearchEmployeeButtons.setToolTipText("Employee Controls");
 		
 		//Set up Faculty form
 		lblFirstName = new JLabel("First Name");
@@ -149,39 +154,39 @@ public class ResearchEmployeeDirectoryPanel extends JPanel implements ActionList
 		lblEmail = new JLabel("Email");
 		lblPassword = new JLabel("Password");
 		lblRepeatPassword = new JLabel("Repeat Password");
-		lblMaxCourses = new JLabel("Max Courses");
+		lblMaxOrders = new JLabel("Max Orders");
 		txtFirstName = new JTextField(20);
 		txtLastName = new JTextField(20);
 		txtId = new JTextField(20);
 		txtEmail = new JTextField(20);
 		txtPassword = new JPasswordField(20);
 		txtRepeatPassword = new JPasswordField(20);
-		comboMaxCourses = new JComboBox<Integer>();
-		comboMaxCourses.addItem(1);
-		comboMaxCourses.addItem(2);
-		comboMaxCourses.addItem(3);
-		comboMaxCourses.setEditable(false);
+		comboMaxOrders = new JComboBox<Integer>();
+		comboMaxOrders.addItem(1);
+		comboMaxOrders.addItem(2);
+		comboMaxOrders.addItem(3);
+		comboMaxOrders.setEditable(false);
 		
-		JPanel pnlFacultyForm = new JPanel();
-		pnlFacultyForm.setLayout(new GridLayout(7, 2));
-		pnlFacultyForm.add(lblFirstName);
-		pnlFacultyForm.add(txtFirstName);
-		pnlFacultyForm.add(lblLastName);
-		pnlFacultyForm.add(txtLastName);
-		pnlFacultyForm.add(lblId);
-		pnlFacultyForm.add(txtId);
-		pnlFacultyForm.add(lblEmail);
-		pnlFacultyForm.add(txtEmail);
-		pnlFacultyForm.add(lblPassword);
-		pnlFacultyForm.add(txtPassword);
-		pnlFacultyForm.add(lblRepeatPassword);
-		pnlFacultyForm.add(txtRepeatPassword);
-		pnlFacultyForm.add(lblMaxCourses);
-		pnlFacultyForm.add(comboMaxCourses);
+		JPanel pnlResearchEmployeeForm = new JPanel();
+		pnlResearchEmployeeForm.setLayout(new GridLayout(7, 2));
+		pnlResearchEmployeeForm.add(lblFirstName);
+		pnlResearchEmployeeForm.add(txtFirstName);
+		pnlResearchEmployeeForm.add(lblLastName);
+		pnlResearchEmployeeForm.add(txtLastName);
+		pnlResearchEmployeeForm.add(lblId);
+		pnlResearchEmployeeForm.add(txtId);
+		pnlResearchEmployeeForm.add(lblEmail);
+		pnlResearchEmployeeForm.add(txtEmail);
+		pnlResearchEmployeeForm.add(lblPassword);
+		pnlResearchEmployeeForm.add(txtPassword);
+		pnlResearchEmployeeForm.add(lblRepeatPassword);
+		pnlResearchEmployeeForm.add(txtRepeatPassword);
+		pnlResearchEmployeeForm.add(lblMaxOrders);
+		pnlResearchEmployeeForm.add(comboMaxOrders);
 		
-		boarder = BorderFactory.createTitledBorder(lowerEtched, "Faculty Information");
-		pnlFacultyForm.setBorder(boarder);
-		pnlFacultyForm.setToolTipText("Faculty Information");
+		boarder = BorderFactory.createTitledBorder(lowerEtched, "Employee Information");
+		pnlResearchEmployeeForm.setBorder(boarder);
+		pnlResearchEmployeeForm.setToolTipText("Employee Information");
 		
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 0;
@@ -198,7 +203,7 @@ public class ResearchEmployeeDirectoryPanel extends JPanel implements ActionList
 		c.weighty = 1;
 		c.anchor = GridBagConstraints.LINE_START;
 		c.fill = GridBagConstraints.BOTH;
-		this.add(scrollFacultyDirectory, c);
+		this.add(scrollResearchEmployeeDirectory, c);
 		
 		c.gridx = 0;
 		c.gridy = 2;
@@ -206,7 +211,7 @@ public class ResearchEmployeeDirectoryPanel extends JPanel implements ActionList
 		c.weighty = .5;
 		c.anchor = GridBagConstraints.LINE_START;
 		c.fill = GridBagConstraints.BOTH;
-		this.add(pnlFacultyButtons, c);
+		this.add(pnlResearchEmployeeButtons, c);
 		
 		c.gridx = 0;
 		c.gridy = 3;
@@ -214,37 +219,37 @@ public class ResearchEmployeeDirectoryPanel extends JPanel implements ActionList
 		c.weighty = 1;
 		c.anchor = GridBagConstraints.LINE_START;
 		c.fill = GridBagConstraints.BOTH;
-		this.add(pnlFacultyForm, c);
+		this.add(pnlResearchEmployeeForm, c);
 		
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == btnLoadFacultyList) {
+		if (e.getSource() == btnLoadResearchEmployeeList) {
 			String fileName = getFileName(true);
 			try {
-				facultyDirectory.loadCompanyFromFile(fileName);
-				facultyDirectoryTableModel.updateData();
-				scrollFacultyDirectory.revalidate();
-				scrollFacultyDirectory.repaint();
-				facultyDirectoryTableModel.fireTableDataChanged();
+				userDirectory.loadUsersFromFile(fileName);
+				researchEmployeeDirectoryTableModel.updateData();
+				scrollResearchEmployeeDirectory.revalidate();
+				scrollResearchEmployeeDirectory.repaint();
+				researchEmployeeDirectoryTableModel.fireTableDataChanged();
 			} catch (IllegalArgumentException iae) {
 				JOptionPane.showMessageDialog(this, iae.getMessage());
 			}
-		} else if (e.getSource() == btnSaveFacultyList) {
+		} else if (e.getSource() == btnSaveResearchEmployeeList) {
 			String fileName = getFileName(false);
 			try {
-				facultyDirectory.saveCompanyDirectory(fileName);
+				userDirectory.saveUserDirectory(fileName);
 			} catch (IllegalArgumentException iae) {
 				JOptionPane.showMessageDialog(this, iae.getMessage());
 			}
-		} else if (e.getSource() == btnNewFacultyList) {
-			facultyDirectory.newCompanyDirectory();
-			facultyDirectoryTableModel.updateData();
-			scrollFacultyDirectory.revalidate();
-			scrollFacultyDirectory.repaint();
-			facultyDirectoryTableModel.fireTableDataChanged();
-		} else if (e.getSource() == btnAddFaculty) {
+		} else if (e.getSource() == btnNewResearchEmployeeList) {
+			userDirectory.newUserDirectory();
+			researchEmployeeDirectoryTableModel.updateData();
+			scrollResearchEmployeeDirectory.revalidate();
+			scrollResearchEmployeeDirectory.repaint();
+			researchEmployeeDirectoryTableModel.fireTableDataChanged();
+		} else if (e.getSource() == btnAddResearchEmployee) {
 			String firstName = txtFirstName.getText();
 			String lastName = txtLastName.getText();
 			String id = txtId.getText();
@@ -253,9 +258,9 @@ public class ResearchEmployeeDirectoryPanel extends JPanel implements ActionList
 			char[] repeatPassword = txtRepeatPassword.getPassword();
 			int maxCourses = 0;
 			try {
-				maxCourses = comboMaxCourses.getItemAt(comboMaxCourses.getSelectedIndex());
+				maxCourses = comboMaxOrders.getItemAt(comboMaxOrders.getSelectedIndex());
 			} catch (NumberFormatException nfe) {
-				JOptionPane.showMessageDialog(this, "Max courses must be a positive number between 1 and 3.");
+				JOptionPane.showMessageDialog(this, "Max orders must be a positive number between 1 and 3.");
 				return;
 			}
 			
@@ -270,33 +275,45 @@ public class ResearchEmployeeDirectoryPanel extends JPanel implements ActionList
 			}
 			
 			try {
-				if (facultyDirectory.addCompany(firstName, new ResearchSite("a1","c","nc","usa",123,"name",1) ) /*lastName, id, email, pwString, repeatPWString, maxCourses)*/) {
+				if (userDirectory.addUser(firstName,lastName,id,email,pwString,repeatPWString) ) {
 					txtFirstName.setText("");
 					txtLastName.setText("");
 					txtId.setText("");
 					txtEmail.setText("");
 					txtPassword.setText("");
 					txtRepeatPassword.setText("");
-					comboMaxCourses.setSelectedIndex(0);
+					comboMaxOrders.setSelectedIndex(0);
+					
+					if (companyDirectory.getCompanyList().size() == 0) { 
+						companyDirectory.addCompany("ERT","1818 Market Street","Suite 1000","Philadelphia","PA","19103","USA");
+					} else {
+					  Company c = null;
+					  for(int i = 0; i < companyDirectory.getCompanyList().size(); i++) {
+					      if(companyDirectory.getCompanyList().get(i).getName().equals("ERT"))
+					  		  c = companyDirectory.getCompanyList().get(i);
+					  }
+					  if (c == null) companyDirectory.addCompany("ERT","1818 Market Street","Suite 1000","Philadelphia","PA","19103","USA");
+					}
+					
 				} else {
-					JOptionPane.showMessageDialog(this, "Faculty already in system.");
+					JOptionPane.showMessageDialog(this, "Employee already in system.");
 				}
 			} catch (IllegalArgumentException iae) {
 				JOptionPane.showMessageDialog(this, iae.getMessage());
 			}
-			facultyDirectoryTableModel.updateData();
-		} else if (e.getSource() == btnRemoveFaculty) {
-			int row = tableFacultyDirectory.getSelectedRow();
+			researchEmployeeDirectoryTableModel.updateData();
+		} else if (e.getSource() == btnRemoveResearchEmployee) {
+			int row = tableResearchEmployeeDirectory.getSelectedRow();
 			if (row == -1) {
-				JOptionPane.showMessageDialog(this, "No faculty selected.");
+				JOptionPane.showMessageDialog(this, "No employee selected.");
 			} else {
 				try {
-					facultyDirectory.removeCompany(tableFacultyDirectory.getValueAt(row, 2).toString());
+					userDirectory.removeUser(tableResearchEmployeeDirectory.getValueAt(row, 2).toString());
 				} catch (ArrayIndexOutOfBoundsException aioobe) {
-					JOptionPane.showMessageDialog(this, "No faculty selected.");
+					JOptionPane.showMessageDialog(this, "No employee selected.");
 				}
 			}
-			facultyDirectoryTableModel.updateData();
+			researchEmployeeDirectoryTableModel.updateData();
 		}
 		
 		this.validate();
@@ -314,10 +331,10 @@ public class ResearchEmployeeDirectoryPanel extends JPanel implements ActionList
 		fc.setApproveButtonText("Select");
 		int returnVal = Integer.MIN_VALUE;
 		if (chooserType) {
-			fc.setDialogTitle("Load Faculty Directory");
+			fc.setDialogTitle("Load Employee Directory");
 			returnVal = fc.showOpenDialog(this);
 		} else {
-			fc.setDialogTitle("Save Faculty Directory");
+			fc.setDialogTitle("Save Employee Directory");
 			returnVal = fc.showSaveDialog(this);
 		}
 		if (returnVal != JFileChooser.APPROVE_OPTION) {
@@ -329,24 +346,24 @@ public class ResearchEmployeeDirectoryPanel extends JPanel implements ActionList
 	}
 	
 	/**
-	 * {@link FacultyDirectoryTableModel} is the object underlying the {@link JTable} object that displays
+	 * {@link ResearchEmployeeDirectoryTableModel} is the object underlying the {@link JTable} object that displays
 	 * the list of Faculty to the system.
-	 * @author Sarah Heckman
+	 * @author Arthur Vargas
 	 */
-	private class FacultyDirectoryTableModel extends AbstractTableModel {
+	private class ResearchEmployeeDirectoryTableModel extends AbstractTableModel {
 		
 		/** ID number used for object serialization. */
 		private static final long serialVersionUID = 1L;
 		/** Column names for the table */
-		private String [] columnNames = {"First Name", "Last Name", "Faculty ID"};
+		private String [] columnNames = {"First Name", "Last Name", "Employee ID"};
 		/** Data stored in the table */
 		private Object [][] data;
 		
 		/**
-		 * Constructs the {@link FacultyDirectoryTableModel} by requesting the latest information
+		 * Constructs the {@link ResearchEmployeeDirectoryTableModel} by requesting the latest information
 		 * from the {@link RequirementTrackerModel}.
 		 */
-		public FacultyDirectoryTableModel() {
+		public ResearchEmployeeDirectoryTableModel() {
 			updateData();
 		}
 
@@ -401,7 +418,7 @@ public class ResearchEmployeeDirectoryPanel extends JPanel implements ActionList
 		 * Updates the given model with {@link Employee} information from the {@link CustomerDirectory}.
 		 */
 		public void updateData() {
-			data = facultyDirectory.getCompanyDirectory();
+			data = userDirectory.getEmployeeDirectory();
 		}
 	}
 

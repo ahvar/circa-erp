@@ -72,10 +72,10 @@ public class ResearchCompanyOrderSchedulePanel extends JPanel implements ActionL
 	private JLabel lblProductlistExtraCapacity = new JLabel("9");
 	
 	
-	/** Panel for displaying Faculty Details */
+	/** Panel for displaying order details */
 	/** ID used for object serialization */
 	private static final long serialVersionUID = 1L;
-	/** JTable for displaying the employee schedule of Orders */
+	/** JTable for displaying the employee schedule of orders */
 	private JTable tableEmployeeSchedule;
 	/** Scroll pane for table */
 	private JScrollPane scrollEmployeeSchedule;

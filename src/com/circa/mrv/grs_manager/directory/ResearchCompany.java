@@ -29,6 +29,12 @@ public class ResearchCompany extends Company {
 		setDevices();
 	}
 	
+	public ResearchCompany( String name, String add1, String add2, String city, String state, String zip, String country ){
+		super(name,add1,add2,city,state,country,zip);
+		setStudies(null);
+		setDevices();
+	}
+	
 	
 	/**
 	 * Sets the list of studies to the instance variable named 'studies'.
@@ -50,7 +56,7 @@ public class ResearchCompany extends Company {
 	 * Counts the devices in all the studies and assigns it to the instance variable named 'devices'
 	 */
 	public void setDevices() {
-		if(studies.isEmpty()) { 
+		if(studies == null) { 
 		  this.devices = 0; 
 		} else {
 		    for(int i = 0; i < studies.size(); i++ ) {
