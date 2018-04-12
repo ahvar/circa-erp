@@ -110,14 +110,8 @@ public class UserDirectory {
 		//If an IllegalArgumentException is thrown, it's passed up from faculty
 		//to the GUI 
 		Employee employee = new Employee( firstName, lastName, id, email, hashPW );
-		
-		for (int i = 0; i < users.size(); i++) {
-			User s = users.get(i);
-			if (s.getId().equals(employee.getId())) {
-				return false;
-			}
-		}
-		return users.add(employee);
+
+		return this.getUsers().add(employee);
 	}
 	
 	/**
@@ -162,6 +156,14 @@ public class UserDirectory {
 		} catch (IOException e) {
 			throw new IllegalArgumentException("Unable to write to file " + fileName);
 		}
+	}
+	
+	/**
+	 * Returns the LinkedAbstractList of users contained in this user directory.
+	 * @return users the directory of users
+	 */
+	public LinkedAbstractList<User> getUsers() {
+		return users;
 	}
 
 }

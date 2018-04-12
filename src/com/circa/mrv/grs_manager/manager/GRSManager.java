@@ -108,9 +108,9 @@ public class GRSManager {
 			MessageDigest digest = MessageDigest.getInstance(HASH_ALGORITHM);
 			digest.update(password.getBytes());
 			String localHashPW = new String(digest.digest());
-			
+		
 		    for(int i = 0; i < companyDirectory.getCompanyList().size(); i++ ) {
-		      	
+		    	
 			  for(int j = 0; j < companyDirectory.getCompanyList().get(i).getLocations().size(); j++) {
 				  
 				 if( (u = companyDirectory.getCompanyAt(i).getLocations().get(j).findEmployee(id, password)) != null ) {
@@ -358,10 +358,11 @@ public class GRSManager {
 	}
 	
 	/**
-	 * Gets the company Directory
+	 * Gets the company Directory. If company directory is null, returns a new company directory.
 	 * @return companyDirectory The directory of the company. 
 	 */
 	public CompanyDirectory getCompanyDirectory(){
+		if(companyDirectory == null) return new CompanyDirectory();
 		return companyDirectory;
 	}
 	

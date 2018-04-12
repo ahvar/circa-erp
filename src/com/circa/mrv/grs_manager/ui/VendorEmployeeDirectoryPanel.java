@@ -157,7 +157,7 @@ public class VendorEmployeeDirectoryPanel extends JPanel implements ActionListen
 		lblEmail = new JLabel("Email");
 		lblPassword = new JLabel("Password");
 		lblRepeatPassword = new JLabel("Repeat Password");
-		lblMaxCredits = new JLabel("Max Credits");
+		lblMaxCredits = new JLabel("Max Products");
 		txtFirstName = new JTextField(20);
 		txtLastName = new JTextField(20);
 		txtId = new JTextField(20);
@@ -277,6 +277,7 @@ public class VendorEmployeeDirectoryPanel extends JPanel implements ActionListen
 			
 			try {
 				if (userDirectory.addUser(firstName, lastName, id, email, pwString, repeatPWString)) {
+					//System.out.println(userDirectory.getUserById("avar").getFirstName());
 					txtFirstName.setText("");
 					txtLastName.setText("");
 					txtId.setText("");
@@ -285,12 +286,17 @@ public class VendorEmployeeDirectoryPanel extends JPanel implements ActionListen
 					txtRepeatPassword.setText("");
 					txtMaxCredits.setText("");
 					
-					Company c = null;
-					for(int i = 0; i < companyDirectory.getCompanyList().size(); i++) {
-					  	if(companyDirectory.getCompanyList().get(i).getName().equals("Circassia Pharmaceuticals"))
-					  		c = companyDirectory.getCompanyList().get(i);
+					if (companyDirectory.getCompanyList().size() == 0) { 
+						companyDirectory.addCompany("Circassia Pharmaceuticals","5151 McCrimmon Parkway","Suite 260","Morrisville","NC","27560","USA");
+					} else {
+					  Company c = null;
+					  for(int i = 0; i < companyDirectory.getCompanyList().size(); i++) {
+					      if(companyDirectory.getCompanyList().get(i).getName().equals("Circassia Pharmaceuticals"))
+					  		  c = companyDirectory.getCompanyList().get(i);
+					  }
+					  if (c == null) companyDirectory.addCompany("Circassia Pharmaceuticals","5151 McCrimmon Parkway","Suite 260","Morrisville","NC","27560","USA");
 					}
-					if (c == null) companyDirectory.addCompany("Circassia Pharmaceuticals","5151 McCrimmon Parkway","Suite 260","Morrisville","NC","27560","USA");
+					
 					
 				} else {
 					JOptionPane.showMessageDialog(this, "Employee already in system.");
@@ -298,6 +304,7 @@ public class VendorEmployeeDirectoryPanel extends JPanel implements ActionListen
 			} catch (IllegalArgumentException iae) {
 				JOptionPane.showMessageDialog(this, iae.getMessage());
 			}
+			
 			employeeDirectoryTableModel.updateData();
 			
 		} else if (e.getSource() == btnRemoveEmployee) {

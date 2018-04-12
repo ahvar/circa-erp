@@ -96,6 +96,47 @@ public class LinkedAbstractList<E> extends AbstractList<E> {
 		}
 	}
 	
+	/**
+	 * Adds an element to the end of the list. The list must have capacity for additional elements.
+	 * 
+	 * @param element the element to be added
+	 * @throws IllegalArgumentException if the list is full
+	 * @throws NullPointerException if element is null
+	 * @return true if the element is succesfully added
+	 */
+	@Override
+	public boolean add(E element) {
+		
+		if (size == capacity) {
+			throw new IllegalArgumentException("size equals capacity");
+		}
+		if (element == null) {
+			throw new NullPointerException("element is null");
+		}
+		if( front == null) {
+			front = new ListNode<E>(element);
+			back = front;
+			size++;
+			return true;
+		} else {
+		    ListNode<E> current = front;
+		    while (current != null) {
+			    if (current.data.equals(element)) {
+				    throw new IllegalArgumentException("Duplicate element.");
+			    }
+			    current = current.next;
+		    }
+		    current = front;
+		    while(current.next != null) {
+		    	current = current.next;
+		    }
+		    current.next = new ListNode<E>(element);
+		    if(current == null) System.err.println("current = null");
+		    size++;
+		    return true;
+		}
+	}
+	
 //	/**
 //	 * Insert new data into the front of the list
 //	 * @param data the data to insert into the list
@@ -247,9 +288,9 @@ public class LinkedAbstractList<E> extends AbstractList<E> {
 		if (index < 0 || index >= size()) {
 			 throw new IndexOutOfBoundsException();
 		 }
-		
+		if( size == 1) return front.data;
 		ListNode<E> current = front;
-		for (int i = 0; i < index; i++) {
+		for (int i = 0; i != index; i++) {
 			current = current.next;
 		}
 		return current.data;
@@ -274,27 +315,27 @@ public class LinkedAbstractList<E> extends AbstractList<E> {
 	 * reference to the next node in the list.
 	 * @param <T> generic type parameter
 	 */
-	private class ListNode<T> {
+	private class ListNode<E> {
 		/** The data object */
 		private E data;
 		/** The next node in the list */
-		private ListNode<T> next;
+		private ListNode<E> next;
 		
-//		/**
-//		 * Constructs a ListNode with parameter specified T
-//		 * @param data the data element of this node
-//		 */
-//		public ListNode(E data) {
-//			this.data = data;
-//			this.next = null;
-//		}
+		/**
+		 * Constructs a ListNode with the E parameter and sets the next node to null
+		 * @param data the data element of this node
+		 */
+		public ListNode(E data) {
+			this.data = data;
+			this.next = null;
+		}
 		
 		/**
 		 * Constructs a ListNode with parameter specified T and next
 		 * @param data the data element of this node
 		 * @param next a reference to the next node in the list
 		 */
-		public ListNode (E data, ListNode<T> next) {
+		public ListNode (E data, ListNode<E> next) {
 			this.data = data;
 			this.next = next;
 		}
