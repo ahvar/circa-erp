@@ -29,6 +29,8 @@ import com.circa.mrv.grs_manager.directory.Company;
 import com.circa.mrv.grs_manager.directory.CompanyDirectory;
 import com.circa.mrv.grs_manager.directory.UserDirectory;
 import com.circa.mrv.grs_manager.manager.GRSManager;
+import com.circa.mrv.grs_manager.user.Employee;
+import com.circa.mrv.grs_manager.location.BillTo;
 import com.circa.mrv.grs_manager.location.ResearchSite;
 
 /**
@@ -293,6 +295,16 @@ public class ResearchEmployeeDirectoryPanel extends JPanel implements ActionList
 					  		  c = companyDirectory.getCompanyList().get(i);
 					  }
 					  if (c == null) companyDirectory.addCompany("ERT","1818 Market Street","Suite 1000","Philadelphia","PA","19103","USA");
+					}
+					
+					Employee emp;
+					if((emp = companyDirectory.getEmployeeById(id)) == null) {
+						for(int i = 0; i < companyDirectory.getCompanyByNameAndStreet("ERT","1818 Market Street" ).getLocations().size(); i++) {
+							if(companyDirectory.getCompanyByNameAndStreet("ERT","1818 Market Street").getLocations().get(i) instanceof BillTo) {
+								companyDirectory.getCompanyByNameAndStreet("ERT","1818 Market Street").getLocations().get(i).getEmployees().add(emp);
+							}
+						}
+						
 					}
 					
 				} else {

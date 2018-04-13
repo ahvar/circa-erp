@@ -7,6 +7,8 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -26,6 +28,8 @@ import javax.swing.table.AbstractTableModel;
 
 import com.circa.mrv.grs_manager.manager.GRSManager;
 import com.circa.mrv.grs_manager.directory.Company;
+import com.circa.mrv.grs_manager.location.BillTo;
+import com.circa.mrv.grs_manager.user.Employee;
 import com.circa.mrv.grs_manager.directory.CompanyDirectory;
 import com.circa.mrv.grs_manager.directory.UserDirectory;
 
@@ -91,6 +95,8 @@ public class VendorEmployeeDirectoryPanel extends JPanel implements ActionListen
 	private UserDirectory userDirectory;
 	/** Reference to CompanyDirectory */
 	private CompanyDirectory companyDirectory;
+	/** Hashing algorithm */
+	private static final String HASH_ALGORITHM = "SHA-256";
 
 	
 	/**
@@ -277,7 +283,7 @@ public class VendorEmployeeDirectoryPanel extends JPanel implements ActionListen
 			
 			try {
 				if (userDirectory.addUser(firstName, lastName, id, email, pwString, repeatPWString)) {
-					//System.out.println(userDirectory.getUserById("avar").getFirstName());
+					
 					txtFirstName.setText("");
 					txtLastName.setText("");
 					txtId.setText("");
@@ -296,6 +302,47 @@ public class VendorEmployeeDirectoryPanel extends JPanel implements ActionListen
 					  }
 					  if (c == null) companyDirectory.addCompany("Circassia Pharmaceuticals","5151 McCrimmon Parkway","Suite 260","Morrisville","NC","27560","USA");
 					}
+					
+					Employee emp;
+					if((emp = companyDirectory.getEmployeeById(id)) == null) {
+						
+						String hashPW = "";
+						String repeatHashPW = "";
+						
+						if (pwString == null || repeatPWString == null || pwString.equals("") || repeatPWString.equals("")) {
+							throw new IllegalArgumentException("Invalid password");
+						}
+						try {
+							MessageDigest digest1 = MessageDigest.getInstance(HASH_ALGORITHM);
+							digest1.update(pwString.getBytes());
+							hashPW = new String(digest1.digest());
+							
+							MessageDigest digest2 = MessageDigest.getInstance(HASH_ALGORITHM);
+							digest2.update(repeatPWString.getBytes());
+							repeatHashPW = new String(digest2.digest());
+							
+						} catch (NoSuchAlgorithmException ex) {
+							throw new IllegalArgumentException("Cannot hash password");
+						}
+						
+						if (!hashPW.equals(repeatHashPW)) {
+							throw new IllegalArgumentException("Passwords do not match");
+						}
+						
+						
+						if(!companyDirectory.addEmployeeToBillToLocation(new Employee(firstName,lastName,id,email,hashPW), "Circassia Pharmaceuticals", "5151 McCrimmon Parkway"))
+							throw new IllegalArgumentException("Vendor company bill to not found in directory");
+				
+						System.out.println(GRSManager.getInstance().getCompanyDirectory().getCompanyList().size());
+						System.out.println(GRSManager.getInstance().getCompanyDirectory().getCompanyList().get(0).getLocations().size());
+						System.out.println(GRSManager.getInstance().getCompanyDirectory().getCompanyList().get(0).getLocations().get(0).getEmployees().size());
+						System.out.println(companyDirectory.getCompanyList().get(0).getLocations().get(0).getEmployees().size());
+						
+					}
+					
+					System.out.println(GRSManager.getInstance().getCompanyDirectory().getCompanyList().size());
+					System.out.println(GRSManager.getInstance().getCompanyDirectory().getCompanyList().get(0).getLocations().get(0).getEmployees().size());
+					
 					
 					
 				} else {

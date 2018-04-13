@@ -87,10 +87,15 @@ public class CompanyDirectory {
 	 * @throws IllegalArgumentException if the company is not eRT or Circassia.
 	 */
 	public boolean addCompany(String name, Location local) {
-		if(!name.equals(Company.cir) || !name.equals(Company.ert)) 
+		
+		if(!name.equals(Company.cir) || !name.equals(Company.ert)) {
 			throw new IllegalArgumentException("This company already exists. Contact administrator to setup new company.");
-		else if(name.contains(Company.cir)) return companyDirectory.add(new VendorCompany(local, name));
-		else if(name.contains(Company.ert)) return companyDirectory.add(new ResearchCompany(local,name));
+		} else if(name.contains(Company.cir)) {
+	
+			return companyDirectory.add(new VendorCompany(local, name));
+		} else if(name.contains(Company.ert)) { 
+			return companyDirectory.add(new ResearchCompany(local,name));
+		}
 		return false;
 
 	}
@@ -111,10 +116,15 @@ public class CompanyDirectory {
 	 * @throws IllegalArgumentException if the company is not eRT or Circassia.
 	 */
 	public boolean addCompany(String name, String add1, String city, String state, String zip, String country) {
-		if(!name.equals(Company.cir) || !name.equals(Company.ert)) 
+		
+		if(!name.equals(Company.cir) || !name.equals(Company.ert)) {
 			throw new IllegalArgumentException("This company already exists. Contact administrator to setup new company.");
-		else if(name.contains(Company.cir)) return companyDirectory.add(new VendorCompany(new BillTo(add1,city,state,country,zip), name));
-		else if(name.contains(Company.ert)) return companyDirectory.add(new ResearchCompany(new BillTo(add1,city,state,country,zip),name));
+		} else if(name.contains(Company.cir)) {
+			
+			return companyDirectory.add(new VendorCompany(new BillTo(add1,city,state,zip,country,"first last"), name));
+		} else if(name.contains(Company.ert)) {
+			return companyDirectory.add(new ResearchCompany(new BillTo(add1,city,state,zip,country,"first last"),name));
+		}
 		return false;
 
 	}
@@ -135,11 +145,18 @@ public class CompanyDirectory {
 	 * @return true if added
 	 * @throws IllegalArgumentException if the company is not eRT or Circassia.
 	 */
-	public boolean addCompany(String name, String add1, String add2, String city, String state, String zip, String country) {
-		if(!name.equals(Company.cir) && !name.equals(Company.ert)) 
+	public boolean addCompany(String name, String add1, String add2, String city, String state, String zip, String country) {	
+		System.out.println("enter addCompany");
+		if(!name.equals(Company.cir) && !name.equals(Company.ert)) { 
 			throw new IllegalArgumentException("This company already exists. Contact administrator to setup new company.");
-		else if(name.equals(Company.cir)) return companyDirectory.add(new VendorCompany(new BillTo(add1,city,state,country,zip), name));
-		else if(name.equals(Company.ert)) return companyDirectory.add(new ResearchCompany(name,add1,add2,city,state,country,zip));
+		} else if(name.equals(Company.cir)) {
+			System.out.println("add vendor");
+			companyDirectory.add(new VendorCompany(new BillTo(add1,add2,city,state,zip,country), name));
+			System.out.println("companies in CompanyDirectory: " + getCompanyList().size());
+			return true;
+		} else if(name.equals(Company.ert)) {
+			return companyDirectory.add(new ResearchCompany(name,add1,add2,city,state,country,zip));
+		}
 		return false;
 	}
 	
@@ -219,7 +236,7 @@ public class CompanyDirectory {
 	 * @return the company. If no match is found, null is returned. 
 	 */
 	public Company getCompanyByNameAndStreet(String name, String add1) {
-		for (int i = 0 ; i < companyDirectory.get(i).getLocations().size() ; i++){
+		for (int i = 0 ; i < companyDirectory.size() ; i++) {
 			for(int j = 0; j < companyDirectory.get(i).getLocations().size(); j++)
 			    if ( companyDirectory.get(i).getLocations().get(j) instanceof BillTo )
 			    	if(companyDirectory.get(i).getLocations().get(j).getAddress1().equals(add1) &&
@@ -249,4 +266,26 @@ public class CompanyDirectory {
       return null;
 	}
 	
+	/**
+	 * Searches the employee list of the company whose name matches parameter name and whose bill to street address
+	 * matches the street parameter. 
+	 * @param emp the employee to add to the bill to
+	 * @param name the name of the company
+	 * @param street the street address of the bil to
+	 * @return true if the employee is successfully added.
+	 */
+	public boolean addEmployeeToBillToLocation(Employee emp, String name, String street) {
+		System.out.println("enter add employee");
+		for(int i = 0; i < companyDirectory.size(); i++) {
+			for(int j = 0; j < companyDirectory.get(i).getLocations().size(); j++) {
+				if(companyDirectory.get(i).getLocations().get(j) instanceof BillTo &&
+				companyDirectory.get(i).getName().equals(name) && 
+				companyDirectory.get(i).getLocations().get(j).getAddress1().equals(street) ) {
+					System.out.println(i + " " + j + " " + companyDirectory.get(i).getLocations().get(j).getEmployees().size() );
+					return companyDirectory.get(i).getLocations().get(j).getEmployees().add(emp);
+				}
+			}
+		}
+		return false;
+	}
 }

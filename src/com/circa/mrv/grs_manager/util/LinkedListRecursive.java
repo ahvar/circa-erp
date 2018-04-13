@@ -4,7 +4,7 @@ package com.circa.mrv.grs_manager.util;
 /**
  * custom implementation of a recursive linked list that doesn't allow for null elements or duplicate 
  * elements as defined by the equals() method.
- * @author Ben W Ioppolo
+ * @author Arthur Vargas
  * @param <E> generic type parameter
  */
 public class LinkedListRecursive<E> {
@@ -51,14 +51,18 @@ public class LinkedListRecursive<E> {
 	 * @throws IllegalArgumentException if the passed element already exists in the list. 
 	 */
 	public boolean add(E element){
-		if (element == null)
+		System.out.println("enter add");
+		if (element == null){
+			System.out.println("element false");
 			return false;
+		}
 		if(contains(element))
 			throw new IllegalArgumentException("Element already exists");
 		if(size == 0){
+			System.out.println("enter add condition");
 			front = new ListNode(element, front);
 			size++;
-			if(front == null) System.out.println("front == null");
+			System.out.println("size increment");
 			return true;
 		}
 		front.add(element);
@@ -205,7 +209,7 @@ public class LinkedListRecursive<E> {
 		 * @param data The information stored at a list item. 
 		 * @param next The reference to the next list item which is stored at the prior list item. 
 		 */
-		public ListNode(E data, ListNode next){
+		public ListNode(E data, ListNode next) {
 			this.data = data;
 			this.next = next;
 		}
@@ -213,6 +217,7 @@ public class LinkedListRecursive<E> {
 		/**
 		 * Adds the passed element to the end of the list by recursively going through the list until reaching
 		 * the end at which point the element is added. 
+		 * 
 		 * @param element The new item to add to the list. 
 		 */
 		public void add(E element){

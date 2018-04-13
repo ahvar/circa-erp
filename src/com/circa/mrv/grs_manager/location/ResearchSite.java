@@ -18,12 +18,17 @@ public class ResearchSite extends ShipTo {
 	
 	/**
 	 * Constructs a research site for a particular study.
+	 * @param add1 the street address
+	 * @param city the city
+	 * @param state the state
+	 * @param zip the zip code
+	 * @param country the country
 	 * @param num the unique ID for this site
 	 * @param name the name of a health care professional associated with the study at this site
 	 * @param devices the number of devices at this site
 	 */
-	public ResearchSite(String add1, String city, String state, String country, long num, String name, int devices) {
-		super(add1,city,state,country);
+	public ResearchSite(String add1, String city, String state, String zip, String country, long num, String name, int devices) {
+		super(add1,city,state,zip,country);
 		this.num = num;
 		this.name = name;
 		this.devices = devices;
@@ -31,12 +36,18 @@ public class ResearchSite extends ShipTo {
 	
 	/**
 	 * Constructs a research site for a particular study.
+	 * @param add1 the street address
+	 * @param add2 the suite or building number
+	 * @param city the city
+	 * @param state the state
+	 * @param zip the zip code
+	 * @param country the country
 	 * @param num the unique ID for this site
 	 * @param name the name of a health care professional associated with the study at this site
 	 * @param devices the number of devices at this site
 	 */
-	public ResearchSite(String add1, String add2, String city, String state, String country, long num, String name, int devices) {
-		this(add1,city,state,country,num,name,devices);
+	public ResearchSite(String add1, String add2, String city, String state, String zip, String country, long num, String name, int devices) {
+		this(add1,city,state,zip,country,num,name,devices);
 		setAddress2(add2);
 	}
 	

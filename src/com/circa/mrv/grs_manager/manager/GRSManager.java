@@ -108,7 +108,7 @@ public class GRSManager {
 			MessageDigest digest = MessageDigest.getInstance(HASH_ALGORITHM);
 			digest.update(password.getBytes());
 			String localHashPW = new String(digest.digest());
-		
+		    
 		    for(int i = 0; i < companyDirectory.getCompanyList().size(); i++ ) {
 		    	
 			  for(int j = 0; j < companyDirectory.getCompanyList().get(i).getLocations().size(); j++) {

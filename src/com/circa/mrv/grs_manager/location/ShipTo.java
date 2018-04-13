@@ -18,10 +18,11 @@ public class ShipTo extends Location {
 	 * @param add1 street address
 	 * @param city the city
 	 * @param state the state
+	 * @param zip the zip code
 	 * @param country the country
 	 */
-	public ShipTo(String add1, String city, String state, String country) {
-        super(add1,city,state,country);
+	public ShipTo(String add1, String city, String state, String zip, String country) {
+        super(add1,city,state,zip,country);
 	}
 
 	/**
@@ -30,10 +31,11 @@ public class ShipTo extends Location {
 	 * @param add2 additional information for the street address
 	 * @param city the city
 	 * @param state the state
+	 * @param zip the zip code
 	 * @param country the country
 	 */
-	public ShipTo(String add1, String add2, String city, String state, String country, String name) {
-		this(add1,city,state,country);
+	public ShipTo(String add1, String add2, String city, String state, String zip, String country, String name) {
+		this(add1,city,state,zip,country);
 		setAddress2(add2);
 		setShippingContact(name);
 	}

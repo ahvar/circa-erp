@@ -33,13 +33,16 @@ public abstract class Location {
 	 * @param address1 street address
 	 * @param city the city
 	 * @param state the state
+	 * @param zip the zip code
 	 * @param country the country
 	 */
-	public Location(String address1, String city, String state, String country) {
+	public Location(String address1, String city, String state, String zip, String country) {
 		setAddress1(address1);
 		setCity(city);
 		setState(state);
+		setZip(zip);
 		setCountry(country);
+		employees = new LinkedListRecursive<Employee>();
 	}
 	
 	/**
@@ -49,10 +52,11 @@ public abstract class Location {
 	 * @param address2 additional information
 	 * @param city the city
 	 * @param state the state
+	 * @param zip the zip code
 	 * @param country the country
 	 */
-	public Location(String address1, String address2, String city, String state, String country) {
-		this(address1,city,state,country);
+	public Location(String address1, String address2, String city, String state, String zip, String country) {
+		this(address1,city,state,zip,country);
 		setAddress2(address2);
 	}
 
