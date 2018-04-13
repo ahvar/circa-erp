@@ -146,11 +146,10 @@ public class CompanyDirectory {
 	 * @throws IllegalArgumentException if the company is not eRT or Circassia.
 	 */
 	public boolean addCompany(String name, String add1, String add2, String city, String state, String zip, String country) {	
-		System.out.println("enter addCompany");
+		
 		if(!name.equals(Company.cir) && !name.equals(Company.ert)) { 
 			throw new IllegalArgumentException("This company already exists. Contact administrator to setup new company.");
 		} else if(name.equals(Company.cir)) {
-			System.out.println("add vendor");
 			companyDirectory.add(new VendorCompany(new BillTo(add1,add2,city,state,zip,country), name));
 			System.out.println("companies in CompanyDirectory: " + getCompanyList().size());
 			return true;
@@ -275,7 +274,6 @@ public class CompanyDirectory {
 	 * @return true if the employee is successfully added.
 	 */
 	public boolean addEmployeeToBillToLocation(Employee emp, String name, String street) {
-		System.out.println("enter add employee");
 		for(int i = 0; i < companyDirectory.size(); i++) {
 			for(int j = 0; j < companyDirectory.get(i).getLocations().size(); j++) {
 				if(companyDirectory.get(i).getLocations().get(j) instanceof BillTo &&

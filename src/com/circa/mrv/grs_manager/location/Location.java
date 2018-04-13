@@ -180,15 +180,15 @@ public abstract class Location {
 	 * an IllegalArgumentException is thrown.
 	 * 
 	 * @param userID the unique id for the employee
-	 * @param password the employee password
+	 * @param localHashPW the employee password
 	 * @throws IllegalArgumentException if the userID is invalid
 	 * @return the employee whose unique id matches userID
 	 */
-	public Employee findEmployee(String userID, String password) throws IllegalArgumentException {
-		if( userID == null || userID.equals("") || password == null || password.equals("")) 
+	public Employee findEmployee(String userID, String localHashPW) throws IllegalArgumentException {
+		if( userID == null || userID.equals("") || localHashPW == null || localHashPW.equals("")) 
 			throw new IllegalArgumentException("Invalid User ID");
 		for(int i = 0; i < employees.size(); i++ ) {
-			if(employees.get(i).getId().equals(userID) && employees.get(i).getPassword().equals(password))
+			if(employees.get(i).getId().equals(userID) && employees.get(i).getPassword().equals(localHashPW))
 				return employees.get(i);
 		}
 		return null;

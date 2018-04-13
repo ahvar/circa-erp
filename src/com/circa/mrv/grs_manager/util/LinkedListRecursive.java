@@ -51,7 +51,6 @@ public class LinkedListRecursive<E> {
 	 * @throws IllegalArgumentException if the passed element already exists in the list. 
 	 */
 	public boolean add(E element){
-		System.out.println("enter add");
 		if (element == null){
 			System.out.println("element false");
 			return false;
@@ -59,10 +58,10 @@ public class LinkedListRecursive<E> {
 		if(contains(element))
 			throw new IllegalArgumentException("Element already exists");
 		if(size == 0){
-			System.out.println("enter add condition");
+			
 			front = new ListNode(element, front);
 			size++;
-			System.out.println("size increment");
+			
 			return true;
 		}
 		front.add(element);
