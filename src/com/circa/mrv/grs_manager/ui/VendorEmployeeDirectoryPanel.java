@@ -332,17 +332,8 @@ public class VendorEmployeeDirectoryPanel extends JPanel implements ActionListen
 						
 					    if(!companyDirectory.addEmployeeToBillToLocation(new Employee(firstName,lastName,id,email,hashPW), "Circassia Pharmaceuticals", "5151 McCrimmon Parkway"))
 							throw new IllegalArgumentException("Vendor company bill to not found in directory");
-				
-						System.out.println(GRSManager.getInstance().getCompanyDirectory().getCompanyList().size());
-						System.out.println(GRSManager.getInstance().getCompanyDirectory().getCompanyList().get(0).getLocations().size());
-						System.out.println(GRSManager.getInstance().getCompanyDirectory().getCompanyList().get(0).getLocations().get(0).getEmployees().size());
-						System.out.println(companyDirectory.getCompanyList().get(0).getLocations().get(0).getEmployees().size());
 						
 					}
-					
-					System.out.println(GRSManager.getInstance().getCompanyDirectory().getCompanyList().size());
-					System.out.println(GRSManager.getInstance().getCompanyDirectory().getCompanyList().get(0).getLocations().get(0).getEmployees().size());
-					
 					
 					
 				} else {

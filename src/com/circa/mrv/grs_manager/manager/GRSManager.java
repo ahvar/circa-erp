@@ -114,7 +114,6 @@ public class GRSManager {
 			  for(int j = 0; j < companyDirectory.getCompanyList().get(i).getLocations().size(); j++) {
 				  
 				 if( (u = companyDirectory.getCompanyAt(i).getLocations().get(j).findEmployee(id, localHashPW)) != null ) {
-					System.out.println("found the employee");
 					if ( companyDirectory.getCompanyAt(i) instanceof VendorCompany ) {
 						company = companyDirectory.getCompanyAt(i);
 					} else if ( companyDirectory.getCompanyAt(i) instanceof ResearchCompany ) {

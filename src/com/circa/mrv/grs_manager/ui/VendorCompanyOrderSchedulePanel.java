@@ -38,16 +38,16 @@ import com.circa.mrv.grs_manager.user.schedule.OrderSchedule;
 public class VendorCompanyOrderSchedulePanel  extends JPanel implements ActionListener {
 	/** ID number used for object serialization. */
 	private static final long serialVersionUID = 1L;
-	/** Button for adding the selected product in the catalog to the schedule */
+	/** Button for adding the selected Order in the catalog to the schedule */
 	private JButton btnAddCourse;
-	/** Button for removing the selected Course from the schedule */
+	/** Button for removing the selected Order from the schedule */
 	private JButton btnRemoveCourse;
 	/** Button for resetting the schedule */
 	private JButton btnReset;
 	/** Button for displaying the final schedule */
 	private JButton btnDisplay;
 	/** JTable for displaying the catalog of Courses */
-	private JTable tableCatalog;
+	private JTable orderSchedule;
 	/** JTable for displaying the schedule of Courses */
 	private JTable tableSchedule;
 	/** TableModel for catalog */
@@ -157,7 +157,7 @@ public class VendorCompanyOrderSchedulePanel  extends JPanel implements ActionLi
 					
 		//Set up Catalog table
 		catalogTableModel = new CourseTableModel(true);
-		tableCatalog = new JTable(catalogTableModel) {
+		orderSchedule = new JTable(catalogTableModel) {
 			private static final long serialVersionUID = 1L;
 			
 			/**
@@ -174,22 +174,22 @@ public class VendorCompanyOrderSchedulePanel  extends JPanel implements ActionLi
 				return (String)catalogTableModel.getValueAt(rowIndex, realColumnIndex);
 			}
 		};
-		tableCatalog.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		tableCatalog.setPreferredScrollableViewportSize(new Dimension(500, 500));
-		tableCatalog.setFillsViewportHeight(true);
-		tableCatalog.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+		orderSchedule.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		orderSchedule.setPreferredScrollableViewportSize(new Dimension(500, 500));
+		orderSchedule.setFillsViewportHeight(true);
+		orderSchedule.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
-				String name = tableCatalog.getValueAt(tableCatalog.getSelectedRow(), 0).toString();
-				String section = tableCatalog.getValueAt(tableCatalog.getSelectedRow(), 1).toString();
+				String name = orderSchedule.getValueAt(orderSchedule.getSelectedRow(), 0).toString();
+				String section = orderSchedule.getValueAt(orderSchedule.getSelectedRow(), 1).toString();
 				Product c = catalog.getProductFromCatalog(name, section);
 				updateProductDetails(c);
 			}
 			
 		});
 		
-		JScrollPane scrollCatalog = new JScrollPane(tableCatalog, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		JScrollPane scrollCatalog = new JScrollPane(orderSchedule, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		
 		TitledBorder borderCatalog = BorderFactory.createTitledBorder(lowerEtched, "Course Catalog");
 		scrollCatalog.setBorder(borderCatalog);
@@ -293,7 +293,7 @@ public class VendorCompanyOrderSchedulePanel  extends JPanel implements ActionLi
 	 */
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnAddCourse) {
-			int row = tableCatalog.getSelectedRow();
+			int row = orderSchedule.getSelectedRow();
 			if (row == -1) {
 				JOptionPane.showMessageDialog(this, "No course selected in the catalog.");
 			} else {

@@ -417,8 +417,14 @@ public class GRSManagerGUI {
 		private static final long serialVersionUID = 1L;
 		/** Button to logout */
 		private JButton btnLogout;
+		/** Button to switch to open order view */
+		private JButton btnOpenOrder;
+		/** The order entry panel */
 		private ResearchCompanyOrderSchedulePanel rcOrdSchPanel;
-		/**
+		/** A research company's schedule of open orders */
+		private ResearchCompanyOpenOrderPanel rcOpenOrdPanel;
+		
+		 /*
 		 * Temporary class for the ResearchPanel until we implement
 		 * that functionality.
 		 */
@@ -426,11 +432,15 @@ public class GRSManagerGUI {
 			super(new GridBagLayout());
 			
 			JPanel pnlButtons = new JPanel();
-			pnlButtons.setLayout(new GridLayout(1, 1));
+			pnlButtons.setLayout(new GridLayout(1, 2));
 			btnLogout = new JButton("Logout");
 			btnLogout.addActionListener(this);
 			pnlButtons.add(btnLogout);
+			btnOpenOrder = new JButton("Open Orders");
+			btnOpenOrder.addActionListener(this);
+			pnlButtons.add(btnOpenOrder);
 			
+			rcOpenOrdPanel = new ResearchCompanyOpenOrderPanel();
 			rcOrdSchPanel = new ResearchCompanyOrderSchedulePanel();
 			
 			GridBagConstraints c = new GridBagConstraints();

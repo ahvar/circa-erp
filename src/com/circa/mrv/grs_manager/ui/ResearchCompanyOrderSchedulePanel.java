@@ -22,9 +22,8 @@ import com.circa.mrv.grs_manager.manager.GRSManager;
 import com.circa.mrv.grs_manager.user.Employee;
 import com.circa.mrv.grs_manager.user.schedule.OrderSchedule;
 
-
 /**
- * Displays all ROW (rest of world) orders for a given date. 
+ * . 
  * 
  * @author Arthur Vargas.
  */

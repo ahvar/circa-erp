@@ -7,6 +7,8 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -91,6 +93,8 @@ public class ResearchEmployeeDirectoryPanel extends JPanel implements ActionList
 	private UserDirectory userDirectory;
 	/** Reference to CompanyDirectory */
 	private CompanyDirectory companyDirectory;
+	/** Hash algorithm */
+	private static final String HASH_ALGORITHM = "SHA-256";
 	
 	/**
 	 * Constructs the ResearchEmployeeDirectoryPanel and sets up the GUI 
@@ -299,11 +303,31 @@ public class ResearchEmployeeDirectoryPanel extends JPanel implements ActionList
 					
 					Employee emp;
 					if((emp = companyDirectory.getEmployeeById(id)) == null) {
-						for(int i = 0; i < companyDirectory.getCompanyByNameAndStreet("ERT","1818 Market Street" ).getLocations().size(); i++) {
-							if(companyDirectory.getCompanyByNameAndStreet("ERT","1818 Market Street").getLocations().get(i) instanceof BillTo) {
-								companyDirectory.getCompanyByNameAndStreet("ERT","1818 Market Street").getLocations().get(i).getEmployees().add(emp);
-							}
+						String hashPW = "";
+						String repeatHashPW = "";
+						
+						if (pwString == null || repeatPWString == null || pwString.equals("") || repeatPWString.equals("")) {
+							throw new IllegalArgumentException("Invalid password");
 						}
+						try {
+							MessageDigest digest1 = MessageDigest.getInstance(HASH_ALGORITHM);
+							digest1.update(pwString.getBytes());
+							hashPW = new String(digest1.digest());
+							
+							MessageDigest digest2 = MessageDigest.getInstance(HASH_ALGORITHM);
+							digest2.update(repeatPWString.getBytes());
+							repeatHashPW = new String(digest2.digest());
+							
+						} catch (NoSuchAlgorithmException ex) {
+							throw new IllegalArgumentException("Cannot hash password");
+						}
+						
+						if (!hashPW.equals(repeatHashPW)) {
+							throw new IllegalArgumentException("Passwords do not match");
+						}
+						
+						if(!companyDirectory.addEmployeeToBillToLocation(new Employee(firstName,lastName,id,email,hashPW), "ERT", "1818 Market Street"))
+							throw new IllegalArgumentException("Research company bill to not found in directory");
 						
 					}
 					

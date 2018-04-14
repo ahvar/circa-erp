@@ -279,7 +279,6 @@ public class CompanyDirectory {
 				if(companyDirectory.get(i).getLocations().get(j) instanceof BillTo &&
 				companyDirectory.get(i).getName().equals(name) && 
 				companyDirectory.get(i).getLocations().get(j).getAddress1().equals(street) ) {
-					System.out.println(i + " " + j + " " + companyDirectory.get(i).getLocations().get(j).getEmployees().size() );
 					return companyDirectory.get(i).getLocations().get(j).getEmployees().add(emp);
 				}
 			}
