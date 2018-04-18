@@ -23,11 +23,11 @@ import com.circa.mrv.grs_manager.user.Employee;
 import com.circa.mrv.grs_manager.user.schedule.OrderSchedule;
 
 /**
- * . 
+ * .
  * 
  * @author Arthur Vargas.
  */
-public class ResearchCompanyOrderSchedulePanel extends JPanel implements ActionListener {
+public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionListener {
 	
 	/** Panel for displaying Order Details */
 	private JPanel pnlOrderDetails;
@@ -97,7 +97,7 @@ public class ResearchCompanyOrderSchedulePanel extends JPanel implements ActionL
 	 * Constructs the ResearchCompanyOrderSchedulePanel and sets up the GUI 
 	 * components.
 	 */
-	public ResearchCompanyOrderSchedulePanel() {
+	public ResearchCompanyOrderEntryPanel() {
 		super(new GridBagLayout());
 		
 		//RegistrationManager manager = RegistrationManager.getInstance();
@@ -399,8 +399,8 @@ public class ResearchCompanyOrderSchedulePanel extends JPanel implements ActionL
 			if (currentUser != null){
 				data = schedule.getScheduledOrders();
 				//facultyScheduleTableModel.fireTableDataChanged();
-				ResearchCompanyOrderSchedulePanel.this.repaint();
-				ResearchCompanyOrderSchedulePanel.this.validate();
+				ResearchCompanyOrderEntryPanel.this.repaint();
+				ResearchCompanyOrderEntryPanel.this.validate();
 			}
 		}	
 	}

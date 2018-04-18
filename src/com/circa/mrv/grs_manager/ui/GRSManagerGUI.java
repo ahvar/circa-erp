@@ -41,6 +41,7 @@ public class GRSManagerGUI {
 	private static final String RESEARCH_COMPANY_PANEL = "ResearchPanel";
 	/** Constant to identify AdministratorPanel */
 	private static final String ADMINISTRATOR_PANEL = "AdministratorPanel";
+
 	/** LoginPanel */
 	private LoginPanel pnlLogin;
 	/** AdministratorPanel */
@@ -49,6 +50,7 @@ public class GRSManagerGUI {
 	private VendorPanel pnlVendor;
 	/** ResearchPanel */
 	private ResearchPanel pnlResearch;
+
 	/** CardLayout for GUI */
 	private CardLayout cardLayout;
 	/** Panel that will contain all of the application views */
@@ -68,6 +70,7 @@ public class GRSManagerGUI {
 		pnlAdministrator = new AdministratorPanel();
 		pnlVendor = new VendorPanel();
 		pnlResearch = new ResearchPanel();
+
 		
 		panel = new JPanel();
 		cardLayout = new CardLayout();
@@ -76,6 +79,7 @@ public class GRSManagerGUI {
 		panel.add(pnlAdministrator, ADMINISTRATOR_PANEL);
 		panel.add(pnlVendor, VENDOR_COMPANY_PANEL);
 		panel.add(pnlResearch, RESEARCH_COMPANY_PANEL);
+
 		cardLayout.show(panel, LOGIN_PANEL);
 		
 		Container c = gui.getContentPane();
@@ -412,19 +416,30 @@ public class GRSManagerGUI {
 	 * @author Arthur Vargas
 	 */
 	private class ResearchPanel extends JPanel implements ActionListener {
-
 		/** ID number used for object serialization. */
 		private static final long serialVersionUID = 1L;
+		private static final String OPEN_ORDER_PANEL = "OpenOrders";
+		/** The order schedule panel */
+		private static final String ORDER_ENTRY_PANEL = "OrderEntry";
+		
 		/** Button to logout */
 		private JButton btnLogout;
 		/** Button to switch to open order view */
 		private JButton btnOpenOrder;
-		/** The order entry panel */
-		private ResearchCompanyOrderSchedulePanel rcOrdSchPanel;
-		/** A research company's schedule of open orders */
-		private ResearchCompanyOpenOrderPanel rcOpenOrdPanel;
+		/** Button to switch to order entry view */
+		private JButton btnOrderEntry;
 		
-		 /*
+		/** The order entry panel */
+		private ResearchCompanyOrderEntryPanel pnlOrderEntry;
+		/** A research company's schedule of open orders */
+		private ResearchCompanyOpenOrderPanel pnlOpenOrder;
+		/** Research panel */
+		private JPanel rPanel;
+		
+		/** CardLayout for the ResearchPanel */
+		private CardLayout rCardLayout;
+		
+	    /**
 		 * Temporary class for the ResearchPanel until we implement
 		 * that functionality.
 		 */
@@ -432,16 +447,25 @@ public class GRSManagerGUI {
 			super(new GridBagLayout());
 			
 			JPanel pnlButtons = new JPanel();
-			pnlButtons.setLayout(new GridLayout(1, 2));
+			pnlButtons.setLayout(new GridLayout(1, 3));
 			btnLogout = new JButton("Logout");
 			btnLogout.addActionListener(this);
 			pnlButtons.add(btnLogout);
 			btnOpenOrder = new JButton("Open Orders");
 			btnOpenOrder.addActionListener(this);
 			pnlButtons.add(btnOpenOrder);
+			btnOrderEntry = new JButton("Order Entry");
+			btnOrderEntry.addActionListener(this);
+			pnlButtons.add(btnOrderEntry);
 			
-			rcOpenOrdPanel = new ResearchCompanyOpenOrderPanel();
-			rcOrdSchPanel = new ResearchCompanyOrderSchedulePanel();
+			rCardLayout = new CardLayout();
+			rPanel = new JPanel();
+			rPanel.setLayout(rCardLayout);
+			pnlOrderEntry = new ResearchCompanyOrderEntryPanel();
+			pnlOpenOrder = new ResearchCompanyOpenOrderPanel();
+			rPanel.add(pnlOrderEntry, ORDER_ENTRY_PANEL);
+			rPanel.add(pnlOpenOrder, OPEN_ORDER_PANEL);
+			rCardLayout.show(rPanel, ORDER_ENTRY_PANEL);
 			
 			GridBagConstraints c = new GridBagConstraints();
 			c.gridx = 0;
@@ -459,7 +483,7 @@ public class GRSManagerGUI {
 			c.weighty = 1;
 			c.anchor = GridBagConstraints.FIRST_LINE_START;
 			c.fill = GridBagConstraints.BOTH;
-			add(rcOrdSchPanel, c);
+			add(rPanel, c);
 		}
 		
 		/**
@@ -471,6 +495,10 @@ public class GRSManagerGUI {
 			if (e.getSource() == btnLogout) {
 				GRSManager.getInstance().logout();
 				cardLayout.show(panel, LOGIN_PANEL);
+			} else if (e.getSource() == btnOpenOrder) {
+				rCardLayout.show(rPanel, OPEN_ORDER_PANEL);
+			} else if (e.getSource() == btnOrderEntry) {
+				rCardLayout.show(rPanel, ORDER_ENTRY_PANEL);
 			}
 		}
 		
@@ -478,7 +506,7 @@ public class GRSManagerGUI {
 		 * Updates tables
 		 */
 		public void updateTables() {
-			rcOrdSchPanel = new ResearchCompanyOrderSchedulePanel();
+			pnlOrderEntry = new ResearchCompanyOrderEntryPanel();
 		}
 	}
 

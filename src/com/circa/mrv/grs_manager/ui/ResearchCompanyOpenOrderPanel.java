@@ -3,22 +3,41 @@
  */
 package com.circa.mrv.grs_manager.ui;
 
+import java.awt.Dimension;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.border.Border;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.TitledBorder;
 import javax.swing.table.AbstractTableModel;
 
-import com.circa.mrv.grs_manager.niox.Product;
+import com.circa.mrv.grs_manager.manager.GRSManager;
 import com.circa.mrv.grs_manager.user.Employee;
 import com.circa.mrv.grs_manager.user.schedule.OrderSchedule;
 
 /**
+ * Displays a list of the orders with open status.
  * 
  * @author Arthur Vargas
  */
 public class ResearchCompanyOpenOrderPanel extends JPanel implements ActionListener {
+	
+	/** Panel for displaying order details */
+	/** ID used for object serialization */
+	private static final long serialVersionUID = 1L;
+	/** JTable for displaying the open order schedule of orders */
+	private JTable tableOpenOrderSchedule;
+	/** Scroll pane for table */
+	private JScrollPane scrollOpenOrderSchedule;
+	/** TableModel for employee schedule of Orders */
+	private OpenOrderScheduleTableModel openOrderScheduleTableModel;
 	/** The order schedule */
 	OrderSchedule orderSchedule;
 	/** The user currently logged in */
@@ -26,17 +45,46 @@ public class ResearchCompanyOpenOrderPanel extends JPanel implements ActionListe
 	
 
 	/**
-	 * 
+	 * Constructs the ResearchCompanyOpenOrderPanel and sets up the GUI components
 	 */
 	public ResearchCompanyOpenOrderPanel() {
-		// TODO Auto-generated constructor stub
+	    super(new GridBagLayout());
+	    
+		currentUser = (Employee)GRSManager.getInstance().getCurrentUser();
+		if (currentUser != null)
+			orderSchedule = currentUser.getSchedule();
+	  
+		Border lowerEtched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
+		TitledBorder boarder = BorderFactory.createTitledBorder(lowerEtched, "Schedule Buttons");
+	  
+		openOrderScheduleTableModel = new OpenOrderScheduleTableModel();
+		tableOpenOrderSchedule = new JTable(openOrderScheduleTableModel);
+		tableOpenOrderSchedule.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tableOpenOrderSchedule.setPreferredScrollableViewportSize(new Dimension(500, 500));
+		tableOpenOrderSchedule.setFillsViewportHeight(true);
+		scrollOpenOrderSchedule = new JScrollPane(tableOpenOrderSchedule, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		
+		boarder = BorderFactory.createTitledBorder(lowerEtched, "Open Orders");
+		scrollOpenOrderSchedule.setBorder(boarder);
+	}
+	
+	/**
+	 * Updates the orders in the OpenOrderScheduleTableModel.
+	 */
+	public void updateTable() {
+		//courseRollTableModel.updateData();
+		openOrderScheduleTableModel.updateData();
+		//initFacultySchedule();
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		// TODO Auto-generated method stub
-		
+		openOrderScheduleTableModel.updateData();
+		this.validate();
+		this.repaint();
 	}
+	
+	
 	
 	
 	/**
