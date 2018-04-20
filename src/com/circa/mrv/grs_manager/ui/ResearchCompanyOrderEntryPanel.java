@@ -7,10 +7,12 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
@@ -29,16 +31,26 @@ import com.circa.mrv.grs_manager.user.schedule.OrderSchedule;
  */
 public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionListener {
 	
+	/** Panel for displaying Study Details */
+	private JPanel pnlStudyDetails;
+	/** Label for Study Details order entry the order creation date title */
+	private JLabel lblOrderEntryDate = new JLabel("Date: ");
+	/** Label for Study Details order entry the study number title */
+	private JLabel lblStudyNumber = new JLabel("Study: ");
+	/** Label for Study Details order entry the site number title*/
+	private JLabel lblSiteNumber = new JLabel("Site: ");
+	
 	/** Panel for displaying Order Details */
 	private JPanel pnlOrderDetails;
-	/** Label for Order Details order entry employee name title */
-	private JLabel lblOrderEntryEmployeeNameTitle = new JLabel("Name: ");
-	/** Label for Order Details product part number title*/
-	private JLabel lblProductPartNumberTitle = new JLabel("Part Number: ");
-	/** Label for Order Details order number title*/
-	private JLabel lblOrderNumber = new JLabel("Order Number: ");
-	/** Label for Order Details order employee title title */
-	private JLabel lblOrderEntryEmployeeTitleTitle = new JLabel("Employee Title: ");
+	/** Label for Order Details order entry the NAV sales order number title*/
+	private JLabel lblNAVOrderNumber = new JLabel("NAV Sales Order Number: ");
+	/** Customer PO number */
+	private JLabel lblCustomerPONumber = new JLabel("PO Number: ");
+	
+	
+	/** Label for Order Details order employee ID title */
+	private JLabel lblOrderEntryEmployeeTitleTitle = new JLabel("Employee ID: ");
+	
 	/** Label for Order Details price title */
 	private JLabel lblPriceTitle = new JLabel("Price: ");
 	/** Label for Order Details delivery date title */
@@ -51,16 +63,17 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 	private JLabel lblExtraCapacityTitle = new JLabel("Extra Capacity: ");
 	
 	
-	/** Label for Order Details name */
-	private JLabel lblName = new JLabel("1");
-	/** Label for Order Details product part number */
-	private JLabel lblProductPartNumber = new JLabel("2");
-	/** Label for Order Details order entry employee title */
-	private JLabel lblOrderEntryEmployeeTitle = new JLabel("3");
-	/** Label for Order Details employee */
-	private JLabel lblEmployee = new JLabel("4");
-	/** Label for Order Details price */
-	private JLabel lblPrice = new JLabel("5");
+	/** Text Field for Order Details name */
+	private JTextField txtFldDate = new JTextField(10);
+	/** ComboBox for Order Details order entry research study number */
+	private JComboBox cmbBoxStudyNumber = new JComboBox();
+	/** ComboBox for Order Details order entry research site number */
+	private JComboBox cmbBoxSiteNumber = new JComboBox();
+	/** Text Field for Order Details order entry NAV sales order number */
+	private JTextField txtFldNAVOrderNumber = new JTextField(10);
+	/** Text Field for Order Details customer purchase order number */
+	private JTextField txtFldPONumber = new JTextField(10);
+	
 	/** Label for Course Details delivery date */
 	private JLabel lblDeliveryDate = new JLabel("6");
 	/** Label for Order Details product list capacity */
@@ -127,7 +140,7 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 		
 		scrollProductRoll = new JScrollPane(tableProductsRoll, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		
-		boarder = BorderFactory.createTitledBorder(lowerEtched, "Course Roll");
+		boarder = BorderFactory.createTitledBorder(lowerEtched, "Product Catalog");
 		scrollProductRoll.setBorder(boarder);
 		
 		//Set up Faculty Schedule table
@@ -140,45 +153,43 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 		scrollEmployeeSchedule = new JScrollPane(tableEmployeeSchedule, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		Border lowerEtched2 = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
 		TitledBorder border = BorderFactory.createTitledBorder(lowerEtched2, "Catalog Buttons");
-		border = BorderFactory.createTitledBorder(lowerEtched2, "Faculty Schedule");
+		border = BorderFactory.createTitledBorder(lowerEtched2, "Open Orders");
 		scrollEmployeeSchedule.setBorder(border);
 		
 		updateTables();
 		
 		//Set up the course details panel
+		pnlStudyDetails = new JPanel();
+		pnlStudyDetails.setLayout(new GridLayout(3, 3));
+		pnlStudyDetails.add(lblOrderEntryDate);
+		pnlStudyDetails.add(txtFldDate);
+		pnlStudyDetails.add(lblStudyNumber);
+		pnlStudyDetails.add(cmbBoxStudyNumber);
+		pnlStudyDetails.add(lblSiteNumber);
+		pnlStudyDetails.add(cmbBoxSiteNumber);
+        
 		pnlOrderDetails = new JPanel();
-		pnlOrderDetails.setLayout(new GridLayout(9, 3));
-		
-		pnlOrderDetails.add(lblOrderEntryEmployeeNameTitle);
-		pnlOrderDetails.add(lblName);
-
-		pnlOrderDetails.add(lblProductPartNumberTitle);
-		pnlOrderDetails.add(lblProductPartNumber);
-
-		pnlOrderDetails.add(lblOrderNumber);
+		pnlOrderDetails.setLayout(new GridLayout(3,3));
+		pnlOrderDetails.add(lblNAVOrderNumber);
 		pnlOrderDetails.add(lblOrderEntryEmployeeTitleTitle);
+		pnlStudyDetails.add(lblPriceTitle);
+		pnlStudyDetails.add(txtFldPONumber);
 
-		pnlOrderDetails.add(lblOrderEntryEmployeeTitle);
-		pnlOrderDetails.add(lblEmployee);
+		pnlStudyDetails.add(lblDeliveryDateTitle);		
+		pnlStudyDetails.add(lblDeliveryDate);
 
-		pnlOrderDetails.add(lblPriceTitle);
-		pnlOrderDetails.add(lblPrice);
+		pnlStudyDetails.add(lblProductListCapTitle);
+		pnlStudyDetails.add(lblProductListCapacity);
 
-		pnlOrderDetails.add(lblDeliveryDateTitle);		
-		pnlOrderDetails.add(lblDeliveryDate);
+		pnlStudyDetails.add(lblRemainingProductListCapTitle);
+		pnlStudyDetails.add(lblProductListOpenCapacity);
 
-		pnlOrderDetails.add(lblProductListCapTitle);
-		pnlOrderDetails.add(lblProductListCapacity);
-
-		pnlOrderDetails.add(lblRemainingProductListCapTitle);
-		pnlOrderDetails.add(lblProductListOpenCapacity);
-
-		pnlOrderDetails.add(lblExtraCapacityTitle);		
-		pnlOrderDetails.add(lblProductlistExtraCapacity);
+		pnlStudyDetails.add(lblExtraCapacityTitle);		
+		pnlStudyDetails.add(lblProductlistExtraCapacity);
 		
 		TitledBorder borderCourseDetails = BorderFactory.createTitledBorder(lowerEtched, "Course Details");
-		pnlOrderDetails.setBorder(borderCourseDetails);
-		pnlOrderDetails.setToolTipText("Course Details");
+		pnlStudyDetails.setBorder(borderCourseDetails);
+		pnlStudyDetails.setToolTipText("Course Details");
 		
 		
 		GridBagConstraints c = new GridBagConstraints();			
@@ -205,7 +216,7 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 		c.weighty = 1;
 		c.anchor = GridBagConstraints.LINE_START;
 		c.fill = GridBagConstraints.BOTH;
-		add(pnlOrderDetails, c);
+		add(pnlStudyDetails, c);
 		
 		c.gridx = 0;
 		c.gridy = 4;
