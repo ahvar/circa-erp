@@ -30,31 +30,38 @@ import com.circa.mrv.grs_manager.user.schedule.OrderSchedule;
  * @author Arthur Vargas.
  */
 public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionListener {
-	
 	/** Panel for displaying Study Details */
 	private JPanel pnlStudyDetails;
 	/** Label for Study Details order entry the order creation date title */
-	private JLabel lblOrderEntryDate = new JLabel("Date: ");
+	private JLabel lblOrderEntryDateTitle = new JLabel("Date: ");
 	/** Label for Study Details order entry the study number title */
-	private JLabel lblStudyNumber = new JLabel("Study: ");
+	private JLabel lblStudyNumberTitle = new JLabel("Study: ");
 	/** Label for Study Details order entry the site number title*/
-	private JLabel lblSiteNumber = new JLabel("Site: ");
+	private JLabel lblSiteNumberTitle = new JLabel("Site: ");
 	
 	/** Panel for displaying Order Details */
 	private JPanel pnlOrderDetails;
 	/** Label for Order Details order entry the NAV sales order number title*/
-	private JLabel lblNAVOrderNumber = new JLabel("NAV Sales Order Number: ");
+	private JLabel lblNAVOrderNumberTitle = new JLabel("NAV Sales Order Number: ");
 	/** Customer PO number */
-	private JLabel lblCustomerPONumber = new JLabel("PO Number: ");
+	private JLabel lblCustomerPOTitle = new JLabel("PO Number: ");
+	
+	/** Panel for displaying customer details */
+	private JPanel pnlCustomerDetails;
+	/** Label for Order Details customer name title */
+	private JLabel lblCustomerNameTitle = new JLabel("Customer Name: ");
+	/** Label for Order Details address title */
+	private JLabel lblAddressTitle = new JLabel("Address: ");
+	/** Label for Order Details address title */
+	private JLabel lblAddress2Title = new JLabel("Address: ");
+	/** Label for Customer Details the city title */
+	private JLabel lblCityTitle = new JLabel("City: ");
+	/** Label for Customer Details the state title */
+	private JLabel lblStateTitle = new JLabel("State: ");
+	/** Label for Customer Details the zip code title */
+	private JLabel lblZipCodeTitle = new JLabel("Zip Code: ");
 	
 	
-	/** Label for Order Details order employee ID title */
-	private JLabel lblOrderEntryEmployeeTitleTitle = new JLabel("Employee ID: ");
-	
-	/** Label for Order Details price title */
-	private JLabel lblPriceTitle = new JLabel("Price: ");
-	/** Label for Order Details delivery date title */
-	private JLabel lblDeliveryDateTitle = new JLabel("Delivery date: ");
 	/** Label for Order Details product list capacity title */
 	private JLabel lblProductListCapTitle = new JLabel("Product List Capacity: ");
 	/** Label for Order Details remaining product list capacity title */
@@ -74,6 +81,18 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 	/** Text Field for Order Details customer purchase order number */
 	private JTextField txtFldPONumber = new JTextField(10);
 	
+	/** Text Field for Order Entry customer details address */
+	private JTextField txtFldAddress = new JTextField(20);
+	/** Text Field for Order Entry customer details address */
+	private JTextField txtFldAddress2 = new JTextField(10);
+	/** Text Field for Order Entry customer details city */
+	private JTextField txtFldCity = new JTextField(15);
+	/** Text Field for Order Entry customer details state */
+	private JTextField txtFldState = new JTextField(4);
+	/** Text Field for Order Entry customer details zip code */
+	private JTextField txtFldZipCode = new JTextField(8);
+	
+	
 	/** Label for Course Details delivery date */
 	private JLabel lblDeliveryDate = new JLabel("6");
 	/** Label for Order Details product list capacity */
@@ -92,7 +111,7 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 	/** Scroll pane for table */
 	private JScrollPane scrollEmployeeSchedule;
 	/** TableModel for employee schedule of Orders */
-	private EmployeeScheduleTableModel employeeScheduleTableModel;
+	private OpenOrderTableModel employeeScheduleTableModel;
 	/** JTable for displaying the roll of Products */
 	private JTable tableProductsRoll;
 	/** Scroll pane for table */
@@ -144,7 +163,7 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 		scrollProductRoll.setBorder(boarder);
 		
 		//Set up Faculty Schedule table
-		employeeScheduleTableModel = new EmployeeScheduleTableModel();
+		employeeScheduleTableModel = new OpenOrderTableModel();
 		tableEmployeeSchedule = new JTable(employeeScheduleTableModel);
 		tableEmployeeSchedule.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tableEmployeeSchedule.setPreferredScrollableViewportSize(new Dimension(500, 500));
@@ -158,48 +177,14 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 		
 		updateTables();
 		
-		//Set up the course details panel
-		pnlStudyDetails = new JPanel();
-		pnlStudyDetails.setLayout(new GridLayout(3, 3));
-		pnlStudyDetails.add(lblOrderEntryDate);
-		pnlStudyDetails.add(txtFldDate);
-		pnlStudyDetails.add(lblStudyNumber);
-		pnlStudyDetails.add(cmbBoxStudyNumber);
-		pnlStudyDetails.add(lblSiteNumber);
-		pnlStudyDetails.add(cmbBoxSiteNumber);
-        
-		pnlOrderDetails = new JPanel();
-		pnlOrderDetails.setLayout(new GridLayout(3,3));
-		pnlOrderDetails.add(lblNAVOrderNumber);
-		pnlOrderDetails.add(lblOrderEntryEmployeeTitleTitle);
-		pnlStudyDetails.add(lblPriceTitle);
-		pnlStudyDetails.add(txtFldPONumber);
-
-		pnlStudyDetails.add(lblDeliveryDateTitle);		
-		pnlStudyDetails.add(lblDeliveryDate);
-
-		pnlStudyDetails.add(lblProductListCapTitle);
-		pnlStudyDetails.add(lblProductListCapacity);
-
-		pnlStudyDetails.add(lblRemainingProductListCapTitle);
-		pnlStudyDetails.add(lblProductListOpenCapacity);
-
-		pnlStudyDetails.add(lblExtraCapacityTitle);		
-		pnlStudyDetails.add(lblProductlistExtraCapacity);
+		GridBagConstraints c = new GridBagConstraints();
 		
-		TitledBorder borderCourseDetails = BorderFactory.createTitledBorder(lowerEtched, "Course Details");
-		pnlStudyDetails.setBorder(borderCourseDetails);
-		pnlStudyDetails.setToolTipText("Course Details");
-		
-		
-		GridBagConstraints c = new GridBagConstraints();			
-//		c.gridx = 0;
-//		c.gridy = 0;
-//		c.gridwidth = 1;
-//		c.weightx = 1;
-//		c.anchor = GridBagConstraints.FIRST_LINE_START;
-//		c.fill = GridBagConstraints.RELATIVE;
-//		add(pnlButtons, c);		
+		/***************************SET UP OPEN ORDER SCHEDULE TABLE**************************
+		 * 																					  *
+		 * 																					  *
+		 * 																					  *
+		 * 																				      *
+		 *************************************************************************************/
 		
 		c.gridx = 0;
 		c.gridy = 2;
@@ -208,15 +193,155 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 		c.anchor = GridBagConstraints.LINE_START;
 		c.fill = GridBagConstraints.BOTH;
 		add(scrollEmployeeSchedule, c);
-
+		
+		/*******************************SET UP STUDY PANEL*********************************
+		 *																				  *
+		 *																				  *
+		 *																				  *
+		 **********************************************************************************/
+		pnlStudyDetails = new JPanel();
+		pnlStudyDetails.setLayout(new GridLayout(4, 10));
+		pnlStudyDetails.setSize(200,400);
+		
+		lblOrderEntryDateTitle.setSize(50,50);
+		c.gridx = 0;
+		c.gridy = 0;
+		c.gridwidth = 2;
+		c.ipadx = 0;
+		c.weightx = .5;
+		pnlStudyDetails.add(lblOrderEntryDateTitle,c);
+		
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.gridy = 2;
+		c.gridwidth = 8;
+		c.ipadx = 5;
+		c.weightx = 0.0;
+		pnlStudyDetails.add(txtFldDate,c);
+		
+		lblStudyNumberTitle.setSize(50,100);
+		c.gridx = 1;
+		c.gridy = 0;
+		c.weightx = .5;
+		c.gridwidth = 2;
+		pnlStudyDetails.add(lblStudyNumberTitle,c);
+		
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 1;
+		c.gridy = 2;
+		c.ipadx = 5;
+		c.gridwidth = 8;
+		c.weightx = .5;
+		pnlStudyDetails.add(cmbBoxStudyNumber,c);
+		
+		lblSiteNumberTitle.setSize(50,100);
+		c.gridx = 2;
+		c.gridy = 0;
+		c.weightx = .5;
+		c.gridwidth = 2;
+		pnlStudyDetails.add(lblSiteNumberTitle,c);
+		
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 2;
+		c.gridy = 2;
+		c.weightx = .5;
+		c.gridwidth = 8;
+		pnlStudyDetails.add(cmbBoxSiteNumber,c);
+		
 		c.gridx = 0;
 		c.gridy = 3;
-		c.gridwidth = 1;
 		c.weightx = 1;
 		c.weighty = 1;
 		c.anchor = GridBagConstraints.LINE_START;
 		c.fill = GridBagConstraints.BOTH;
 		add(pnlStudyDetails, c);
+		
+        
+		
+		
+		/******************** ADD ORDER DETAILS PANEL ********************************
+		 * 																			  *	
+		 * 																			  *
+		 * ***************************************************************************/
+		pnlOrderDetails = new JPanel();
+		pnlOrderDetails.setLayout(new GridLayout(3,4));
+		pnlOrderDetails.setSize(200,200);
+		lblNAVOrderNumberTitle.setSize(50,100);
+		c.gridx = 0;
+		c.gridy = 0;
+		c.gridwidth = 2;
+		c.ipadx = 0;
+		c.weightx = .5;
+		pnlOrderDetails.add(lblNAVOrderNumberTitle,c);
+		
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.gridy = 2;
+		c.gridwidth = 8;
+		c.ipadx = 5;
+		c.weightx = 0.0;
+		pnlOrderDetails.add(txtFldNAVOrderNumber,c);
+		
+		lblCustomerPOTitle.setSize(50,100);
+		c.gridx = 1;
+		c.gridy = 0;
+		c.gridwidth = 2;
+		c.ipadx = 0;
+		c.weightx = .5;
+		pnlOrderDetails.add(lblCustomerPOTitle,c);
+		
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 1;
+		c.gridy = 2;
+		c.gridwidth = 8;
+		c.ipadx = 5;
+		c.weightx = 0.0;
+		pnlOrderDetails.add(txtFldPONumber,c);
+		
+		c.gridx = 0;
+		c.gridy = 3;
+		c.weightx = 1;
+		c.weighty = 1;
+		c.anchor = GridBagConstraints.LINE_START;
+		c.fill = GridBagConstraints.BOTH;
+		add(pnlOrderDetails, c);
+		
+		
+		/******************************CUSTOMER DETAILS PANEL***********************************
+		 * 																						*
+		 * 																					    *
+		 * 																						*
+		 ***************************************************************************************/
+		
+		pnlCustomerDetails = new JPanel();
+		pnlCustomerDetails.setLayout(new GridLayout(3,4));
+		pnlCustomerDetails.add(lblAddressTitle);
+		pnlCustomerDetails.add(txtFldAddress);
+		pnlCustomerDetails.add(lblAddress2Title);
+		pnlCustomerDetails.add(txtFldAddress2);
+		pnlCustomerDetails.add(lblCityTitle);
+		pnlCustomerDetails.add(txtFldCity);
+		pnlCustomerDetails.add(lblStateTitle);
+		pnlCustomerDetails.add(txtFldState);
+		pnlCustomerDetails.add(lblZipCodeTitle);
+		pnlCustomerDetails.add(txtFldZipCode);
+		
+		
+		
+		
+		
+		
+		TitledBorder borderCourseDetails = BorderFactory.createTitledBorder(lowerEtched, "Course Details");
+		pnlStudyDetails.setBorder(borderCourseDetails);
+		pnlStudyDetails.setToolTipText("Course Details");				
+		
+		c.gridx = 0;
+		c.gridy = 3;
+		c.weightx = 1;
+		c.weighty = 1;
+		c.anchor = GridBagConstraints.LINE_START;
+		c.fill = GridBagConstraints.BOTH;
+		add(pnlCustomerDetails, c);
 		
 		c.gridx = 0;
 		c.gridy = 4;
@@ -259,15 +384,15 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 	
 	/**
 	 * {@link ProductRollTableModel} is the object underlying the {@link JTable} object that displays
-	 * the list of Students to the user.
-	 * @author Sarah Heckman
+	 * the list of NIOX Products
+	 * @author Arthur Vargas
 	 */
 	private class ProductRollTableModel extends AbstractTableModel {
 		
 		/** ID number used for object serialization. */
 		private static final long serialVersionUID = 1L;
 		/** Column names for the table */
-		private String [] columnNames = {"First Name", "Last Name", "Student ID"};
+		private String [] columnNames = {"Part Number", "Description", "Quantity", "$$/Unit"};
 		/** Data stored in the table */
 		private Object [][] data;
 		
@@ -335,24 +460,24 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 	}
 
 	/**
-	 * {@link EmployeeScheduleTableModel} is the object underlying the {@link JTable} object that displays
+	 * {@link OpenOrderTableModel} is the object underlying the {@link JTable} object that displays
 	 * the list of Orders to the user.
 	 * @author Arthur Vargas
 	 */
-	private class EmployeeScheduleTableModel extends AbstractTableModel {
+	private class OpenOrderTableModel extends AbstractTableModel {
 		
 		/** ID number used for object serialization. */
 		private static final long serialVersionUID = 1L;
 		/** Column names for the table */
-		private String [] columnNames = {"Name", "Section", "Title", "Meeting Information", "Open Seats"};
+		private String [] columnNames = {"Study", "Site", "PO Number", "Requested Delivery Date", "User ID"};
 		/** Data stored in the table */
 		private Object [][] data;
 		
 		/**
-		 * Constructs the {@link EmployeeScheduleTableModel} by requesting the latest information
+		 * Constructs the {@link OpenOrderTableModel} by requesting the latest information
 		 * from the {@link RequirementTrackerModel}.
 		 */
-		public EmployeeScheduleTableModel() {
+		public OpenOrderTableModel() {
 			updateData();
 		}
 
