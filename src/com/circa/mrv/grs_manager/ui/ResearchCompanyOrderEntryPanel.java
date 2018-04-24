@@ -118,6 +118,19 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 	/** Text Field for Order Entry customer details zip code */
 	private JTextField txtFldZipCode = new JTextField(8);
 	
+	/** Text Field for Order Details ship-to location name */
+	private JTextField txtFldShipToName = new JTextField(20);
+	/** Text Field for Order Details ship-to street address */
+	private JTextField txtFldShipToAddress = new JTextField(50);
+	/** Text Field for Order Details ship-to building, suite, or room number */
+	private JTextField txtFldShipToAddress2 = new JTextField(15);
+	/** Text Field for Order Details ship-to city */
+	private JTextField txtFldShipToCity = new JTextField(15);
+	/** Text Field for Order Details the state */
+	private JTextField txtFldShipToState = new JTextField(15);
+	/** Text Field for Order Details the zip code */
+	private JTextField txtFldShipToZipCode = new JTextField(10);
+	
 	
 	/** Label for Course Details delivery date */
 	private JLabel lblDeliveryDate = new JLabel("6");
@@ -238,11 +251,31 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 			.addGroup(grpLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
 				.addComponent(txtFldCustomerName)
 				.addGroup(grpLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-					.addComponent(lblStudyNumberTitle)
-					.addComponent(lblSiteNumberTitle)
+					.addGroup(grpLayout.createSequentialGroup()
+						.addComponent(lblStudyNumberTitle)
+						.addComponent(cmbBoxStudyNumber))
+					.addGroup(grpLayout.createSequentialGroup()
+						.addComponent(lblSiteNumberTitle)
+						.addComponent(cmbBoxSiteNumber))))
+			.addComponent(lblShipToNameTitle)
+			.addGroup(grpLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+				.addComponent(txtFldShipToName)
 				.addGroup(grpLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-					.addComponent(cmbBoxStudyNumber)
-					.addComponent(cmbBoxSiteNumber)) ) )
+					.addGroup(grpLayout.createSequentialGroup()
+						.addComponent(lblShipToAddressTitle)
+						.addComponent(txtFldShipToAddress))
+					.addGroup(grpLayout.createSequentialGroup()
+						.addComponent(lblShipToAddress2Title)
+						.addComponent(txtFldShipToAddress2) )
+					.addGroup(grpLayout.createSequentialGroup()
+						.addComponent(lblShipToCityTitle)
+						.addComponent(txtFldShipToCity) )
+					.addGroup(grpLayout.createSequentialGroup()
+						.addComponent(lblShipToStateTitle)
+						.addComponent(txtFldShipToState))
+					.addGroup(grpLayout.createSequentialGroup()
+						.addComponent(lblShipToZipCodeTitle)
+						.addComponent(txtFldShipToZipCode))))
 			.addGroup(grpLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
 				.addComponent(submit)
 				.addComponent(clear))
@@ -256,17 +289,35 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 			.addGroup(grpLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
 				.addComponent(lblCustomerNameTitle)
 				.addComponent(txtFldCustomerName)
-				.addComponent(submit))	
-			.addGroup(grpLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+				.addComponent(lblShipToNameTitle)
+				.addComponent(txtFldShipToName)
+				.addComponent(submit))
+			.addGroup(grpLayout.createParallelGroup(GroupLayout.Alignment.LEADING)	
 				.addGroup(grpLayout.createSequentialGroup()
 					.addGroup(grpLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
 						.addComponent(lblStudyNumberTitle)
-						.addComponent(cmbBoxStudyNumber))
+						.addComponent(cmbBoxStudyNumber)
+						.addComponent(lblShipToAddressTitle)
+						.addComponent(txtFldShipToAddress)
+						.addComponent(clear))
 					.addGroup(grpLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
 						.addComponent(lblSiteNumberTitle)
-						.addComponent(cmbBoxSiteNumber)))
-		    	.addComponent(clear))
+						.addComponent(cmbBoxSiteNumber)
+						.addComponent(lblShipToAddress2Title)
+						.addComponent(txtFldShipToAddress2))))
+			.addGroup(grpLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+				.addGroup(grpLayout.createSequentialGroup()
+					.addGroup(grpLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+						.addComponent(lblShipToCityTitle)
+						.addComponent(txtFldShipToCity))
+					.addGroup(grpLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+						.addComponent(lblShipToStateTitle)
+						.addComponent(txtFldShipToState))
+					.addGroup(grpLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+						.addComponent(lblShipToZipCodeTitle)
+						.addComponent(txtFldShipToZipCode))))
 		);
+					
 		
 		//pnlStudyDetails.add(lblOrderEntryDateTitle,c);
 	
