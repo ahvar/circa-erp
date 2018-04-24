@@ -3,41 +3,33 @@
  */
 package com.circa.mrv.grs_manager.ui;
 
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
-import javax.swing.border.Border;
-import javax.swing.border.EtchedBorder;
-import javax.swing.border.TitledBorder;
-import javax.swing.table.AbstractTableModel;
 
 import com.circa.mrv.grs_manager.manager.GRSManager;
 import com.circa.mrv.grs_manager.user.Employee;
 import com.circa.mrv.grs_manager.user.schedule.OrderSchedule;
 
 /**
- * Displays a list of the orders with open status.
  * 
  * @author Arthur Vargas
  */
-public class ResearchCompanyOpenOrderPanel extends JPanel implements ActionListener {
-	
-	/** Panel for displaying order details */
-	/** ID used for object serialization */
-	private static final long serialVersionUID = 1L;
-	/** Panel for displaying Study Details */
+public class OrderFormPanel extends JPanel implements ActionListener {
+	private String newline = "\n";
+    protected static final String GRS_ORDER_NUMBER = "JTextField";
+    protected static final String passwordFieldString = "JPasswordField";
+    protected static final String ftfString = "JFormattedTextField";
+    protected static final String buttonString = "JButton";
+    
+    /** Panel for displaying Study Details */
 	private JPanel pnlStudyDetails;
 	/** Label for Study Details order entry the order creation date title */
 	private JLabel lblOrderEntryDateTitle = new JLabel("Date: ");
@@ -90,28 +82,20 @@ public class ResearchCompanyOpenOrderPanel extends JPanel implements ActionListe
 	/** Text Field for Order Entry customer details zip code */
 	private JTextField txtFldZipCode = new JTextField(8);
 	
-	/** JTable for displaying the open order schedule of orders */
-	private JTable tableOpenOrderSchedule;
-	/** Scroll pane for table */
-	private JScrollPane scrollOpenOrderSchedule;
-
-	/** The order schedule */
-	OrderSchedule orderSchedule;
-	/** The user currently logged in */
-    private Employee currentUser;
+	/** Current user */
+	private Employee currentUser;
+	private OrderSchedule schedule;
 	
-
 	/**
-	 * Constructs the ResearchCompanyOpenOrderPanel and sets up the GUI components
+	 * 
 	 */
-	public ResearchCompanyOpenOrderPanel() {
-	    super(new GridBagLayout());
-	    
+	public OrderFormPanel() {
+        super(new GridBagLayout());
+		
+		//RegistrationManager manager = RegistrationManager.getInstance();
 		currentUser = (Employee)GRSManager.getInstance().getCurrentUser();
 		if (currentUser != null)
-			orderSchedule = currentUser.getSchedule();
-	  
-		
+			schedule = currentUser.getSchedule();
 		
 		GridBagConstraints c = new GridBagConstraints();
 		
@@ -121,42 +105,55 @@ public class ResearchCompanyOpenOrderPanel extends JPanel implements ActionListe
 		 *																				  *
 		 **********************************************************************************/
 		pnlStudyDetails = new JPanel();
-		pnlStudyDetails.setLayout(new GridLayout(0,6));
+		pnlStudyDetails.setLayout(new GridLayout(4, 10));
+		
+		lblOrderEntryDateTitle.setSize(50,50);
 		c.gridx = 0;
 		c.gridy = 0;
+		c.gridwidth = 2;
+		c.ipadx = 0;
 		c.weightx = .5;
 		pnlStudyDetails.add(lblOrderEntryDateTitle,c);
 		
+		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
-		c.gridy = 1;
+		c.gridy = 2;
+		c.gridwidth = 8;
+		c.ipadx = 5;
 		c.weightx = 0.0;
 		pnlStudyDetails.add(txtFldDate,c);
 		
-		c.gridx = 0;
-		c.gridy =2;
+		lblStudyNumberTitle.setSize(50,100);
+		c.gridx = 1;
+		c.gridy = 0;
 		c.weightx = .5;
 		c.gridwidth = 2;
 		pnlStudyDetails.add(lblStudyNumberTitle,c);
 		
-		c.gridx = 0;
-		c.gridy = 3;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 1;
+		c.gridy = 2;
+		c.ipadx = 5;
+		c.gridwidth = 8;
 		c.weightx = .5;
 		pnlStudyDetails.add(cmbBoxStudyNumber,c);
 		
 		lblSiteNumberTitle.setSize(50,100);
-		c.gridx = 0;
-		c.gridy = 4;
+		c.gridx = 2;
+		c.gridy = 0;
 		c.weightx = .5;
+		c.gridwidth = 2;
 		pnlStudyDetails.add(lblSiteNumberTitle,c);
 		
-		c.gridx = 0;
-		c.gridy = 5;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 2;
+		c.gridy = 2;
 		c.weightx = .5;
 		c.gridwidth = 8;
 		pnlStudyDetails.add(cmbBoxSiteNumber,c);
 		
 		c.gridx = 0;
-		c.gridy = 0;
+		c.gridy = 3;
 		c.weightx = 1;
 		c.weighty = 1;
 		c.anchor = GridBagConstraints.LINE_START;
@@ -169,7 +166,7 @@ public class ResearchCompanyOpenOrderPanel extends JPanel implements ActionListe
 		 * 																			  *
 		 * ***************************************************************************/
 		pnlOrderDetails = new JPanel();
-		pnlOrderDetails.setLayout(new GridBagLayout());
+		pnlOrderDetails.setLayout(new GridLayout(3,4));
 		lblNAVOrderNumberTitle.setSize(50,100);
 		c.gridx = 0;
 		c.gridy = 0;
@@ -209,22 +206,13 @@ public class ResearchCompanyOpenOrderPanel extends JPanel implements ActionListe
 		c.anchor = GridBagConstraints.LINE_START;
 		c.fill = GridBagConstraints.BOTH;
 		add(pnlOrderDetails, c);
-	}
-	
-	/**
-	 * Updates the orders in the OpenOrderScheduleTableModel.
-	 */
-	public void updateTable() {
-		//courseRollTableModel.updateData();
-
-		//initFacultySchedule();
+		
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-
-		this.validate();
-		this.repaint();
+		// TODO Auto-generated method stub
+		
 	}
 
 }

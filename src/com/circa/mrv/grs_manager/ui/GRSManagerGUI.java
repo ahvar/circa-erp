@@ -463,6 +463,7 @@ public class GRSManagerGUI {
 			rPanel.setLayout(rCardLayout);
 			pnlOrderEntry = new ResearchCompanyOrderEntryPanel();
 			pnlOpenOrder = new ResearchCompanyOpenOrderPanel();
+			
 			rPanel.add(pnlOrderEntry, ORDER_ENTRY_PANEL);
 			rPanel.add(pnlOpenOrder, OPEN_ORDER_PANEL);
 			rCardLayout.show(rPanel, ORDER_ENTRY_PANEL);
