@@ -20,6 +20,12 @@ public abstract class Product {
 	public static final String PART_NUMBER_ERROR = "Part number not found.";
 	/** Product family error message */
 	public static final String PRODUCT_FAMILY_ERROR = "Product family cannot be empty or null.";
+	/** Default String for description data field */
+	public static final String DEFAULT_PRODUCT_DESCRIPTION = "Description";
+	/** Default String for product family data field */
+	public static final String DEFAULT_PRODUCT_FAMILY = "Family";
+	/** Default String for product part number data field */
+	public static final String DEFAULT_PRODUCT_PART_NUMBER = "Part-Number";
 	
 	/**
 	 * Niox is constructed from a description, part number, and price for the product.
@@ -40,8 +46,8 @@ public abstract class Product {
 	 * @param desc the product description
 	 * @param partNumber partNumber for this Niox product
 	 */
-	public Product(String name, String desc, String pn, double p ) {
-		this(name,desc,pn);
+	public Product(String fam, String desc, String pn, double p ) {
+		this(fam,desc,pn);
 		setPrice(p);
 	}
 	
@@ -58,7 +64,7 @@ public abstract class Product {
 	 * @param name the name to set
 	*/
 	public void setFamily(String family) {
-		if(!family.equals("NIOX") )
+		if(family.equals("") || family == null )
 			throw new IllegalArgumentException(PRODUCT_FAMILY_ERROR);
 		this.productFamily = family;
 	}
@@ -99,7 +105,7 @@ public abstract class Product {
 	 * @throws IllegalArgumentException if pn parameter is null
 	 */
 	public void setPartNumber(String pn) {
-		if(pn == null || pn.equals("") || !Character.isDigit(pn.charAt(0))) 
+		if( pn == null || pn.equals("") ) 
 			throw new IllegalArgumentException(PART_NUMBER_ERROR);
 		partNumber = pn; 
 	}
@@ -115,6 +121,15 @@ public abstract class Product {
 	 * @param p the price for the product.
 	 */
 	public void setPrice(double p) { price = p; }
+	
+	/**
+	 * Sets the price for this product to the value passed in by 'p'.
+	 * @param p the price for the product.
+	 */
+	public void setPrice(String p) {
+		Double d = Double.parseDouble(p);
+		price = d; 
+	}
 	
 	/**
 	 * Returns the price for this product

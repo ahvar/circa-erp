@@ -103,7 +103,7 @@ public class LinkedListRecursive<E> {
 	 * @throws IndexOutOfBoundsException if the passed index is less than 0 or greater than the size of the list. 
 	 */
 	public E get(int index){
-		if(index < 0 || index >= size)
+		if(index < 0 || size <= index)
 			throw new IndexOutOfBoundsException("Invalid index");
 		
 		return front.get(index);

@@ -40,25 +40,10 @@ public class ProductRecordIO {
 		LinkedListRecursive<Product> products = new LinkedListRecursive<Product>();
 		while (fileReader.hasNextLine()) {
 			try {
-				if( ( !products.add( ProductRecordIO.readLine( fileReader.nextLine() ) ) ) ) 
-					throw new IllegalArgumentException("Duplicate"); 
-			    
-					// add to records
-
-					//boolean duplicate = false;
-					//for (int i = 0; i < courses.size(); i++) {
-						//Product c = courses.get(i);
-						//if (course.getName().equals(c.getName()) && course.getSection().equals(c.getSection())) {
-							// it's a duplicate
-							//duplicate = true;
-						//}
-					//}
-					//if (!duplicate) {
-						//courses.add(course);
-					//}
+				products.add( ProductRecordIO.readLine( fileReader.nextLine() ) ); 
 			
 			} catch (IllegalArgumentException e) {
-				// skip the line
+				throw new IllegalArgumentException(e.getMessage());
 			}
 		}
 		fileReader.close();
@@ -74,26 +59,49 @@ public class ProductRecordIO {
 	 * @throws IllegalArgumentException if the parameters are not in the correct order or if there
 	 * is an incorrect number of parameters.
 	 */
-	private static Product readLine(String nextLine) {
+	private static Product readLine(String nextLine) throws IllegalArgumentException {
 		Scanner scan = new Scanner(nextLine);
-		String token = scan.next();
-		Component c = new Component();
+		String token = "";
+		Component c = new Component(Product.DEFAULT_PRODUCT_FAMILY,Product.DEFAULT_PRODUCT_DESCRIPTION,Product.DEFAULT_PRODUCT_PART_NUMBER);
 		scan.useDelimiter(",");
-		while(!token.isEmpty()) {
-			try {
-				if(c.getMiscIDNumber() == 1 && c.getMiscIDNumber() == 0) {
-					c.setMiscIDNumber(token);
-				}
-			} catch (IllegalArgumentException e) {
-				if(e.getMessage().equals(Component.MISC_ID_ERROR)) {
-					c.setMiscIDNumber(1);
-				} else  if (e.getMessage().equals(Component.PART_NUMBER_ERROR)) {
-					c.setPartNumber(" ");
-				} else if (e.getMessage().equals(Component.PRODUCT_FAMILY_ERROR)) {
-					c.setFamily("NIOX");
-				}
-			}
+		while(scan.hasNext()) {
 			token = scan.next();
+			
+			try {
+				
+				if( c.getMiscIDNumber() == 0  && ProductRecordIO.verifyCharacters(token) && c.getMiscIDNumber() != 1) {
+					
+					c.setMiscIDNumber(token);
+				} else if( token.contains("-") && Character.isDigit(token.charAt(0)) && Character.isDigit(token.charAt(1)) &&
+						c.getPartNumber().equals(Product.DEFAULT_PRODUCT_PART_NUMBER) )  {
+			
+					c.setPartNumber(token);
+				} else if(token.equals("NIOX") && c.getFamily().equals(Product.DEFAULT_PRODUCT_FAMILY)) { 
+				
+					c.setFamily(token);
+				} else if (token.equals("MINO") || token.equals("VERO")) { 
+					
+					c.setGeneration(token);
+				} else if( ProductRecordIO.attemptPriceParse(token) && c.getPrice() == 0 ) { 
+					
+					c.setPrice(Double.parseDouble(token));
+				} else if( c.getDescription().equals(Product.DEFAULT_PRODUCT_DESCRIPTION)  ) {
+					
+					c.setDescription(token);
+				} else if ( !c.getDescription().equals(Product.DEFAULT_PRODUCT_DESCRIPTION) && (c.getNote() == null || c.getDescription().equals("") ) ) {
+					c.setNote(token);
+				} else throw new IllegalArgumentException("error");
+				
+
+			} catch (IllegalArgumentException e) {
+				if(e.getMessage().equals(Component.MISC_ID_ERROR)) 
+					c.setMiscIDNumber(1);
+				else  if (e.getMessage().equals(Component.PART_NUMBER_ERROR)) 
+					c.setPartNumber(" ");
+				else if (e.getMessage().equals(Component.PRODUCT_FAMILY_ERROR)) 
+					c.setFamily("NIOX");
+				 else throw new IllegalArgumentException(e.getMessage());
+			} 
 		}
 		scan.close();
 		return c;
@@ -101,25 +109,28 @@ public class ProductRecordIO {
 	}
 
 	/**
-	 * counts the number of tokens that exist in the passed line. uses a comma delimiter.
+	 * If the line contains
 	 * @param nextLine line to count tokens on.
-	 * @return tokenCount the number of tokens found
+	 * @return true if every character in the string is a digit
 	 */
-	private static int countTokens(String nextLine) {
-		int tokenCount = 0;
-		Scanner lineScanner = new Scanner(nextLine);
-		lineScanner.useDelimiter(",");
-
-		while (lineScanner.hasNext()) {
-			try {
-				lineScanner.next();
-				tokenCount++;
-			} catch (IllegalArgumentException e) {
-				//Something odd would have to happen to trigger this.
-			}
+	private static boolean verifyCharacters(String line) {
+		for(int i = 0; i < line.length(); i++) {
+			if(!Character.isDigit(line.charAt(i)))
+				return false;
 		}
-		lineScanner.close();
-		return tokenCount;
+		return true;
+	}
+	
+	/**
+	 * 
+	 */
+	private static boolean attemptPriceParse(String line) {
+		try {
+			Double.parseDouble(line);
+		} catch (IllegalArgumentException e) {
+			return false;
+		}
+		return true;
 	}
 
 	/**

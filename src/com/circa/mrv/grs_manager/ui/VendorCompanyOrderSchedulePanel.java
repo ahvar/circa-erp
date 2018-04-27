@@ -346,7 +346,7 @@ public class VendorCompanyOrderSchedulePanel  extends JPanel implements ActionLi
 	 */
 	private void updateProductDetails(Product c) {
 		if (c != null) {
-			lblName.setText(c.getName());
+			lblName.setText(c.getFamily());
 			lblSection.setText(c.getPartNumber());
 			lblTitle.setText(c.getDescription());
 			//lblInstructor.setText(c.getInstructorId());

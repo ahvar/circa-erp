@@ -516,7 +516,7 @@ public class ProductCatalogPanel extends JPanel implements ActionListener {
 		/** ID number used for object serialization. */
 		private static final long serialVersionUID = 1L;
 		/** Column names for the table */
-		private String [] columnNames = {"Name", "Part Number", "Description", "Meeting Information", "Open Seats"};
+		private String [] columnNames = {"Part Number", "Family", "Generation", "Description", "Price"};
 		/** Data stored in the table */
 		private Object [][] data;
 		

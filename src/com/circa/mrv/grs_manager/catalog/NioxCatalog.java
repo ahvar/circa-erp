@@ -97,10 +97,10 @@ public class NioxCatalog {
 	 * @param desc the description of the product to remove
 	 * @return True if the course was removed 
 	 */
-	public boolean removeProductFromCatalog(String name, String desc, String partNumber){
+	public boolean removeProductFromCatalog(String family, String desc, String partNumber){
 		
 		for (int i = 0; i < catalog.size(); i++) {
-			if (catalog.get(i).getName().equals(name) && catalog.get(i).getDescription().equals(desc) && 
+			if (catalog.get(i).getFamily().equals(family) && catalog.get(i).getDescription().equals(desc) && 
 					catalog.get(i).getPartNumber().equals(partNumber)) {
 				catalog.remove(i);
 				return true;
@@ -115,10 +115,10 @@ public class NioxCatalog {
 	 * @param part number the part number of the product to remove
 	 * @return True if the course was removed 
 	 */
-	public boolean removeProductFromCatalog(String name, String partNumber){
+	public boolean removeProductFromCatalog(String family, String partNumber){
 		
 		for (int i = 0; i < catalog.size(); i++) {
-			if (catalog.get(i).getName().equals(name) && catalog.get(i).getDescription().equals(partNumber) && 
+			if (catalog.get(i).getFamily().equals(family) && catalog.get(i).getDescription().equals(partNumber) && 
 					catalog.get(i).getPartNumber().equals(partNumber)) {
 				catalog.remove(i);
 				return true;
@@ -135,11 +135,11 @@ public class NioxCatalog {
 	 * @param pn the part number of the product to get
 	 * @return c the product that matches the passed name and section. Returns null if no match existed.
 	 */
-	public Product getProductFromCatalog(String name, String desc, String pn){	
+	public Product getProductFromCatalog(String family, String desc, String pn){	
 		for (int i = 0; i < catalog.size(); i++) {
-			if (catalog.get(i).getName().equals(name) && catalog.get(i).getDescription().equals(desc) &&
+			if (catalog.get(i).getFamily().equals(family) && catalog.get(i).getDescription().equals(desc) &&
 					catalog.get(i).getPartNumber().equals(pn))
-				return new Component(catalog.get(i).getName(), catalog.get(i).getDescription(), catalog.get(i).getPartNumber());
+				return new Component(catalog.get(i).getFamily(), catalog.get(i).getDescription(), catalog.get(i).getPartNumber());
 		}
 		return null;
 	}
@@ -152,11 +152,11 @@ public class NioxCatalog {
 	 * @param pn the part number of the product to get
 	 * @return c the product that matches the passed name and section. Returns null if no match existed.
 	 */
-	public Product getProductFromCatalog(String name, String pn){	
+	public Product getProductFromCatalog(String family, String pn){	
 		for (int i = 0; i < catalog.size(); i++) {
-			if (catalog.get(i).getName().equals(name) && catalog.get(i).getPartNumber().equals(pn) &&
+			if (catalog.get(i).getFamily().equals(family) && catalog.get(i).getPartNumber().equals(pn) &&
 					catalog.get(i).getPartNumber().equals(pn))
-				return new Component(catalog.get(i).getName(), catalog.get(i).getDescription(), catalog.get(i).getPartNumber());
+				return new Component(catalog.get(i).getFamily(), catalog.get(i).getDescription(), catalog.get(i).getPartNumber());
 		}
 		return null;
 	}
@@ -169,12 +169,14 @@ public class NioxCatalog {
 	 * @return nioxCatalog a 2D String array representing the niox catalog. 
 	 */
 	public String[][] getNioxCatalog() {
-		String [][] nioxCatalog = new String[catalog.size()][5];
+		String [][] nioxCatalog = new String[catalog.size()][6];
 		for (int i = 0; i < catalog.size(); i++) {
-			Product c = catalog.get(i);
+			Component c = (Component) catalog.get(i);
 			nioxCatalog[i][0] = c.getPartNumber();
-			nioxCatalog[i][2] = c.getName();
-			nioxCatalog[i][3] = c.getDescription();	
+			nioxCatalog[i][1] = c.getFamily();
+			nioxCatalog[i][2] = c.getGeneration();
+			nioxCatalog[i][3] = c.getDescription();
+			nioxCatalog[i][4] = Double.toString(c.getPrice());
 		}
 		return nioxCatalog;
 	}

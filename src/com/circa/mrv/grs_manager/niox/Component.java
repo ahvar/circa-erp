@@ -62,12 +62,12 @@ public class Component extends Product implements Consumable {
 	
 	/**
 	 * Constructs a component with a name, description, part number,
-	 * @param name the name of the product
+	 * @param family the product family
 	 * @param desc the description of the component
 	 * @param pn the part number
 	 */
-	public Component(String name, String desc, String pn) {
-		super(name, desc, pn);
+	public Component(String fam, String desc, String pn) {
+		super(fam, desc, pn);
 		setPackageDate(null);
 		setSerial(0);
 		setGeneration(null);
