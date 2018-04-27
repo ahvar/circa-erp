@@ -13,6 +13,8 @@ import java.util.Calendar;
  * @author Arthur Vargas
  */
 public class Component extends Product implements Consumable {
+	/** Miscellaneous ID number */
+	private long miscIDNumber;
 	/** Date the component was packaged */
 	private Calendar packageDate;
 	/** Serial Number */
@@ -21,6 +23,8 @@ public class Component extends Product implements Consumable {
 	private String generation;
 	/** Notes about this specific component */
 	private String note;
+	/** Error msg for missing miscellaneous ID number */
+	public static final String MISC_ID_ERROR = "Miscellaneous ID Error";
 	
 	/**
 	 * Constructs a component with a description, part number, price, package date, serial number, and product
@@ -155,6 +159,35 @@ public class Component extends Product implements Consumable {
 	 */
 	public void setNote(String note) {
 		this.note = note;
+	}
+	
+	public long getMiscIDNumber() {
+		return miscIDNumber;
+	}
+	
+	/**
+	 * Sets the miscellaneous ID number data field to number parameter. If number parameter is <= 0 an 
+	 * IllegalArgumentException is thrown.
+	 * @param number the miscellaneous ID number
+	 * @throws IllegalArgumentException if the number is <=0
+	 */
+	public void setMiscIDNumber(long number) {
+		if( number <= 0 )
+			throw new IllegalArgumentException(MISC_ID_ERROR);
+		miscIDNumber = number;
+	}
+	
+	/**
+	 * Sets the miscellaneous ID number data field to number parameter. If number parameter is <= 0 an 
+	 * IllegalArgumentException is thrown.
+	 * @param number the miscellaneous ID number
+	 * @throws IllegalArgumentException if the number is <=0
+	 */
+	public void setMiscIDNumber(String number) {
+		Long l = Long.parseLong(number);
+		if( l <= 0 )
+			throw new IllegalArgumentException(MISC_ID_ERROR);
+		miscIDNumber = l;
 	}
 
 	/**

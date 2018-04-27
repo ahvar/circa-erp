@@ -104,7 +104,7 @@ public class ProductCatalogPanel extends JPanel implements ActionListener {
 	/** Drop down for end am/pm */
 	private JComboBox<String> comboEndPeriod;
 	/** Drop down for credits */
-	private JComboBox<Integer> comboCredits;
+	private JComboBox<Double> comboPrices;
 	/** Button for adding a course */
 	private JButton btnAddProduct;
 	/** Button for removing the selected Course from the catalog */
@@ -159,18 +159,17 @@ public class ProductCatalogPanel extends JPanel implements ActionListener {
 		btnRemoveProduct = new JButton("Remove Product");
 		btnRemoveProduct.addActionListener(this);
 		
-		JPanel pnlProductButtons = new JPanel();
-		pnlProductButtons.setLayout(new GridLayout(1, 2));
-		pnlProductButtons.add(btnAddProduct);
-		pnlProductButtons.add(btnRemoveProduct);
+		JPanel pnlAddRemoveProductBtn = new JPanel();
+		pnlAddRemoveProductBtn.setLayout(new GridLayout(1, 2));
+		pnlAddRemoveProductBtn.add(btnAddProduct);
+		pnlAddRemoveProductBtn.add(btnRemoveProduct);
 		
-		border = BorderFactory.createTitledBorder(lowerEtched, "Product Controls");
-		pnlProductButtons.setBorder(border);
-		pnlProductButtons.setToolTipText("Product Controls");
+		border = BorderFactory.createTitledBorder(lowerEtched, "Add and Remove Products");
+		pnlAddRemoveProductBtn.setBorder(border);
+		pnlAddRemoveProductBtn.setToolTipText("Product Controls");
 		
-		//Set up Course form
-		lblName = new JLabel("Product Name");
-		lblDescription = new JLabel("Product Description");
+		lblName = new JLabel("Product Family");
+		lblDescription = new JLabel("Product Generation");
 		lblPartNumber = new JLabel("Part Number");
 		lblPrice = new JLabel("Price");
 		lblInstructorId = new JLabel("Instructor Id");
@@ -180,12 +179,12 @@ public class ProductCatalogPanel extends JPanel implements ActionListener {
 		txtPrice = new JTextField(20);
 		txtInstructorId = new JTextField(20);
 		txtEnrollmentCap = new JTextField(20);
-		comboCredits = new JComboBox<Integer>();
-		comboCredits.addItem(Integer.valueOf(1));
-		comboCredits.addItem(Integer.valueOf(2));
-		comboCredits.addItem(Integer.valueOf(3));
-		comboCredits.addItem(Integer.valueOf(4));
-		comboCredits.addItem(Integer.valueOf(5));
+		comboPrices = new JComboBox<Double>();
+		comboPrices.addItem(Double.valueOf(100.00));
+		comboPrices.addItem(Double.valueOf(200.00));
+		comboPrices.addItem(Double.valueOf(300.00));
+		comboPrices.addItem(Double.valueOf(400.99));
+		comboPrices.addItem(Double.valueOf(599.99));
 		
 		JPanel pnlDays = new JPanel(new GridLayout(1, 15));
 		pnlDays.add(new JLabel("Mon"));
@@ -294,15 +293,15 @@ public class ProductCatalogPanel extends JPanel implements ActionListener {
 		pnlProductForm.add(lblPartNumber);
 		pnlProductForm.add(txtPrice);
 		pnlProductForm.add(lblPrice);
-		pnlProductForm.add(comboCredits);
-		pnlProductForm.add(lblInstructorId);
-		pnlProductForm.add(txtInstructorId);
-		pnlProductForm.add(lblEnrollmentCap);
-		pnlProductForm.add(txtEnrollmentCap);
-		pnlProductForm.add(pnlStartTime);
-		pnlProductForm.add(pnlEndTime);
-		pnlProductForm.add(lblMeetingDays);
-		pnlProductForm.add(pnlDays);
+		pnlProductForm.add(comboPrices);
+		//pnlProductForm.add(lblInstructorId);
+		//pnlProductForm.add(txtInstructorId);
+		//pnlProductForm.add(lblEnrollmentCap);
+		//pnlProductForm.add(txtEnrollmentCap);
+		//pnlProductForm.add(pnlStartTime);
+		//pnlProductForm.add(pnlEndTime);
+		//pnlProductForm.add(lblMeetingDays);
+		//pnlProductForm.add(pnlDays);
 		
 		border = BorderFactory.createTitledBorder(lowerEtched, "Product Information");
 		pnlProductForm.setBorder(border);
@@ -331,7 +330,7 @@ public class ProductCatalogPanel extends JPanel implements ActionListener {
 		c.weighty = .5;
 		c.anchor = GridBagConstraints.LINE_START;
 		c.fill = GridBagConstraints.BOTH;
-		this.add(pnlProductButtons, c);
+		this.add(pnlAddRemoveProductBtn, c);
 		
 		c.gridx = 0;
 		c.gridy = 3;
@@ -381,12 +380,12 @@ public class ProductCatalogPanel extends JPanel implements ActionListener {
 				JOptionPane.showMessageDialog(this, "Enrollment capacity must be a number between 10 and 250.");
 			}
 			int price = 0;
-			int creditsIdx = comboCredits.getSelectedIndex();
+			int creditsIdx = comboPrices.getSelectedIndex();
 			if (creditsIdx == -1) {
 				JOptionPane.showMessageDialog(this, "The weekly repeat is invalid.");
 				return;
 			}
-			price = comboCredits.getItemAt(creditsIdx);
+			//price = comboPrices.getItemAt(creditsIdx);
 			String meetingDays = "";
 			if (cbMonday.isSelected()) {
 				meetingDays += "M";

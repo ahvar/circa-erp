@@ -24,6 +24,8 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.AbstractTableModel;
 
 import com.circa.mrv.grs_manager.manager.GRSManager;
+import com.circa.mrv.grs_manager.niox.Product;
+
 import com.circa.mrv.grs_manager.user.Employee;
 import com.circa.mrv.grs_manager.user.schedule.OrderSchedule;
 
@@ -37,48 +39,7 @@ public class ResearchCompanyOpenOrderPanel extends JPanel implements ActionListe
 	/** Panel for displaying order details */
 	/** ID used for object serialization */
 	private static final long serialVersionUID = 1L;
-	/** Panel for displaying Study Details */
-	private JPanel pnlStudyDetails;
-	/** Label for Study Details order entry the order creation date title */
-	private JLabel lblOrderEntryDateTitle = new JLabel("Date: ");
-	/** Label for Study Details order entry the study number title */
-	private JLabel lblStudyNumberTitle = new JLabel("Study: ");
-	/** Label for Study Details order entry the site number title*/
-	private JLabel lblSiteNumberTitle = new JLabel("Site: ");
-	
-	/** Panel for displaying Order Details */
-	private JPanel pnlOrderDetails;
-	/** Label for Order Details order entry the NAV sales order number title*/
-	private JLabel lblNAVOrderNumberTitle = new JLabel("NAV Sales Order Number: ");
-	/** Customer PO number */
-	private JLabel lblCustomerPOTitle = new JLabel("PO Number: ");
-	
-	/** Panel for displaying customer details */
-	private JPanel pnlCustomerDetails;
-	/** Label for Order Details customer name title */
-	private JLabel lblCustomerNameTitle = new JLabel("Customer Name: ");
-	/** Label for Order Details address title */
-	private JLabel lblAddressTitle = new JLabel("Address: ");
-	/** Label for Order Details address title */
-	private JLabel lblAddress2Title = new JLabel("Address: ");
-	/** Label for Customer Details the city title */
-	private JLabel lblCityTitle = new JLabel("City: ");
-	/** Label for Customer Details the state title */
-	private JLabel lblStateTitle = new JLabel("State: ");
-	/** Label for Customer Details the zip code title */
-	private JLabel lblZipCodeTitle = new JLabel("Zip Code: ");
-	
-	/** Text Field for Order Details name */
-	private JTextField txtFldDate = new JTextField(10);
-	/** ComboBox for Order Details order entry research study number */
-	private JComboBox cmbBoxStudyNumber = new JComboBox();
-	/** ComboBox for Order Details order entry research site number */
-	private JComboBox cmbBoxSiteNumber = new JComboBox();
-	/** Text Field for Order Details order entry NAV sales order number */
-	private JTextField txtFldNAVOrderNumber = new JTextField(10);
-	/** Text Field for Order Details customer purchase order number */
-	private JTextField txtFldPONumber = new JTextField(10);
-	
+
 	/** Text Field for Order Entry customer details address */
 	private JTextField txtFldAddress = new JTextField(20);
 	/** Text Field for Order Entry customer details address */
@@ -94,6 +55,8 @@ public class ResearchCompanyOpenOrderPanel extends JPanel implements ActionListe
 	private JTable tableOpenOrderSchedule;
 	/** Scroll pane for table */
 	private JScrollPane scrollOpenOrderSchedule;
+	/** Table Model for schedule of currently open orders */
+	private OpenOrderTableModel openOrderTableModel;
 
 	/** The order schedule */
 	OrderSchedule orderSchedule;
@@ -111,15 +74,49 @@ public class ResearchCompanyOpenOrderPanel extends JPanel implements ActionListe
 		if (currentUser != null)
 			orderSchedule = currentUser.getSchedule();
 	  
+		Border lowerEtched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
+		TitledBorder boarder = BorderFactory.createTitledBorder(lowerEtched, "Order Schedule Buttons");		
+
+//		pnlButtons.setLayout(new GridLayout(1, 1));
+//		btnLogout = new JButton("Logout");
+//		btnLogout.addActionListener(this);
+//		pnlButtons.add(btnLogout);
 		
+		//Set up Course Roll table
+		openOrderTableModel = new OpenOrderTableModel();
+		tableOpenOrderSchedule = new JTable(openOrderTableModel);
+		tableOpenOrderSchedule.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tableOpenOrderSchedule.setPreferredScrollableViewportSize(new Dimension(500, 500));
+		tableOpenOrderSchedule.setFillsViewportHeight(true);
+		
+		scrollOpenOrderSchedule = new JScrollPane(tableOpenOrderSchedule, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		
+		boarder = BorderFactory.createTitledBorder(lowerEtched, "Open Order Schedule");
+		scrollOpenOrderSchedule.setBorder(boarder);
 		
 		GridBagConstraints c = new GridBagConstraints();
+		
+		/***************************SET UP OPEN ORDER SCHEDULE TABLE**************************
+		 * 																					  *
+		 * 																					  *
+		 * 																					  *
+		 * 																				      *
+		 *************************************************************************************/
+		
+		c.gridx = 0;
+		c.gridy = 0;
+		c.weightx = 1;
+		c.weighty = 1;
+		c.gridwidth = 1;
+		c.anchor = GridBagConstraints.LINE_START;
+		c.fill = GridBagConstraints.BOTH;
+		add(scrollOpenOrderSchedule, c);
 		
 		/*******************************SET UP STUDY PANEL*********************************
 		 *																				  *
 		 *																				  *
 		 *																				  *
-		 **********************************************************************************/
+		 **********************************************************************************
 		pnlStudyDetails = new JPanel();
 		pnlStudyDetails.setLayout(new GridLayout(0,6));
 		c.gridx = 0;
@@ -167,7 +164,7 @@ public class ResearchCompanyOpenOrderPanel extends JPanel implements ActionListe
 		/******************** ADD ORDER DETAILS PANEL ********************************
 		 * 																			  *	
 		 * 																			  *
-		 * ***************************************************************************/
+		 * ***************************************************************************
 		pnlOrderDetails = new JPanel();
 		pnlOrderDetails.setLayout(new GridBagLayout());
 		lblNAVOrderNumberTitle.setSize(50,100);
@@ -209,6 +206,7 @@ public class ResearchCompanyOpenOrderPanel extends JPanel implements ActionListe
 		c.anchor = GridBagConstraints.LINE_START;
 		c.fill = GridBagConstraints.BOTH;
 		add(pnlOrderDetails, c);
+	*/
 	}
 	
 	/**
@@ -216,7 +214,7 @@ public class ResearchCompanyOpenOrderPanel extends JPanel implements ActionListe
 	 */
 	public void updateTable() {
 		//courseRollTableModel.updateData();
-
+		openOrderTableModel.updateData();
 		//initFacultySchedule();
 	}
 
@@ -225,6 +223,88 @@ public class ResearchCompanyOpenOrderPanel extends JPanel implements ActionListe
 
 		this.validate();
 		this.repaint();
+	}
+	
+	/**
+	 * {@link OpenOrderTableModel} is the object underlying the {@link JTable} object that displays
+	 * the list of Orders to the user.
+	 * @author Arthur Vargas
+	 */
+	private class OpenOrderTableModel extends AbstractTableModel {
+		
+		/** ID number used for object serialization. */
+		private static final long serialVersionUID = 1L;
+		/** Column names for the table */
+		private String [] columnNames = {"Study", "Site", "PO Number", "Requested Delivery Date", "User ID"};
+		/** Data stored in the table */
+		private Object [][] data;
+		
+		/**
+		 * Constructs the {@link OpenOrderTableModel} by requesting the latest information
+		 * from the {@link RequirementTrackerModel}.
+		 */
+		public OpenOrderTableModel() {
+			updateData();
+		}
+
+		/**
+		 * Returns the number of columns in the table.
+		 * @return the number of columns in the table.
+		 */
+		public int getColumnCount() {
+			return columnNames.length;
+		}
+
+		/**
+		 * Returns the number of rows in the table.
+		 * @return the number of rows in the table.
+		 */
+		public int getRowCount() {
+			if (data == null) 
+				return 0;
+			return data.length;
+		}
+		
+		/**
+		 * Returns the column name at the given index.
+		 * @return the column name at the given column.
+		 */
+		public String getColumnName(int col) {
+			return columnNames[col];
+		}
+
+		/**
+		 * Returns the data at the given {row, col} index.
+		 * @return the data at the given location.
+		 */
+		public Object getValueAt(int row, int col) {
+			if (data == null)
+				return null;
+			return data[row][col];
+		}
+		
+		/**
+		 * Sets the given value to the given {row, col} location. 
+		 * @param value Object to modify in the data.
+		 * @param row location to modify the data.
+		 * @param column location to modify the data.
+		 */
+		public void setValueAt(Object value, int row, int col) {
+			data[row][col] = value;
+			fireTableCellUpdated(row, col);
+		}
+		
+		/**
+		 * Updates the given model with {@link Product} information from the {@link CustomerSchedule}.
+		 */
+		public void updateData() {
+			if (currentUser != null){
+				data = orderSchedule.getScheduledOrders();
+				//facultyScheduleTableModel.fireTableDataChanged();
+				ResearchCompanyOpenOrderPanel.this.repaint();
+				ResearchCompanyOpenOrderPanel.this.validate();
+			}
+		}	
 	}
 
 }

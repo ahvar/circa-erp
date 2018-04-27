@@ -9,22 +9,27 @@ import java.util.Calendar;
  */
 public abstract class Product {
 	/** Trade name */
-	private String name;
+	private String productFamily;
 	/** A description of the product. */
 	private String description;
 	/** A part-number for the product */
 	private String partNumber;
 	/** A price for this customer*/
 	private double price;
+	/** Error message for part-number */
+	public static final String PART_NUMBER_ERROR = "Part number not found.";
+	/** Product family error message */
+	public static final String PRODUCT_FAMILY_ERROR = "Product family cannot be empty or null.";
 	
 	/**
 	 * Niox is constructed from a description, part number, and price for the product.
 	 * 
+	 * @param fam is the product family
 	 * @param desc the product description
 	 * @param partNumber partNumber for this Niox product
 	 */
-	public Product(String name, String desc, String pn) {
-		setName(name);
+	public Product(String fam, String desc, String pn) {
+		setFamily(fam);
 		setDescription(desc);
 		setPartNumber(pn);
 	}
@@ -44,16 +49,18 @@ public abstract class Product {
 	 * returns the name of the product
 	 * @return name the name of the product
 	*/
-	public String getName() {
-		return name;
+	public String getFamily() {
+		return productFamily;
 	}
 	
 	/**
 	 * Sets the name of the product to the parameter name
 	 * @param name the name to set
 	*/
-	public void setName(String name) {
-		this.name = name;
+	public void setFamily(String family) {
+		if(!family.equals("NIOX") )
+			throw new IllegalArgumentException(PRODUCT_FAMILY_ERROR);
+		this.productFamily = family;
 	}
 	
 	/**
@@ -85,9 +92,17 @@ public abstract class Product {
 	
 	/**
 	 * Sets the part-number for this product to the value of pn.
+	 * If the pn parameter is null or does not begin with a number then setPartNumber 
+	 * throws an IllegalArgumentException.
+	 * 
 	 * @param pn the part-number for this product.
+	 * @throws IllegalArgumentException if pn parameter is null
 	 */
-	public void setPartNumber(String pn) { partNumber = pn; }
+	public void setPartNumber(String pn) {
+		if(pn == null || pn.equals("") || !Character.isDigit(pn.charAt(0))) 
+			throw new IllegalArgumentException(PART_NUMBER_ERROR);
+		partNumber = pn; 
+	}
     
 	/**
 	 * Returns the part-number for this product.
@@ -335,7 +350,7 @@ public abstract class Product {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((productFamily == null) ? 0 : productFamily.hashCode());
 		result = prime * result + ((partNumber == null) ? 0 : partNumber.hashCode());
 		long temp;
 		temp = Double.doubleToLongBits(price);
@@ -360,10 +375,10 @@ public abstract class Product {
 				return false;
 		} else if (!description.equals(other.description))
 			return false;
-		if (name == null) {
-			if (other.name != null)
+		if (productFamily == null) {
+			if (other.productFamily != null)
 				return false;
-		} else if (!name.equals(other.name))
+		} else if (!productFamily.equals(other.productFamily))
 			return false;
 		if (partNumber == null) {
 			if (other.partNumber != null)

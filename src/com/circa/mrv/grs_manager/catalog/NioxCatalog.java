@@ -15,7 +15,7 @@ import com.circa.mrv.grs_manager.util.LinkedListRecursive;
 import edu.ncsu.csc216.collections.list.SortedList;
 
 /**
- * The NioxCatalog is a list of Products. All NIOX products extend the abstract class Product.
+ * The NioxCatalog is a list of Products. 
  *    
  * @author Arthur Vargas 
  */
@@ -40,7 +40,7 @@ public class NioxCatalog {
 	 * @throws IllegalArgumentException if the file is unable to be found.
 	 * @param fileName the filename for the file of products to be read in to create the catalog. 
 	 */
-	public void loadProductsFromFile(String fileName) {
+	public void loadProductsFromFile(String fileName) throws IllegalArgumentException {
 		try {
 			catalog = ProductRecordIO.readProductRecords(fileName);
 			System.out.println(catalog.size());

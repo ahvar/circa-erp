@@ -68,15 +68,34 @@ public class ProductRecordIO {
 
 	/**
 	 * Reads the value fields from the string and constructs an instance of Product class.
+	 * 
 	 * @param nextLine the line that is to be processed
 	 * @return p a product constructed from the line
 	 * @throws IllegalArgumentException if the parameters are not in the correct order or if there
 	 * is an incorrect number of parameters.
 	 */
 	private static Product readLine(String nextLine) {
-		Scanner word = new Scanner(nextLine);
-		Component c = new Component(word.next(),word.next(),word.next());
-		word.close();
+		Scanner scan = new Scanner(nextLine);
+		String token = scan.next();
+		Component c = new Component();
+		scan.useDelimiter(",");
+		while(!token.isEmpty()) {
+			try {
+				if(c.getMiscIDNumber() == 1 && c.getMiscIDNumber() == 0) {
+					c.setMiscIDNumber(token);
+				}
+			} catch (IllegalArgumentException e) {
+				if(e.getMessage().equals(Component.MISC_ID_ERROR)) {
+					c.setMiscIDNumber(1);
+				} else  if (e.getMessage().equals(Component.PART_NUMBER_ERROR)) {
+					c.setPartNumber(" ");
+				} else if (e.getMessage().equals(Component.PRODUCT_FAMILY_ERROR)) {
+					c.setFamily("NIOX");
+				}
+			}
+			token = scan.next();
+		}
+		scan.close();
 		return c;
 		
 	}
