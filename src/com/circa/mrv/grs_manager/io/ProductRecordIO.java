@@ -47,7 +47,6 @@ public class ProductRecordIO {
 			}
 		}
 		fileReader.close();
-		System.out.println(products.size());
 		return products;
 	}
 

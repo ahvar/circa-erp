@@ -347,7 +347,7 @@ public class ProductCatalogPanel extends JPanel implements ActionListener {
 		if (e.getSource() == btnLoadProductCatalog) {
 			String fileName = getFileName(true);
 			try {
-				catalog.loadProductsFromFile(fileName);
+				GRSManager.getInstance().getNioxCatalog().loadProductsFromFile(fileName);
 				productCatalogTableModel.updateData();
 				scrollProductCatalog.revalidate();
 				scrollProductCatalog.repaint();
@@ -579,7 +579,7 @@ public class ProductCatalogPanel extends JPanel implements ActionListener {
 		 * Updates the given model with {@link NIOX} information from the {@link NioxCatalog}.
 		 */
 		public void updateData() {
-			data = catalog.getNioxCatalog();
+			data = GRSManager.getInstance().getNioxCatalog().getNioxCatalog();
 		}
 	}
 

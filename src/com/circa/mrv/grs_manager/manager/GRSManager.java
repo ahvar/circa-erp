@@ -41,7 +41,7 @@ public class GRSManager {
 	/** Hashing algorithm */
 	private static final String HASH_ALGORITHM = "SHA-256";
 	/** Administrator Password */
-	private static final String PW = "03CI27RCA17";
+	private static final String ADMIN_PW = "admin";
 
 	private static String hashPW;
 	
@@ -49,7 +49,7 @@ public class GRSManager {
 	{
 		try {
 	        MessageDigest digest1 = MessageDigest.getInstance(HASH_ALGORITHM);
-			digest1.update(PW.getBytes());
+			digest1.update(ADMIN_PW.getBytes());
 			 hashPW = new String(digest1.digest());
 		} catch (NoSuchAlgorithmException e) {
 			throw new IllegalArgumentException("Cannot hash password");

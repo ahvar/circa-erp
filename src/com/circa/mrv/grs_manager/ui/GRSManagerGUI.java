@@ -293,10 +293,12 @@ public class GRSManagerGUI {
 			aPanel = new JPanel();
 			aCardLayout = new CardLayout();
 			aPanel.setLayout(aCardLayout);
+			
 			pnlVendorEmployeeDirectory = new VendorEmployeeDirectoryPanel();
 			pnlResearchEmployeeDirectory = new ResearchEmployeeDirectoryPanel();
 			pnlCatalog = new ProductCatalogPanel();
 			pnlCompanyAssignment = new CompanyAssignmentPanel();
+			
 			aPanel.add(pnlVendorEmployeeDirectory, VENDOR_DIRECTORY_PANEL);
 			aPanel.add(pnlResearchEmployeeDirectory, RESEARCH_DIRECTORY_PANEL);
 			aPanel.add(pnlCatalog, PRODUCT_CATALOG_PANEL);
@@ -446,6 +448,7 @@ public class GRSManagerGUI {
 		public ResearchPanel() {			
 			super(new GridBagLayout());
 			
+			// add button panel to top of research panel
 			JPanel pnlButtons = new JPanel();
 			pnlButtons.setLayout(new GridLayout(1, 3));
 			btnLogout = new JButton("Logout");

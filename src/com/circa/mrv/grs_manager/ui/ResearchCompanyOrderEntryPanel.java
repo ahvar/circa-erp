@@ -7,11 +7,15 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Vector;
+
 import javax.swing.BorderFactory;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -25,6 +29,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.AbstractTableModel;
 
 import com.circa.mrv.grs_manager.niox.Product;
+import com.circa.mrv.grs_manager.catalog.NioxCatalog;
 import com.circa.mrv.grs_manager.manager.GRSManager;
 import com.circa.mrv.grs_manager.user.Employee;
 import com.circa.mrv.grs_manager.user.schedule.OrderSchedule;
@@ -35,6 +40,11 @@ import com.circa.mrv.grs_manager.user.schedule.OrderSchedule;
  * @author Arthur Vargas.
  */
 public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionListener {
+	/** Product part numbers */
+	private static final String [] NUMBERS = {"12-1200","12-1806-US","12-1810-US","12-1010","12-1220","12-1009","12-1008","12-1230","12-1250","03-4002-US","03-4000-US","09-1300","09-1015","09-1005","Part-Number"};
+	/** Product names */
+	private static final String [] NAMES = {"NIOX VERO device","NIOX VERO test kit 60","NIOX VERO test kit 100","NIOX VERO breathing handle","NIOX VERO Power Adapter","NIOX VERO Handle Cap","NIOX VERO Battery Lid","NIOX VERO Power Cord","NIOX VERO Battery","NIOX VERO hardcase","NIOX VERO Boveda Bag for Hardcase","NIOX VERO Training device",
+			"NIOX MINO Unit Model 2009 US Aerocrine eNO System","NIOX MINO Test Kit 50","NIOX MINO Test Kit 100","NIOX MINO NO Scrubber 2009","NIOX MINO QC Plug Niox Mino Unit","NIOX MINO Power Supply NIOX MINO 2009"};
 	/** Panel for displaying Study Details */
 	private JPanel pnlDateAndCustomer;
 	/** Label for Study Details order entry the order creation date title */
@@ -176,9 +186,9 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 	private JTextField txtFldOrderDeliveryDate = new JTextField(10);
 	
 	/** Text Field for Product Details product name */
-	private JTextField txtFldProductName = new JTextField(20);
+	private JComboBox<String> cmbBoxProductName;
 	/** Text Field for Product Details product part number */
-	private JTextField txtFldProductPartNumber = new JTextField(12);
+	private JComboBox<String> cmbBoxProductPartNumber;
 	/** Text Field for Product Details product description */
 	private JTextField txtFldProductDescription = new JTextField(30);
 	/** Text Field for Product Details product quantity */
@@ -201,6 +211,10 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 //	JPanel pnlButtons = new JPanel();
 	/** Current user */
 	private Employee currentUser;
+	/** Catalog of all available NIOX products */
+	private NioxCatalog catalog;
+	private String [] part = new String[19];
+	private String [] name = new String[19];
 	
 	/**
 	 * Constructs the ResearchCompanyOrderSchedulePanel and sets up the GUI 
@@ -208,26 +222,14 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 	 */
 	public ResearchCompanyOrderEntryPanel() {
 		super(new GridBagLayout());
-		
-		//RegistrationManager manager = RegistrationManager.getInstance();
+		pnlDateAndCustomer = new JPanel();
 		currentUser = (Employee)GRSManager.getInstance().getCurrentUser();
-
+		catalog = GRSManager.getInstance().getNioxCatalog();
+		GroupLayout grpLayout = new GroupLayout(pnlDateAndCustomer);
+		pnlDateAndCustomer.setLayout(grpLayout);
+		grpLayout.setAutoCreateGaps(true);
+		grpLayout.setAutoCreateContainerGaps(true);
 		
-		Border lowerEtched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
-		TitledBorder boarder = BorderFactory.createTitledBorder(lowerEtched, "Directory Buttons");		
-
-		productRollTableModel = new ProductRollTableModel();
-		tableProductsRoll = new JTable(productRollTableModel);
-		tableProductsRoll.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		tableProductsRoll.setPreferredScrollableViewportSize(new Dimension(500, 500));
-		tableProductsRoll.setFillsViewportHeight(true);
-		
-		scrollProductRoll = new JScrollPane(tableProductsRoll, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		
-		boarder = BorderFactory.createTitledBorder(lowerEtched, "Product Catalog");
-		scrollProductRoll.setBorder(boarder);
-		
-		updateTables();
 		
 		GridBagConstraints c = new GridBagConstraints();
 		
@@ -237,17 +239,24 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 		 *  																			  *
 		 *																				  *
 		 **********************************************************************************/
-		pnlDateAndCustomer = new JPanel();
-		GroupLayout grpLayout = new GroupLayout(pnlDateAndCustomer);
-		pnlDateAndCustomer.setLayout(grpLayout);
-		grpLayout.setAutoCreateGaps(true);
-		grpLayout.setAutoCreateContainerGaps(true);
 		
+		int i = 0;
+		while( i < catalog.allProducts() ) {
+			//System.out.println(catalog.getNioxCatalog()[i][0]);
+			//System.out.println(catalog.getNioxCatalog()[i][1] + " " + catalog.getNioxCatalog()[i][2] + " " + catalog.getNioxCatalog()[i][3]);
+			part[i] = catalog.getNioxCatalog()[i][0];
+			name[i] = catalog.getNioxCatalog()[i][1] + " " + catalog.getNioxCatalog()[i][2] + " " + catalog.getNioxCatalog()[i][3];
+			i++;
+		}
+		DefaultComboBoxModel<String> numberModel = new DefaultComboBoxModel<String>(NUMBERS);
+		DefaultComboBoxModel<String> nameModel = new DefaultComboBoxModel<String>(NAMES);
+		cmbBoxProductPartNumber = new JComboBox<String>(numberModel);
+		cmbBoxProductName = new JComboBox<String>(nameModel);
 		// define horizontal layout for date and customer information
 		grpLayout.setHorizontalGroup(grpLayout.createSequentialGroup()
 			.addGroup(grpLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
 				
-				//add customer, site, study, and prouduct information 
+				//add customer, site, study, and product information 
 				.addGroup(grpLayout.createSequentialGroup()
 					.addComponent(lblCustomerNameTitle)
 					.addComponent(txtFldCustomerName))
@@ -265,10 +274,10 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 					.addComponent(txtFldOrderDeliveryDate))
 				.addGroup(grpLayout.createSequentialGroup()
 					.addComponent(lblProductNameTitle)
-					.addComponent(txtFldProductName))
+					.addComponent(cmbBoxProductName,0,javax.swing.GroupLayout.DEFAULT_SIZE,Short.MAX_VALUE))
 				.addGroup(grpLayout.createSequentialGroup()
 					.addComponent(lblProductPartNumberTitle)
-					.addComponent(txtFldProductPartNumber))
+					.addComponent(cmbBoxProductPartNumber,0,javax.swing.GroupLayout.DEFAULT_SIZE,Short.MAX_VALUE))
 				.addGroup(grpLayout.createSequentialGroup()
 					.addComponent(lblProductDescriptionTitle)
 					.addComponent(txtFldProductDescription))
@@ -282,6 +291,7 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 				.addComponent(submit)
 				.addComponent(clear)
 				.addComponent(add))
+			
 			// add ship to and bill to information for the customer
 			.addGroup(grpLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
 				.addGroup(grpLayout.createSequentialGroup()
@@ -363,12 +373,12 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 			// product information
 			.addGroup(grpLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
 				.addComponent(lblProductNameTitle)
-				.addComponent(txtFldProductName)
+				.addComponent(cmbBoxProductName,javax.swing.GroupLayout.PREFERRED_SIZE,javax.swing.GroupLayout.DEFAULT_SIZE,javax.swing.GroupLayout.PREFERRED_SIZE)
 				.addComponent(lblBillToNameTitle)
 				.addComponent(txtFldBillToName))
 			.addGroup(grpLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
 				.addComponent(lblProductPartNumberTitle)
-				.addComponent(txtFldProductPartNumber)
+				.addComponent(cmbBoxProductPartNumber,javax.swing.GroupLayout.PREFERRED_SIZE,javax.swing.GroupLayout.DEFAULT_SIZE,javax.swing.GroupLayout.PREFERRED_SIZE)
 				.addComponent(lblBillToAddressTitle)
 				.addComponent(txtFldBillToAddress))
 			.addGroup(grpLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -396,11 +406,27 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 		c.anchor = GridBagConstraints.LINE_START;
 		c.fill = GridBagConstraints.BOTH;
 		add(pnlDateAndCustomer, c);
+		
+		Border lowerEtched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
+		TitledBorder boarder = BorderFactory.createTitledBorder(lowerEtched, "Directory Buttons");		
+
+		productRollTableModel = new ProductRollTableModel();
+		tableProductsRoll = new JTable(productRollTableModel);
+		tableProductsRoll.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tableProductsRoll.setPreferredScrollableViewportSize(new Dimension(500, 500));
+		tableProductsRoll.setFillsViewportHeight(true);
+		
+		scrollProductRoll = new JScrollPane(tableProductsRoll, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		
+		boarder = BorderFactory.createTitledBorder(lowerEtched, "Product Catalog");
+		scrollProductRoll.setBorder(boarder);
+		
+		updateTables();
 			
 		TitledBorder borderCourseDetails = BorderFactory.createTitledBorder(lowerEtched, "Order Details");
 		pnlDateAndCustomer.setBorder(borderCourseDetails);
 		pnlDateAndCustomer.setToolTipText("Order Details");				
-		
+		System.out.println("catalog size: " + catalog.allProducts());
 		c.gridx = 0;
 		c.gridy = 4;
 		c.weightx = 1;
@@ -408,7 +434,8 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 		c.anchor = GridBagConstraints.LINE_START;
 		c.fill = GridBagConstraints.BOTH;
 		add(scrollProductRoll, c);
-		//setVisible(true);
+		setVisible(true);
+		
 	}
 	
 	/**
@@ -417,13 +444,19 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 	public void updateTables() {
 		//courseRollTableModel.updateData();
 		productRollTableModel.updateData();
-		//initFacultySchedule();
 	}
 	
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-
+		if(e.getSource() == cmbBoxProductPartNumber) {
+			String number = (String)cmbBoxProductPartNumber.getSelectedItem();
+			
+		} else if (e.getSource() == cmbBoxProductName) {
+			String name = (String)cmbBoxProductName.getSelectedItem();
+			
+		}
+		
 		productRollTableModel.updateData();
 		
 		this.validate();

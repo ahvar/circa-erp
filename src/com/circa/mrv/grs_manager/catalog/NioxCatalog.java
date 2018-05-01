@@ -43,7 +43,7 @@ public class NioxCatalog {
 	public void loadProductsFromFile(String fileName) throws IllegalArgumentException {
 		try {
 			catalog = ProductRecordIO.readProductRecords(fileName);
-			System.out.println(catalog.size());
+		
 		} catch (FileNotFoundException e) {
 			throw new IllegalArgumentException("Unable to read file " + fileName);
 		}
@@ -110,6 +110,14 @@ public class NioxCatalog {
 	}
 	
 	/**
+	 * Returns the number of products contained in the catalog
+	 * @return int the number of products in the catalog
+	 */
+	public int allProducts() {
+		return catalog.size();
+	}
+	
+	/**
 	 * Removes a product from the catalog if the product's name and part number match the passed values.
 	 * @param name the name of the name of the product to remove
 	 * @param part number the part number of the product to remove
@@ -161,8 +169,6 @@ public class NioxCatalog {
 		return null;
 	}
 	
-	
-	
 	/**
 	 * Gets the full product catalog which is stored as a 2D array. The rows of the array are individual products and the 
 	 * columns of the array are the description and part number 
@@ -178,6 +184,7 @@ public class NioxCatalog {
 			nioxCatalog[i][3] = c.getDescription();
 			nioxCatalog[i][4] = Double.toString(c.getPrice());
 		}
+		
 		return nioxCatalog;
 	}
 	
