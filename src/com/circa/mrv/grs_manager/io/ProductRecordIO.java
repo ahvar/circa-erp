@@ -15,7 +15,6 @@ import com.circa.mrv.grs_manager.niox.Component;
 import com.circa.mrv.grs_manager.niox.Product;
 import com.circa.mrv.grs_manager.util.LinkedListRecursive;
 
-import edu.ncsu.csc216.collections.list.SortedList;
 
 /**
  * ProductRecordIO class handles I/O for NIOX product records. 

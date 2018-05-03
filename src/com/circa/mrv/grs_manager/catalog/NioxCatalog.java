@@ -12,8 +12,6 @@ import com.circa.mrv.grs_manager.niox.Component;
 import com.circa.mrv.grs_manager.niox.Product;
 import com.circa.mrv.grs_manager.util.LinkedListRecursive;
 
-import edu.ncsu.csc216.collections.list.SortedList;
-
 /**
  * The NioxCatalog is a list of Products. 
  *    
@@ -162,8 +160,7 @@ public class NioxCatalog {
 	 */
 	public Product getProductFromCatalog(String family, String pn){	
 		for (int i = 0; i < catalog.size(); i++) {
-			if (catalog.get(i).getFamily().equals(family) && catalog.get(i).getPartNumber().equals(pn) &&
-					catalog.get(i).getPartNumber().equals(pn))
+			if (catalog.get(i).getFamily().equals(family) && catalog.get(i).getPartNumber().equals(pn) )
 				return new Component(catalog.get(i).getFamily(), catalog.get(i).getDescription(), catalog.get(i).getPartNumber());
 		}
 		return null;

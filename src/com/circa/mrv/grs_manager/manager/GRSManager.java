@@ -9,6 +9,7 @@ import com.circa.mrv.grs_manager.directory.VendorCompany;
 import com.circa.mrv.grs_manager.directory.Company;
 import com.circa.mrv.grs_manager.directory.UserDirectory;
 import com.circa.mrv.grs_manager.directory.CompanyDirectory;
+import com.circa.mrv.grs_manager.catalog.OrderRecord;
 import com.circa.mrv.grs_manager.product.list.ProductList;
 import com.circa.mrv.grs_manager.user.User;
 import com.circa.mrv.grs_manager.user.Employee;
@@ -34,6 +35,8 @@ public class GRSManager {
 	private CompanyDirectory companyDirectory;
 	/** A directory of employees */
 	private UserDirectory userDirectory;
+	/** A record of customer orders */
+	private OrderRecord orderRecord;
 	/** The administrator user */
 	private User administrator;
 	/** The user currently logged into GRS Manager */
@@ -82,6 +85,14 @@ public class GRSManager {
 	 */
 	public NioxCatalog getNioxCatalog() {
 		return catalog;
+	}
+	
+	/**
+	 * Gets the order record that was created
+	 * @return the order record
+	 */
+	public OrderRecord getOrderRecord() {
+		return orderRecord;
 	}
 	
 	/**

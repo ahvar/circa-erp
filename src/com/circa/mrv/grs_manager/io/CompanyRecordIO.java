@@ -12,7 +12,6 @@ import com.circa.mrv.grs_manager.util.LinkedListRecursive;
 
 import java.io.*;
 
-import edu.ncsu.csc216.collections.list.SortedList;
 
 /**
  * This class is passed a file with company records. it reads the file line by line. 
@@ -76,7 +75,7 @@ public class CompanyRecordIO {
 			lineScanner.useDelimiter(",");	
 			try{
 				name = lineScanner.next();
-				BillTo bt = new BillTo(lineScanner.next(), lineScanner.next(), lineScanner.next(), lineScanner.next(), lineScanner.next());
+				BillTo bt = new BillTo(lineScanner.next(), lineScanner.next(), lineScanner.next(), lineScanner.next(), lineScanner.next(),lineScanner.next());
 				if (name.contains(Company.cir)) {	
 	              c = new VendorCompany(bt,name);			
 				} else if (name.contains(Company.ert)) {

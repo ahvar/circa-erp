@@ -243,7 +243,7 @@ public class GRSManagerGUI {
 		/** Constant to identify ProductCatalog */
 		private static final String PRODUCT_CATALOG_PANEL = "ProductCatalogPanel";
 		/** Constant to identify InstructorAssignmentPanel */
-		private static final String COMPANY_ASSIGNMENT_PANEL = "Company Assignment Panel";
+		private static final String ORDER_RECORDS_PANEL = "OrderRecordsPanel";
 		
 		/** VendorEmployeeDirectoryPanel */
 		private VendorEmployeeDirectoryPanel pnlVendorEmployeeDirectory;
@@ -252,7 +252,7 @@ public class GRSManagerGUI {
 		/** ProductCatalogPanel */
 		private ProductCatalogPanel pnlCatalog;
 		/** CompanyAssignmentPanel */
-		private CompanyAssignmentPanel pnlCompanyAssignment;
+		private OrderRecordsPanel pnlOrderRecords;
 		/** CardLayout for the AdministratorPanel */
 		private CardLayout aCardLayout;
 		/** Panel for the AdministratorPanel */
@@ -265,7 +265,7 @@ public class GRSManagerGUI {
 		/** Button for the ProductCatalog functionality */
 		private JButton btnProductCatalog;
 		/** Button for CompanyAssignment functionality */
-		private JButton btnCompanyAssignment;
+		private JButton btnOrderRecords;
 		/** Button to logout */
 		private JButton btnLogout;
 		
@@ -280,14 +280,14 @@ public class GRSManagerGUI {
 			btnResearchCompanyDirectory.addActionListener(this);
 			btnProductCatalog = new JButton("Product Catalog");
 			btnProductCatalog.addActionListener(this);
-			btnCompanyAssignment = new JButton("Company Assignment");
-			btnCompanyAssignment.addActionListener(this);
+			btnOrderRecords = new JButton("Order Records");
+			btnOrderRecords.addActionListener(this);
 			btnLogout = new JButton("Logout");
 			btnLogout.addActionListener(this);
 			pnlButtons.add(btnVendorEmployeeDirectory);
 			pnlButtons.add(btnResearchCompanyDirectory);
 			pnlButtons.add(btnProductCatalog);
-			pnlButtons.add(btnCompanyAssignment);
+			pnlButtons.add(btnOrderRecords);
 			pnlButtons.add(btnLogout);
 			
 			aPanel = new JPanel();
@@ -297,12 +297,12 @@ public class GRSManagerGUI {
 			pnlVendorEmployeeDirectory = new VendorEmployeeDirectoryPanel();
 			pnlResearchEmployeeDirectory = new ResearchEmployeeDirectoryPanel();
 			pnlCatalog = new ProductCatalogPanel();
-			pnlCompanyAssignment = new CompanyAssignmentPanel();
+			pnlOrderRecords = new OrderRecordsPanel();
 			
 			aPanel.add(pnlVendorEmployeeDirectory, VENDOR_DIRECTORY_PANEL);
 			aPanel.add(pnlResearchEmployeeDirectory, RESEARCH_DIRECTORY_PANEL);
 			aPanel.add(pnlCatalog, PRODUCT_CATALOG_PANEL);
-			aPanel.add(pnlCompanyAssignment, COMPANY_ASSIGNMENT_PANEL);
+			aPanel.add(pnlOrderRecords, ORDER_RECORDS_PANEL);
 			aCardLayout.show(aPanel, VENDOR_DIRECTORY_PANEL);
 			
 //			scrollRPanel = new JScrollPane(rPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -338,9 +338,9 @@ public class GRSManagerGUI {
 				aCardLayout.show(aPanel, RESEARCH_DIRECTORY_PANEL);
 			} else if (e.getSource() == btnProductCatalog) {
 				aCardLayout.show(aPanel, PRODUCT_CATALOG_PANEL);
-			} else if (e.getSource() == btnCompanyAssignment) {
-				aCardLayout.show(aPanel, COMPANY_ASSIGNMENT_PANEL);
-				pnlCompanyAssignment.updateTables();
+			} else if (e.getSource() == btnOrderRecords) {
+				aCardLayout.show(aPanel, ORDER_RECORDS_PANEL);
+				pnlOrderRecords.updateTables();
 			} else if (e.getSource() == btnLogout) {
 				GRSManager.getInstance().logout();
 				cardLayout.show(panel, LOGIN_PANEL);
