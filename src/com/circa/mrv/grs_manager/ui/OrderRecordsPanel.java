@@ -395,10 +395,10 @@ public class OrderRecordsPanel  extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnLoadOrderRecords) {
 			String titles = getTitlesFileName(true);
-			String orders = getOrdersFileName(true);
+			//String orders = getOrdersFileName(true);
 			try {
 				GRSManager.getInstance().getOrderRecord().loadTitlesFromFile(titles);
-				GRSManager.getInstance().getOrderRecord().loadOrdersFromFile(orders);
+				//GRSManager.getInstance().getOrderRecord().loadOrdersFromFile(orders);
 			}catch (IllegalArgumentException iae) {
 				JOptionPane.showMessageDialog(this,iae.getMessage());
 			}

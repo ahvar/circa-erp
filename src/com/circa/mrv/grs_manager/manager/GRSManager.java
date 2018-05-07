@@ -62,7 +62,7 @@ public class GRSManager {
 	private GRSManager() {
 		catalog = new NioxCatalog();
 		companyDirectory = new CompanyDirectory();
-	
+		orderRecord = new OrderRecord();
 		administrator = new Administrator();
 		userDirectory = new UserDirectory();
 	}
@@ -94,7 +94,7 @@ public class GRSManager {
 	public OrderRecord getOrderRecord() {
 		return orderRecord;
 	}
-	
+
 	/**
 	 * Logs a user into the grs manager after checking the passed id and password. If the employee is located in Sweden,
 	 * then the employee's password is checked against the passed password. If there is a match, then the Sweden employee is logged in. 

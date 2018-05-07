@@ -40,11 +40,7 @@ import com.circa.mrv.grs_manager.user.schedule.OrderSchedule;
  * @author Arthur Vargas.
  */
 public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionListener {
-	/** Product part numbers */
-	private static final String [] NUMBERS = {"12-1200","12-1806-US","12-1810-US","12-1010","12-1220","12-1009","12-1008","12-1230","12-1250","03-4002-US","03-4000-US","09-1300","09-1015","09-1005","Part-Number"};
-	/** Product names */
-	private static final String [] NAMES = {"NIOX VERO device","NIOX VERO test kit 60","NIOX VERO test kit 100","NIOX VERO breathing handle","NIOX VERO Power Adapter","NIOX VERO Handle Cap","NIOX VERO Battery Lid","NIOX VERO Power Cord","NIOX VERO Battery","NIOX VERO hardcase","NIOX VERO Boveda Bag for Hardcase","NIOX VERO Training device",
-			"NIOX MINO Unit Model 2009 US Aerocrine eNO System","NIOX MINO Test Kit 50","NIOX MINO Test Kit 100","NIOX MINO NO Scrubber 2009","NIOX MINO QC Plug Niox Mino Unit","NIOX MINO Power Supply NIOX MINO 2009"};
+	
 	/** Panel for displaying Study Details */
 	private JPanel pnlDateAndCustomer;
 	/** Label for Study Details order entry the order creation date title */
@@ -248,8 +244,8 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 			name[i] = catalog.getNioxCatalog()[i][1] + " " + catalog.getNioxCatalog()[i][2] + " " + catalog.getNioxCatalog()[i][3];
 			i++;
 		}
-		DefaultComboBoxModel<String> numberModel = new DefaultComboBoxModel<String>(NUMBERS);
-		DefaultComboBoxModel<String> nameModel = new DefaultComboBoxModel<String>(NAMES);
+		DefaultComboBoxModel<String> numberModel = new DefaultComboBoxModel<String>(NioxCatalog.NUMBERS);
+		DefaultComboBoxModel<String> nameModel = new DefaultComboBoxModel<String>(NioxCatalog.NAMES);
 		cmbBoxProductPartNumber = new JComboBox<String>(numberModel);
 		cmbBoxProductName = new JComboBox<String>(nameModel);
 		// define horizontal layout for date and customer information

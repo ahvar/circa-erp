@@ -18,7 +18,14 @@ import com.circa.mrv.grs_manager.util.LinkedListRecursive;
  * @author Arthur Vargas 
  */
 public class NioxCatalog {
-/** The catalog for products */
+	/** Product part numbers */
+	public static final String [] NUMBERS = {"12-1200","12-1806-US","12-1810-US","12-1010","12-1220","12-1009","12-1008","12-1230","12-1250","03-4002-US","03-4000-US","09-1300","09-1015","09-1005","Part-Number"};
+	/** Product names */
+	public static final String [] NAMES = {"NIOX VERO device","NIOX VERO test kit 60","NIOX VERO test kit 100","NIOX VERO breathing handle","NIOX VERO Power Adapter","NIOX VERO Handle Cap","NIOX VERO Battery Lid","NIOX VERO Power Cord","NIOX VERO Battery","NIOX VERO hardcase","NIOX VERO Boveda Bag for Hardcase","NIOX VERO Training device",
+			"NIOX MINO Unit Model 2009 US Aerocrine eNO System","NIOX MINO Test Kit 50","NIOX MINO Test Kit 100","NIOX MINO NO Scrubber 2009","NIOX MINO QC Plug Niox Mino Unit","NIOX MINO Power Supply NIOX MINO 2009"};
+	public static final String [] DESCRIPTIONS = {"device","test kit 60","test kit 100","breathing handle","power adapter","handle cap","batter lid","power cord","battery","hardcase","boveda bag for hardcase","training device",
+			"Unit Model 2009 US Aerocrine eNO System","test kit 50","NO Scrubber 2009","QC Plug Niox","Power Supply"};
+	/** The catalog for products */
 	private LinkedListRecursive<Product> catalog;
 	
 	/**
@@ -164,6 +171,18 @@ public class NioxCatalog {
 				return new Component(catalog.get(i).getFamily(), catalog.get(i).getDescription(), catalog.get(i).getPartNumber());
 		}
 		return null;
+	}
+	
+	/**
+	 * Searches the catalog for the product whose famiyl, generation, and description match the parameters.
+	 * @param family the product famiy
+	 * @param generation the product generation
+	 * @param description the product description
+	 * @return true if the catalog contains the product
+	 */
+	public boolean catalogContainsProduct(String family, String generation, String description) {
+		
+		return true;
 	}
 	
 	/**
