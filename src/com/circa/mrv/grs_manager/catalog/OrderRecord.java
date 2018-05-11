@@ -3,12 +3,15 @@
  */
 package com.circa.mrv.grs_manager.catalog;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.util.Scanner;
 
 import com.circa.mrv.grs_manager.io.OrderRecordIO;
 import com.circa.mrv.grs_manager.io.ProductTitle;
@@ -37,11 +40,14 @@ public class OrderRecord {
 	/** PrintStream to output data to file */
 	private PrintStream fileWriter;
 	/** The order records filename */
-	private static final String RECORDS = "test-files/records_formatted_test.txt";
+	private static final String RECORDS_NO_PRODUCT_TITLES = "test-files/records_no_product_titles.txt";
 	/** The order records title filename */
-	private static final String TITLES = "test-files/order_record_titles.txt";
+	private static final String ORDER_RECORD_TITLES = "test-files/order_record_titles.txt";
 	/** Name for the output file of the product titles */
 	private static final String PRODUCT_TITLES = "test-files/product_titles.txt";
+	/** Name of the output file for all order record data; includes product titles */
+	private static final String RECORDS_PRODUCT_TITLES = "test-files/records_product_titles.txt";
+	
 
 	/**
 	 * Constructs the OrderRecord with a default number of row and columns, 500 and 70, respectively.
@@ -70,8 +76,9 @@ public class OrderRecord {
 	public void loadOrdersFromFile(String filename) throws IllegalArgumentException {
 		try {
 			OrderRecordIO.readOrderRecord(filename,unformattedRecords,productTitlesList,lastCol);
-			writeFormattedToFile(RECORDS);
-			removePTColumns();
+			writeUnFormattedToFile(RECORDS_NO_PRODUCT_TITLES);
+			printAllUnformattedToFile(RECORDS_PRODUCT_TITLES);
+			//removePTColumns();
 		} catch (IOException e) {
 			throw new IllegalArgumentException("Unable to read file " + filename);
 		}
@@ -89,7 +96,7 @@ public class OrderRecord {
 		try {
 			lastCol = OrderRecordIO.readOrderTitles(filename, unformattedRecords, productTitlesList);
 			setProductTitleRange();
-			writeTitlesToFile(TITLES);
+			writeTitlesToFile(ORDER_RECORD_TITLES);
 			writeProductTitlesToFile(PRODUCT_TITLES);
 		} catch(IOException e) {
 			throw new IllegalArgumentException(e.getMessage());
@@ -135,18 +142,31 @@ public class OrderRecord {
 	 * Returns a 2D array containing the following order information: Study, Site, City, PO Number, Contact, Date.
 	 * @return array the abbreviated order information
 	 * @throws NullPointerException if noPTColumns array is null
+	 * @throws IOException if there is a problem reading the file
 	 */
-	public String[][] getShortOrderInfo() throws NullPointerException {
-		String[][] shortOrderRecord = new String[noPTColumns.length][7];
-		for(int row = 1; row < noPTColumns.length; row++) {
-			shortOrderRecord[row][0] = noPTColumns[row][0];
-			shortOrderRecord[row][1] = noPTColumns[row][1];
-			shortOrderRecord[row][2] = noPTColumns[row][12];
-			shortOrderRecord[row][3] = noPTColumns[row][14];
-			shortOrderRecord[row][4] = noPTColumns[row][15];
-			shortOrderRecord[row][5] = noPTColumns[row][16];
-			shortOrderRecord[row][6] = noPTColumns[row][22];	
-		}  
+	public String[][] getShortOrderInfo() throws NullPointerException, IOException {
+		System.out.println("ENTER getShortOrderInfo" + '\n');
+		//BufferedReader br = new BufferedReader(new FileReader(RECORDS_NO_PRODUCT_TITLES));
+		//Scanner scan;
+		//String line = br.readLine(); //blank
+		//line = br.readLine(); //titles
+		//String record = "";
+		String[][] shortOrderRecord = new String[unformattedRecords.length][11];
+		for(int row = 1; row < unformattedRecords.length; row++) {
+			shortOrderRecord[row][0] = unformattedRecords[row][0];
+			shortOrderRecord[row][1] = unformattedRecords[row][1];
+			shortOrderRecord[row][2] = unformattedRecords[row][33];
+			shortOrderRecord[row][3] = unformattedRecords[row][34];
+			shortOrderRecord[row][4] = unformattedRecords[row][48];
+			shortOrderRecord[row][5] = unformattedRecords[row][47];
+			shortOrderRecord[row][6] = unformattedRecords[row][39];
+			shortOrderRecord[row][7] = unformattedRecords[row][41];
+			shortOrderRecord[row][8] = unformattedRecords[row][35];
+			shortOrderRecord[row][9] = unformattedRecords[row][36];
+			shortOrderRecord[row][10] = unformattedRecords[row][37];
+			
+		}
+		//br.close();
 		return shortOrderRecord;
 	}
 	
@@ -161,14 +181,16 @@ public class OrderRecord {
 			int noPTRow = 0;
 			int noPTCol = 0;
 			noPTColumns = new String[unformattedRecords.length][lastCol - productTitlesList.size()];
-			for(int row = 1; row < unformattedRecords.length; row++) {
+			for(int row = 0; row < unformattedRecords.length; row++) {
 				for(int col = 0; col < lastCol; col++) {
-					if( getFirst() <= col && col <= getLast() ) {
-						continue;
-					} else {
+					if( isProductTitle(col) ) continue;
+					if ( unformattedRecords[row][col] == null ) {
+						noPTColumns[noPTRow][noPTCol] = "empty";
+					} else { 
 						noPTColumns[noPTRow][noPTCol] = unformattedRecords[row][col];
 						noPTCol++;
-						System.out.println("Column: " + col + '\t' + unformattedRecords[row][col]);
+						//System.out.println("UFR Column: " + col + '\t' + unformattedRecords[noPTRow][noPTCol] + '\n' + 
+								//"no PT Column: " + noPTCol + '\t' + noPTColumns[noPTRow][noPTCol]);
 					}
 				}
 				noPTRow++;
@@ -199,7 +221,6 @@ public class OrderRecord {
 	private void setProductTitleRange() {
 		for(int i = 0; i < productTitlesList.size(); i++) {
 			int titleIdx = productTitlesList.get(i).getIndex();
-			//System.out.println("index: " + titleIdx + " " + "description: " + productTitles.get(i).getDescription());
 			if( first == last ) {
 				first = titleIdx;
 				last = titleIdx + 1;
@@ -207,9 +228,8 @@ public class OrderRecord {
 				first = titleIdx;
 			} else if (last < titleIdx)
 				last = titleIdx;
-
 		}
-		//System.out.println(first + " " + last);
+		
 	}
 	
 	/**
@@ -232,8 +252,7 @@ public class OrderRecord {
 	 * @return true if the column is within the range of product titles
 	 */
 	private boolean isProductTitle(int column) {
-		if( column == first || column == last ||
-				((first < column && column < last)) ) 
+		if( first <= column && column <= last) 
 			return true;
 		return false;
 	}
@@ -243,14 +262,16 @@ public class OrderRecord {
 	 * @param output the filename 
 	 * @throws IOException if there is a problem writing to the output file
 	 */
-	private void writeFormattedToFile(String output) throws IOException {
+	private void writeUnFormattedToFile(String output) throws IOException {
 		fileWriter = new PrintStream(new File(output));
-		for(int row = 1; row < unformattedRecords.length; row++) {
+		for(int row = 0; row < unformattedRecords.length; row++) {
 			fileWriter.println();
 			for(int col = 0; col < lastCol; col++) {
-				if(!isProductTitle(col) && unformattedRecords[row][col] != null) {
-					fileWriter.print(unformattedRecords[row][col] + " ");
-				}
+				if(isProductTitle(col)) continue;
+				if(unformattedRecords[row][col] == null)
+					fileWriter.print("no record" + ",");
+				else 
+					fileWriter.print(unformattedRecords[row][col] + ",");
 			}
 		}
 	}
@@ -282,6 +303,18 @@ public class OrderRecord {
 		for(int i = 0; i < this.productTitlesList.size(); i++) {
 			fileWriter.println(this.productTitlesList.get(i).getFam() + " " + this.productTitlesList.get(i).getGen() + 
 					" " + this.productTitlesList.get(i).getDescription() + " index: " + this.productTitlesList.get(i).getIndex());
+		}
+	}
+	
+	/** 
+	 * Prints all data in the unformatted records array to the output file.
+	 */
+	private void printAllUnformattedToFile(String output) throws IOException {
+		fileWriter = new PrintStream(output);
+		for(int row = 0; row < unformattedRecords.length; row++) {
+			for(int col = 0; col < lastCol; col++) 
+				fileWriter.print(unformattedRecords[row][col] + ",");
+			fileWriter.print('\n');
 		}
 	}
 

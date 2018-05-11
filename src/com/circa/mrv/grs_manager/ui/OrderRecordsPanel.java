@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.IOException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -549,7 +550,7 @@ public class OrderRecordsPanel  extends JPanel implements ActionListener {
 		/** ID number used for object serialization. */
 		private static final long serialVersionUID = 1L;
 		/** Column names for the table */
-		private String [] columnNames = {"Study", "Site", "City", "State", "PO Number", "Contact", "Date"};
+		private String [] columnNames = {"Study", "Site", "City", "Country", "PO Number", "Note", "Email", "Date", "State","Phone","Fax"};
 		/** Data stored in the table */
 		private Object [][] data;
 		
@@ -616,6 +617,10 @@ public class OrderRecordsPanel  extends JPanel implements ActionListener {
 				data = GRSManager.getInstance().getOrderRecord().getShortOrderInfo();
 			} catch(NullPointerException e) {
 				data = GRSManager.getInstance().getOrderRecord().getRecord();
+				System.out.println(e.getMessage());
+			} catch(IOException e) {
+				data = GRSManager.getInstance().getOrderRecord().getRecord();
+				System.out.println(e.getMessage());
 			}
 		}
 	}
