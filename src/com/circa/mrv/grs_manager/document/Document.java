@@ -30,6 +30,9 @@ public abstract class Document {
 		setCreation(Calendar.getInstance());
 		setUserId(userID);
 	}
+	
+	/** Default constructor for document */
+	public Document(){}
 
 	/**
 	 * Returns the unique number for this document

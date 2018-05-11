@@ -1,0 +1,19 @@
+Product Title Min: 3	Product Title Max: 24
+niox vero device index: 3
+niox vero test kit 60 index: 4
+niox vero test kit 100 index: 5
+niox vero breathing handle index: 6
+niox vero power adapter index: 7
+niox vero handle cap index: 8
+niox vero battery index: 9
+niox vero power cord index: 10
+niox vero battery index: 11
+niox vero hardcase index: 12
+niox vero device index: 14
+niox mino unit model 2009 index: 15
+niox mino test kit 50 index: 18
+niox mino test kit 100 index: 20
+niox mino no scrubber index: 21
+niox mino no scrubber index: 22
+niox mino qc plug index: 23
+niox mino power supply index: 24

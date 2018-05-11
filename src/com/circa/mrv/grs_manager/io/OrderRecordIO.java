@@ -25,16 +25,12 @@ import com.circa.mrv.grs_manager.util.LinkedListRecursive;
  * @author Arthur  Vargas
  */
 public class OrderRecordIO {
-	private static final String UNFORMATTED_TITLES = "test-files/unformatted_titles.txt";
-	private static final String FORMATTED_TITLES = "test-files/formatted_titles.txt";
-
-	private static int productColStart;
-	private static int productColEnd;
-
 	private static final String NIOX_LOWER = "niox";
 	private static final String VERO_LOWER = "vero";
 	private static final String MINO_LOWER = "mino";
-
+	private static final String FAMILY_DEFAULT = "family";
+	private static final String GENERATION_DEFAULT = "generation";
+	private static final String DESCRIPTION_DEFAULT = "description";
 
 	
 	/**
@@ -59,6 +55,11 @@ public class OrderRecordIO {
     	while( (x = reader.read()) != -1 ) {
     		c = (char)x;
     		
+    		if(col == lastCol)  {
+        		row++;
+        		col = 0;
+        	}
+    		
     	    if(Character.isWhitespace(c)) {
     	    	
     	    	segment.append(' ');
@@ -67,28 +68,27 @@ public class OrderRecordIO {
     	    	
     	    /** ending comma for a segment. print line, clear builder, clear delimiter */
         	if( (x == ',' && delim == ',' && 0 < segment.length()) || (x == ',' && delim == 0 && 0 < segment.length())) {  
-        			
+        		
         		orders[row][col] = segment.toString();
         		segment = OrderRecordIO.clearStringBuilder(segment);
-        		delim = 0; 
+        		delim = c; 
         		col++;
     			
         	/** quoted information within a comma separate segment. */
     		} else if ( x == '"' && delim == ',' ) { 
     			delim = c;
     			
-    		/** all characters between quotation marks is part of the segment */
-    		} else if ( (delim == '"' && x != '"') || (delim == 0 && x != '"') ) { 
+    		/** all characters between quotation marks or commas are part of the segment */
+    		} else if ( (delim == '"' && x != '"') || (delim == 0 && x != '"') || (delim == ',' && x != ',') || (delim == 0 && x != ',')) { 
     		    
     			segment.append(c);
     			
     			/** the end of a segment between quotation marks. print line, clear builder, clear delim list. 
     		    won't increment current until reading ending comma */
-    		} else if ( delim == '"' && x == '"') { // reader is at the end of a long segment
-    			
+    		} else if ( delim == '"' && x == '"') { 
     			orders[row][lastCol] = segment.toString();
     			segment = OrderRecordIO.clearStringBuilder(segment);
-    			delim = 0;
+    			delim = ','; // a comma always follows ending quotation
     			reader.skip(1);
     			col++;
     			
@@ -99,9 +99,14 @@ public class OrderRecordIO {
     			col++;
     		}
         	
-        	if(col == lastCol) row++;
-
+        	
     	}
+    	//for(int i = 1; i < row; i++ ) {
+    		//for( int j = 0; j < lastCol; j++ ) {
+    			//if(j == 0) System.out.println('\n' + "NEW ROW" + '\n');
+    			//System.out.println("row: " + i + " col: " + j + " content: " + orders[i][j]);
+    		//}
+    	//}
     	reader.close();
     	
     }
@@ -127,13 +132,13 @@ public class OrderRecordIO {
 	 * @return titles an array of order record titles
 	 * @throws IOException if there is a problem reading the file
 	 */
-	public static void readOrderTitles(String filename, String [][] records, LinkedListRecursive<ProductTitle> productTitles, int lastCol) throws IOException {
+	public static int readOrderTitles(String filename, String [][] records, LinkedListRecursive<ProductTitle> productTitles) throws IOException {
 		char delim = 0;
     	StringBuilder segment = new StringBuilder();
-		ProductTitle pt = new ProductTitle("generation","family","description");
+		ProductTitle pt = null;
 		FileReader fr = new FileReader(filename);
     	BufferedReader reader = new BufferedReader(fr);
-
+    	int lastCol = 0;
     	int x;
     	char c;
     	while( (x = reader.read()) != -1 ) {
@@ -147,8 +152,9 @@ public class OrderRecordIO {
     	    	
     	    /** ending comma for a segment. add a ProductTitle if matched, assign to title array, clear builder, clear delimiter */
         	if( (x == ',' && delim == ',' && 0 < segment.length()) || (x == ',' && delim == 0 && 0 < segment.length())) {  
-        		
-        		if( ( pt = OrderRecordIO.matchProductTitle(segment.toString()) ) != null) {
+        		pt = OrderRecordIO.matchProductTitle(segment.toString());
+        		if( pt != null) {
+        			//System.out.println("product title: " + pt.getDescription() + " " + lastCol);
         			pt.setIndex(lastCol);
         			productTitles.add(pt);
         		}
@@ -170,8 +176,9 @@ public class OrderRecordIO {
     		/** the end of a segment between quotation marks. look for product matches, assign to title array, clear builder, 
     			clear delim list. skip the next character which is always a comma */
     		} else if ( delim == '"' && x == '"') { 
-    			
-    			if( ( pt = OrderRecordIO.matchProductTitle(segment.toString()) ) != null) {
+    			pt = OrderRecordIO.matchProductTitle(segment.toString());
+    			if(  pt != null ) {
+    				//System.out.println("product title: " + pt.getDescription() + " " + lastCol);
     				pt.setIndex(lastCol);
     				productTitles.add(pt);
     			}
@@ -190,6 +197,7 @@ public class OrderRecordIO {
         	
     	}
     	reader.close();
+    	return lastCol;
 	}
 	
 	/**
@@ -205,18 +213,23 @@ public class OrderRecordIO {
 		String gen = null; String fam = null; String desc = null; 
 		
 		title = title.toLowerCase();
-		
+		//System.out.println("title: " + title);
 		for(int i = 0;i < GRSManager.getInstance().getNioxCatalog().NAMES.length;i++) {
 			if(title.contains(OrderRecordIO.NIOX_LOWER)) fam = OrderRecordIO.NIOX_LOWER;
 			if(title.contains(OrderRecordIO.VERO_LOWER)) gen = OrderRecordIO.VERO_LOWER;
 			else if(title.contains(OrderRecordIO.MINO_LOWER)) gen = OrderRecordIO.MINO_LOWER;
 		}
 		
-		for(int i = 0;i < NioxCatalog.DESCRIPTIONS.length;i++) {
-			if(title.contains(NioxCatalog.DESCRIPTIONS[i])) desc = NioxCatalog.DESCRIPTIONS[i];
+		for(int i = 0;i < GRSManager.getInstance().getNioxCatalog().DESCRIPTIONS.length;i++) {
+			
+			if(title.contains(GRSManager.getInstance().getNioxCatalog().DESCRIPTIONS[i]) ) {
+				desc = NioxCatalog.DESCRIPTIONS[i];
+				
+				break;
+			}
 		}
 		
-		if(gen != "generation" && fam != "family" && desc != "description") {
+		if(gen != null && fam != null && desc != null) {
 			ProductTitle pt = new ProductTitle(gen,fam,desc);
 			return pt;
 		}

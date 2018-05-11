@@ -25,13 +25,12 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 
 import com.circa.mrv.grs_manager.catalog.NioxCatalog;
-import com.circa.mrv.grs_manager.directory.CompanyDirectory;
+import com.circa.mrv.grs_manager.catalog.OrderRecord;
 import com.circa.mrv.grs_manager.directory.UserDirectory;
+import com.circa.mrv.grs_manager.document.Order;
 import com.circa.mrv.grs_manager.manager.GRSManager;
 import com.circa.mrv.grs_manager.user.Employee;
-import com.circa.mrv.grs_manager.niox.Product;
-import com.circa.mrv.grs_manager.directory.Company;
-import com.circa.mrv.grs_manager.location.BillTo;
+
 
 /**
  * Creates a user interface for the administrator to assign/remove employees from vendor and research companies.
@@ -56,7 +55,7 @@ public class OrderRecordsPanel  extends JPanel implements ActionListener {
 	/** TableModel for orders */
 	private OrderDirectoryTableModel orderTableModel;
 	/** TableModel for users */
-	private UserDirectoryTableModel userTableModel;
+	//private UserDirectoryTableModel userTableModel;
 	
 	/** Panel for displaying User Details */
 	private JPanel pnlUserDetails;
@@ -88,7 +87,7 @@ public class OrderRecordsPanel  extends JPanel implements ActionListener {
 	private JLabel lblOpenSeatsTitle = new JLabel("Open Seats: ");
 	
 	/** Label for Company Details name */
-	private JLabel lblName = new JLabel("");
+	private JLabel lblPONumber = new JLabel("");
 	/** Label for Company Details address */
 	private JLabel lblAddress1 = new JLabel("");
 	/** Label for Company Details address */
@@ -104,7 +103,7 @@ public class OrderRecordsPanel  extends JPanel implements ActionListener {
 	
 	
 	/** Label for Company Details price */
-	private JLabel lblPrice = new JLabel("");
+	private JLabel lblTotal = new JLabel("");
 	/** Label for Product Details delivery */
 	private JLabel lblDelivery = new JLabel("");
 	/** Label for Product Details enrollment cap */
@@ -141,8 +140,8 @@ public class OrderRecordsPanel  extends JPanel implements ActionListener {
 	private JLabel lblOrderEntryDate = new JLabel("");
 	/** User/Employee directory*/
 	private UserDirectory userDirectory;
-	/** Company directory */
-	private CompanyDirectory companyDirectory;
+	/** Order Records */
+	private OrderRecord orderRecord;
 	
 	
 	/**
@@ -153,7 +152,7 @@ public class OrderRecordsPanel  extends JPanel implements ActionListener {
 		
 		GRSManager manager = GRSManager.getInstance();
 		userDirectory = manager.getUserDirectory();
-		companyDirectory = manager.getCompanyDirectory();
+		orderRecord = manager.getOrderRecord();
 		
 		//Set up the JPanel that will hold action buttons		
 		btnLoadOrderRecords = new JButton("Load Order Records");
@@ -205,14 +204,14 @@ public class OrderRecordsPanel  extends JPanel implements ActionListener {
 
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
-				String name = tableOrder.getValueAt(tableOrder.getSelectedRow(), 0).toString();
-				String address1 = tableOrder.getValueAt(tableOrder.getSelectedRow(), 1).toString();
-				String address2 = tableOrder.getValueAt(tableOrder.getSelectedRow(), 2).toString();
-				String city = tableOrder.getValueAt(tableOrder.getSelectedRow(), 3).toString();
-				String state = tableOrder.getValueAt(tableOrder.getSelectedRow(), 4).toString();
-				String zip = tableOrder.getValueAt(tableOrder.getSelectedRow(), 5).toString();
-				String country = tableOrder.getValueAt(tableOrder.getSelectedRow(), 6).toString();
-				updateCompanyDetails(companyDirectory.getCompanyByNameAndStreet(name, address1));
+				String po = tableOrder.getValueAt(tableOrder.getSelectedRow(), 0).toString();
+				String study = tableOrder.getValueAt(tableOrder.getSelectedRow(), 1).toString();
+				//String site = tableOrder.getValueAt(tableOrder.getSelectedRow(), 2).toString();
+				//String city = tableOrder.getValueAt(tableOrder.getSelectedRow(), 3).toString();
+				//String state = tableOrder.getValueAt(tableOrder.getSelectedRow(), 4).toString();
+				//String zip = tableOrder.getValueAt(tableOrder.getSelectedRow(), 5).toString();
+				//String country = tableOrder.getValueAt(tableOrder.getSelectedRow(), 6).toString();
+				updateOrderDetails(orderRecord.getOrderByPOAndStudy(po, study));
 			}
 			
 		});
@@ -223,10 +222,10 @@ public class OrderRecordsPanel  extends JPanel implements ActionListener {
 		scrollOrderRecords.setBorder(borderCatalog);
 		scrollOrderRecords.setToolTipText("All Orders");
 		
-		//Set up Employee Directory table
-		userTableModel = new UserDirectoryTableModel();
-		tableUser = new JTable(userTableModel) {
-			private static final long serialVersionUID = 1L;
+		
+		//userTableModel = new UserDirectoryTableModel();
+		//tableUser = new JTable(userTableModel) {
+			//private static final long serialVersionUID = 1L;
 			
 			/**
 			 * Set custom tool tips for cells
@@ -234,39 +233,39 @@ public class OrderRecordsPanel  extends JPanel implements ActionListener {
 			 * 
 			 * @return tool tip text
 			 */
-			public String getToolTipText(MouseEvent e) {
-				java.awt.Point p = e.getPoint();
-				int rowIndex = rowAtPoint(p);
-				int colIndex = columnAtPoint(p);
-				int realColumnIndex = convertColumnIndexToModel(colIndex);
+			//public String getToolTipText(MouseEvent e) {
+				//java.awt.Point p = e.getPoint();
+				//int rowIndex = rowAtPoint(p);
+				//int colIndex = columnAtPoint(p);
+				//int realColumnIndex = convertColumnIndexToModel(colIndex);
 				
-				if (rowIndex != -1 && realColumnIndex != -1) {
-					return (String)orderTableModel.getValueAt(rowIndex, realColumnIndex);
-				} else {
-					return "";
-				}
-			}
-		};
-		tableUser.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+				//if (rowIndex != -1 && realColumnIndex != -1) {
+					//return (String)orderTableModel.getValueAt(rowIndex, realColumnIndex);
+				//} else {
+					//return "";
+				//}
+			//}
+		//};
+		//tableUser.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 //		tableFaculty.setPreferredScrollableViewportSize(new Dimension(500, 500));
-		tableUser.setFillsViewportHeight(true);
-		tableUser.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+		//tableUser.setFillsViewportHeight(true);
+		//tableUser.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
+			//@Override
+			/*public void valueChanged(ListSelectionEvent e) {
 				String id = tableUser.getValueAt(tableUser.getSelectedRow(), 2).toString();
-				Employee f = companyDirectory.getEmployeeById(id);
+				Order f = orderRecord.getOrderyId(id);
 				if(f == null) throw new IllegalArgumentException("User " + id + " not found.");
 				updateOrderDetails(f);
 			}
 			
-		});
+		});*/
 		
-		JScrollPane scrollUsers = new JScrollPane(tableUser, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		//JScrollPane scrollUsers = new JScrollPane(tableUser, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 				
-		TitledBorder borderEmployee = BorderFactory.createTitledBorder(lowerEtched, "User Directory");
-		scrollUsers.setBorder(borderEmployee);
-		scrollUsers.setToolTipText("User Directory");
+		//TitledBorder borderEmployee = BorderFactory.createTitledBorder(lowerEtched, "User Directory");
+		//scrollUsers.setBorder(borderEmployee);
+		//scrollUsers.setToolTipText("User Directory");
 		
 		
 		updateTables();
@@ -276,7 +275,7 @@ public class OrderRecordsPanel  extends JPanel implements ActionListener {
 		pnlUserDetails.setLayout(new GridLayout(5, 1));
 		JPanel pnlUserNameAndAddress = new JPanel(new GridLayout(1, 4));
 		pnlUserNameAndAddress.add(lblNameTitle);
-		pnlUserNameAndAddress.add(lblName);
+		pnlUserNameAndAddress.add(lblPONumber);
 		pnlUserNameAndAddress.add(lblAddress1Title);
 		pnlUserNameAndAddress.add(lblAddress1);
 		
@@ -358,7 +357,7 @@ public class OrderRecordsPanel  extends JPanel implements ActionListener {
 		c.weighty = 1;
 		c.anchor = GridBagConstraints.LINE_START;
 		c.fill = GridBagConstraints.BOTH;
-		add(scrollUsers, c);
+		//add(scrollUsers, c);
 		
 		c.gridx = 0;
 		c.gridy = 2;
@@ -395,25 +394,25 @@ public class OrderRecordsPanel  extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnLoadOrderRecords) {
 			String titles = getTitlesFileName(true);
-			//String orders = getOrdersFileName(true);
+			String orders = getOrdersFileName(true);
 			try {
 				GRSManager.getInstance().getOrderRecord().loadTitlesFromFile(titles);
-				//GRSManager.getInstance().getOrderRecord().loadOrdersFromFile(orders);
+				GRSManager.getInstance().getOrderRecord().loadOrdersFromFile(orders);
+				orderTableModel.updateData();
+				//tableOrder.fireTableDataChange();
 			}catch (IllegalArgumentException iae) {
 				JOptionPane.showMessageDialog(this,iae.getMessage());
 			}
-			
-			
-			int companyRow = tableOrder.getSelectedRow();
-			int employeeRow = tableUser.getSelectedRow();
-			if (companyRow == -1) {
-				JOptionPane.showMessageDialog(this, "No company selected in the directory.");
-			} else if (employeeRow == -1) {
-				JOptionPane.showMessageDialog(this, "No employee selected in the directory.");
-			} else {
-				try {
-					Company c = companyDirectory.getCompanyByNameAndStreet(tableOrder.getValueAt(companyRow, 0).toString(), tableOrder.getValueAt(companyRow, 1).toString());
-					Employee f = companyDirectory.getEmployeeById(tableUser.getValueAt(employeeRow, 2).toString());
+			int orderRow = tableOrder.getSelectedRow();
+			//int employeeRow = tableUser.getSelectedRow();
+			//if (companyRow == -1) {
+				//JOptionPane.showMessageDialog(this, "No company selected in the directory.");
+			//} else if (employeeRow == -1) {
+				//JOptionPane.showMessageDialog(this, "No employee selected in the directory.");
+			//} else {
+				/*try {
+					Order c = orderRecord.getOrderByNameAndStreet(tableOrder.getValueAt(companyRow, 0).toString(), tableOrder.getValueAt(companyRow, 1).toString());
+					Employee f = orderRecord.getEmployeeById(tableUser.getValueAt(employeeRow, 2).toString());
 					
 					if (!GRSManager.getInstance().addEmployeeToCompany(c, f, companyRow)) {
 						JOptionPane.showMessageDialog(this, "Employee cannot be added to company's schedule.");
@@ -433,8 +432,8 @@ public class OrderRecordsPanel  extends JPanel implements ActionListener {
 			} else if (facultyRow == -1) {
 				JOptionPane.showMessageDialog(this, "No employee selected in the directory.");
 			} else {
-				Company c = companyDirectory.getCompanyByNameAndStreet(tableOrder.getValueAt(catalogRow, 0).toString(), tableOrder.getValueAt(catalogRow, 1).toString());
-				Employee f = companyDirectory.getEmployeeById(tableUser.getValueAt(facultyRow, 2).toString());
+				Order c = orderRecord.getRecordByNameAndStreet(tableOrder.getValueAt(catalogRow, 0).toString(), tableOrder.getValueAt(catalogRow, 1).toString());
+				Employee f = orderRecord.getEmployeeById(tableUser.getValueAt(facultyRow, 2).toString());
 				
 				if (!GRSManager.getInstance().removeEmployeeFromCompany(c, f)) {
 					JOptionPane.showMessageDialog(this, "Employee cannot be removed from company's location.");
@@ -442,14 +441,16 @@ public class OrderRecordsPanel  extends JPanel implements ActionListener {
 				updateCompanyDetails(c);
 				updateOrderDetails(f);
 			}
-			updateTables();
+			updateTables();*/
 		} else if (e.getSource() == btnClearOrderRecords) {
-			int facultyRow = tableUser.getSelectedRow();
-			if (facultyRow == -1) {
-				JOptionPane.showMessageDialog(this, "No employee selected in the directory.");
+			int orderRow = tableOrder.getSelectedRow();
+			if (orderRow == -1) {
+				JOptionPane.showMessageDialog(this, "No order selected in the directory.");
 			} else {
-				Employee f = companyDirectory.getEmployeeById(tableUser.getValueAt(facultyRow, 2).toString());
-				GRSManager.getInstance().resetFacultySchedule(f);
+				orderRecord.newOrderRecord();
+				
+				//Order f = orderRecord.getOrderById(tableOrder.getValueAt(orderRow, 2).toString());
+				//GRSManager.getInstance().resetFacultySchedule(f);
 				updateTables();
 			}
 		} 
@@ -463,50 +464,28 @@ public class OrderRecordsPanel  extends JPanel implements ActionListener {
 	 */
 	public void updateTables() {
 		orderTableModel.updateData();
-		userTableModel.updateData();
+		//userTableModel.updateData();
 	}
 	
 	/**
-	 * Updates the pnlCompanyDetails with full information about the most
-	 * recently added Company
-	 * @param c most recently add company
+	 * Updates the pnlOrderDetails with full information about the most
+	 * recently added Order
+	 * @param o most recently added Order
 	 */
-	private void updateCompanyDetails(Company c) {
-		if (c != null ) {
-			lblName.setText(c.getName());
-			for(int i = 0; i < c.getLocations().size(); i++) {
-				if(c.getLocations().get(i) instanceof BillTo) {
-					lblAddress1.setText(c.getLocations().get(i).getAddress1());
-					
-					if(c.getLocations().get(i).getAddress2() != null && !c.getLocations().get(i).getAddress2().equals(""))
-					    lblAddress2.setText(c.getLocations().get(i).getAddress2());
-					
-					lblCity.setText(c.getLocations().get(i).getCity());
-					lblState.setText(c.getLocations().get(i).getState());
-					lblZipCode.setText(c.getLocations().get(i).getZip());
-					lblCountry.setText(c.getLocations().get(i).getCountry());
-					lblPrice.setText("" + 0);
-				}
-			}
+	private void updateOrderDetails(Order o) {
+		if (o != null ) {
+			lblPONumber.setText(o.getPo());
+			lblStudy.setText(o.getStudy());
+			lblSite.setText(o.getSite());
+			lblCity.setText(o.getCity());
+			lblState.setText(o.getState());
+			lblZipCode.setText(o.getZip());
+			lblCountry.setText(o.getCountry());
+			lblTotal.setText(Double.toString(o.getAmount()));
+
 			//lblDelivery.setText(c.getMeetingString());
 			//lblEnrollmentCap.setText("" + c.getCourseRoll().getCapacity());
 			//lblProductSpaces.setText("" + c.getCourseRoll().getRemainingCapacity());
-		}
-	}
-	
-	/**
-	 * Updates the pnlEmployeeDetails with full information about the most
-	 * recently selected employee.
-	 * @param f most recently selected employee
-	 */
-	private void updateOrderDetails(Employee f) {
-		if (f != null) {
-			lblStudy.setText(f.getFirstName());
-			lblSite.setText(f.getLastName());
-			lblCirSalesOrderNumber.setText(f.getId());
-			lblCustPO.setText(f.getEmail());
-			lblUserID.setText("" + f.getMaxOrders());
-			lblOrderEntryDate.setText("" + f.isOverloaded());
 		}
 	}
 	
@@ -570,7 +549,7 @@ public class OrderRecordsPanel  extends JPanel implements ActionListener {
 		/** ID number used for object serialization. */
 		private static final long serialVersionUID = 1L;
 		/** Column names for the table */
-		private String [] columnNames = {"PO Number", "Study", "Site", "City", "State", "Zip", "Country"};
+		private String [] columnNames = {"Study", "Site", "City", "State", "PO Number", "Contact", "Date"};
 		/** Data stored in the table */
 		private Object [][] data;
 		
@@ -633,7 +612,11 @@ public class OrderRecordsPanel  extends JPanel implements ActionListener {
 		 * Updates the given model with {@link Mino} information from the {@link NioxCatalog}.
 		 */
 		public void updateData() {
-			data = companyDirectory.getCompanyDirectory();
+			try {
+				data = GRSManager.getInstance().getOrderRecord().getShortOrderInfo();
+			} catch(NullPointerException e) {
+				data = GRSManager.getInstance().getOrderRecord().getRecord();
+			}
 		}
 	}
 	

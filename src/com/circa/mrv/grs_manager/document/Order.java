@@ -46,6 +46,22 @@ public class Order extends Document {
 	private long trackingNum;
 	/** Order status */
 	private String status;
+	/** Customer purchase order number */
+	private String po;
+	/** Study number associated with this order */
+	private String study;
+	/** Site number associated with this order */
+	private String site;
+	/** City of the research site */
+	private String city;
+	/** State of the research site */
+	private String state;
+	/** Zip code for the research site */
+	private String zip;
+	/** Country of the research site */
+	private String country;
+	/** Total amount (in USD) on this order */
+	private double amount;
 
 	/**
 	 * Constructs an Order object with today's date, the delivery date, id of the employee who created the order,
@@ -60,6 +76,11 @@ public class Order extends Document {
 		//get the creator id from the grsmgr
 		//get the requested product from the grsmgr
 		
+	}
+	
+	
+	public Order(){
+		super();
 	}
 
 	/**
@@ -92,6 +113,11 @@ public class Order extends Document {
 		this.product = product;
 	}
 	
+	/**
+	 * 
+	 * @param number
+	 * @return
+	 */
 	public boolean isDuplicate(Order number) {
 	    if(this.getNumber() == number.getNumber())
 	    	return true;
@@ -142,7 +168,138 @@ public class Order extends Document {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	
+
+
+	/**
+	 * @return the po
+	 */
+	public String getPo() {
+		return po;
+	}
+
+
+	/**
+	 * @param po the po to set
+	 */
+	public void setPo(String po) {
+		this.po = po;
+	}
+
+
+	/**
+	 * @return the study
+	 */
+	public String getStudy() {
+		return study;
+	}
+
+
+	/**
+	 * @param study the study to set
+	 */
+	public void setStudy(String study) {
+		this.study = study;
+	}
+
+
+	/**
+	 * @return the site
+	 */
+	public String getSite() {
+		return site;
+	}
+
+
+	/**
+	 * @param site the site to set
+	 */
+	public void setSite(String site) {
+		this.site = site;
+	}
+
+
+	/**
+	 * @return the city
+	 */
+	public String getCity() {
+		return city;
+	}
+
+
+	/**
+	 * @param city the city to set
+	 */
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+
+	/**
+	 * @return the state
+	 */
+	public String getState() {
+		return state;
+	}
+
+
+	/**
+	 * @param state the state to set
+	 */
+	public void setState(String state) {
+		this.state = state;
+	}
+
+
+	/**
+	 * @return the zip
+	 */
+	public String getZip() {
+		return zip;
+	}
+
+
+	/**
+	 * @param zip the zip to set
+	 */
+	public void setZip(String zip) {
+		this.zip = zip;
+	}
+
+
+	/**
+	 * @return the country
+	 */
+	public String getCountry() {
+		return country;
+	}
+
+
+	/**
+	 * @param country the country to set
+	 */
+	public void setCountry(String country) {
+		this.country = country;
+	}
+
+
+	/**
+	 * Return the total amount for this order
+	 * @return the amount
+	 */
+	public double getAmount() {
+		return amount;
+	}
+
+
+	/**
+	 * Sets the amount for this order
+	 * @param amount the amount to set
+	 */
+	public void setAmount(double amount) {
+		this.amount = amount;
+	}
+
+
 	/**
 	 * Returns a string array of the order number and creator id
 	 * @return numbers an array of the order numbers 
@@ -152,26 +309,22 @@ public class Order extends Document {
 		return orderString;
 	}
 
-	/**
-	 * Generate the hash code for an order.
-	 * @return result the hash code
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((delivery == null) ? 0 : delivery.hashCode());
-		result = prime * result + ((product == null) ? 0 : product.hashCode());
-		result = prime * result + ((status == null) ? 0 : status.hashCode());
-		result = prime * result + ((statusDate == null) ? 0 : statusDate.hashCode());
-		result = prime * result + (int) (trackingNum ^ (trackingNum >>> 32));
+		result = prime * result + ((po == null) ? 0 : po.hashCode());
+		result = prime * result + ((site == null) ? 0 : site.hashCode());
+		result = prime * result + ((state == null) ? 0 : state.hashCode());
+		result = prime * result + ((study == null) ? 0 : study.hashCode());
 		return result;
 	}
 
-	/**
-	 * Evalutes for equality between this Order and the object parameter
-	 * @param obj the object to test for equality
-	 * @return true if the object parameter is equal to this Order
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
 	public boolean equals(Object obj) {
@@ -182,27 +335,25 @@ public class Order extends Document {
 		if (!(obj instanceof Order))
 			return false;
 		Order other = (Order) obj;
-		if (delivery == null) {
-			if (other.delivery != null)
+		if (po == null) {
+			if (other.po != null)
 				return false;
-		} else if (!delivery.equals(other.delivery))
+		} else if (!po.equals(other.po))
 			return false;
-		if (product == null) {
-			if (other.product != null)
+		if (site == null) {
+			if (other.site != null)
 				return false;
-		} else if (!product.equals(other.product))
+		} else if (!site.equals(other.site))
 			return false;
-		if (status == null) {
-			if (other.status != null)
+		if (state == null) {
+			if (other.state != null)
 				return false;
-		} else if (!status.equals(other.status))
+		} else if (!state.equals(other.state))
 			return false;
-		if (statusDate == null) {
-			if (other.statusDate != null)
+		if (study == null) {
+			if (other.study != null)
 				return false;
-		} else if (!statusDate.equals(other.statusDate))
-			return false;
-		if (trackingNum != other.trackingNum)
+		} else if (!study.equals(other.study))
 			return false;
 		return true;
 	}
