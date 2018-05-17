@@ -16,18 +16,23 @@ import com.circa.mrv.grs_manager.manager.GRSManager;
 public abstract class Document {
 	/** Document number */
 	private long number;
-	/** The date the order is created */
+	/** The date the document is created */
 	private Calendar creation;
 	/** The id of the user who created the document */
 	private String userID;
 
 	/**
-	 * Constructs an instance of Document with an unique ID number, today's date is set the creation instance variable,
-	 * and the userID instance variable is set to parameter userID.
+	 * Constructs an instance of Document by assigning its number parameter to the number instance variable and
+	 * setting today's date as the creation instance variable if creation date is null.
+	 * @param number the unique ID number for this document
+	 * @param userID the id of the user creating this document
 	 */
-	public Document(long number, String userID) {
+	public Document(long number, String userID, Calendar creationDate) {
 		setNumber(number);
-		setCreation(Calendar.getInstance());
+		if(creationDate == null)
+			setCreation(Calendar.getInstance());
+		else 
+			setCreation(creationDate);
 		setUserId(userID);
 	}
 	

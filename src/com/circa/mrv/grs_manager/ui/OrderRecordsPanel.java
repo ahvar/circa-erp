@@ -610,17 +610,18 @@ public class OrderRecordsPanel  extends JPanel implements ActionListener {
 		}
 		
 		/**
-		 * Updates the given model with {@link Mino} information from the {@link NioxCatalog}.
+		 * Updates the given model with {@link Order} information from the {@link OrderRecord}.
 		 */
 		public void updateData() {
+			
 			try {
 				data = GRSManager.getInstance().getOrderRecord().getShortOrderInfo();
 			} catch(NullPointerException e) {
 				data = GRSManager.getInstance().getOrderRecord().getRecord();
-				System.out.println(e.getMessage());
+				System.out.println("NullPointerException in OrderRecordsPanel: " + e.getMessage());
 			} catch(IOException e) {
 				data = GRSManager.getInstance().getOrderRecord().getRecord();
-				System.out.println(e.getMessage());
+				System.out.println("IOException in OrderRecordsPanel: " + e.getMessage());
 			}
 		}
 	}

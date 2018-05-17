@@ -217,4 +217,72 @@ public class NioxCatalog {
 			throw new IllegalArgumentException("Unable to write to file " + fileName);
 		}
 	}
+	
+	/**
+	 * Returns an array of product part-numbers.
+	 * @return array the array of product part-numbers
+	 * @throws IllegalArgumentException if product pn array is empty or if catalog is null 
+	 */
+	public String[] getProductPartNumbers() {
+		String [] pn = null;
+		try {
+		  pn = new String[catalog.size()];
+		  for(int i = 0; i < catalog.size(); i++ ) {
+			  pn[i] = catalog.get(i).getPartNumber();
+		  }
+		} catch (NullPointerException e) {
+			throw new IllegalArgumentException();
+		}
+		if(pn.length == 0 || pn == null) throw new IllegalArgumentException();
+		return pn;
+	}
+	
+	/**
+	 * Returns an array of product names. A product name is constructed by concatenating the product
+	 * family, generation, and description. For example, "Niox Mino test kit 100"
+	 * 
+	 * @return array the array of product names
+	 * @throws IllegalArgumentException if the product name array is empty or if catalog is null
+	 */
+	public String[] getProductNames() {
+		String[] names = null;
+		Component part = null;
+		try {
+			names = new String[catalog.size()];
+			for(int i = 0; i < catalog.size(); i++) {
+				part = (Component) catalog.get(i);
+				names[i] = part.getFamily() + " " + part.getGeneration() + " " + part.getDescription(); 
+			}
+		} catch (NullPointerException e) {
+			throw new IllegalArgumentException();
+		}
+		if (names.length == 0 || names == null) throw new IllegalArgumentException();
+		return names;
+	}
+	
+	/**
+	 * Returns the array of default product numbers
+	 * @return the numbers
+	 */
+	public static String[] getDefaultProductPartNumbers() {
+		return NUMBERS;
+	}
+	
+	/**
+	 * Returns the array of default product names.
+	 * @return the names
+	 */
+	public static String[] getDefaultProductNames() {
+		return NAMES;
+	}
+	
+	/**
+	 * Returns the array of default product descriptions
+	 * @return the descriptions
+	 */
+	public static String[] getDescriptions() {
+		return DESCRIPTIONS;
+	}
+	
+	
 }

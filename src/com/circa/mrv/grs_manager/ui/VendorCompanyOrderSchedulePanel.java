@@ -7,6 +7,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -25,6 +26,8 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 
 import com.circa.mrv.grs_manager.catalog.NioxCatalog;
+import com.circa.mrv.grs_manager.catalog.OrderRecord;
+import com.circa.mrv.grs_manager.document.Order;
 import com.circa.mrv.grs_manager.niox.Product;
 import com.circa.mrv.grs_manager.manager.GRSManager;
 import com.circa.mrv.grs_manager.user.Employee;
@@ -38,70 +41,76 @@ import com.circa.mrv.grs_manager.user.schedule.OrderSchedule;
 public class VendorCompanyOrderSchedulePanel  extends JPanel implements ActionListener {
 	/** ID number used for object serialization. */
 	private static final long serialVersionUID = 1L;
-	/** Button for adding the selected Order in the catalog to the schedule */
-	private JButton btnAddCourse;
+	/** Button for modifying the selected Order in the OrderRecord to the schedule */
+	private JButton btnModifyCourse;
 	/** Button for removing the selected Order from the schedule */
-	private JButton btnRemoveCourse;
+	private JButton btnRemoveOrder;
 	/** Button for resetting the schedule */
-	private JButton btnReset;
+	private JButton btnComplete;
 	/** Button for displaying the final schedule */
 	private JButton btnDisplay;
-	/** JTable for displaying the catalog of Courses */
+	
+	/** JTable for displaying the order schedule */
 	private JTable orderSchedule;
-	/** JTable for displaying the schedule of Courses */
+	/** JTable for displaying the schedule of Orders */
 	private JTable tableSchedule;
 	/** TableModel for catalog */
-	private CourseTableModel catalogTableModel;
+	private OrderTableModel orderTableModel;
 	/** TableModel for schedule */
-	private CourseTableModel scheduleTableModel;
-	/** Student's Schedule title label */
+	private OrderTableModel scheduleTableModel;
+	
+	/** Vendor's Schedule title label */
 	private JLabel lblScheduleTitle;
-	/** Student's Schedule text field */
+	/** Vendor's Schedule text field */
 	private JTextField txtScheduleTitle;
-	/** Button for setting student's schedule title */
+	/** Button for setting vendor's order schedule title */
 	private JButton btnSetScheduleTitle;
-	/** Scroll for student schedule */
+	/** Scroll for vendor's order schedule */
 	private JScrollPane scrollSchedule;
 	/** Border for Schedule */
 	private TitledBorder borderSchedule;
-	/** Panel for displaying Course Details */
-	private JPanel pnlCourseDetails;
-	/** Label for Course Details name title */
-	private JLabel lblNameTitle = new JLabel("Name: ");
-	/** Label for Course Details section title */
-	private JLabel lblSectionTitle = new JLabel("Section: ");
-	/** Label for Course Details title title */
+	/** Panel for displaying Order Details */
+	private JPanel pnlOrderDetails;
+	/** Label for Order Details GRSManager number title */
+	private JLabel lblGRSOrderNumberTitle = new JLabel("GRS Order: ");
+	/** Label for Order Details NAV sales order number title */
+	private JLabel lblNAVSalesOrderNumberTitle = new JLabel("NAV Sales Order: ");
+	/** Label for Order Details customer PO number */
+	private JLabel lblCustomerPONumberTitle = new JLabel("Customer PO: ");
+	/** Label for Order Details order schedule title title */
 	private JLabel lblTitleTitle = new JLabel("Title: ");
-	/** Label for Course Details instructor title */
-	private JLabel lblInstructorTitle = new JLabel("Instructor: ");
-	/** Label for Course Details credit hours title */
-	private JLabel lblCreditsTitle = new JLabel("Credits: ");
-	/** Label for Course Details meeting title */
-	private JLabel lblMeetingTitle = new JLabel("Meeting: ");
-	/** Label for Course Details enrollment cap title */
-	private JLabel lblEnrollmentCapTitle = new JLabel("Enrollment Cap: ");
-	/** Label for Course Details open seats title */
-	private JLabel lblOpenSeatsTitle = new JLabel("Open Seats: ");
-	/** Label for Course Details name */
-	private JLabel lblName = new JLabel("");
-	/** Label for Course Details section */
-	private JLabel lblSection = new JLabel("");
-	/** Label for Course Details title */
+	/** Label for Order Details user id title */
+	private JLabel lblUserIDTitle = new JLabel("Created By: ");
+	/** Label for Order Details number of products ordered title */
+	private JLabel lblNumberOfProductsTitle = new JLabel("Number of Products Ordered: ");
+	/** Label for Order Details date created title */
+	private JLabel lblCreatedDateTitle = new JLabel("Entered On: ");
+	/** Label for Order Details product cap title */
+	private JLabel lblProductCapTitle = new JLabel("Product Cap: ");
+	/** Label for Order Details delivery date title */
+	private JLabel lblDeliveryDateTitle = new JLabel("Delivery Date: ");
+	/** Label for Order Details GRSManager Number */
+	private JLabel lblGRSManagerNumber = new JLabel("");
+	/** Lable for Order Details customer PO number */
+	private JLabel lblCustomerPONumber = new JLabel("");
+	/** Label for Order Details NAV sales order number */
+	private JLabel lblNAVSalesOrder = new JLabel("");
+	/** Label for Order Details schedule title */
 	private JLabel lblTitle = new JLabel("");
-	/** Label for Course Details instructor */
-	private JLabel lblInstructor = new JLabel("");
-	/** Label for Course Details credit hours */
-	private JLabel lblCredits = new JLabel("");
-	/** Label for Course Details meeting */
-	private JLabel lblMeeting = new JLabel("");
-	/** Label for Course Details enrollment cap */
-	private JLabel lblEnrollmentCap = new JLabel("");
+	/** Label for Order Details user id */
+	private JLabel lblUserID = new JLabel("");
+	/** Label for Order Details product count */
+	private JLabel lblNumberOfProducts = new JLabel("");
+	/** Label for Order Details date created*/
+	private JLabel lblCreatedDate = new JLabel("");
+	/** Label for Order Details product cap */
+	private JLabel lblProductCap = new JLabel("");
 	/** Label for Course Details open seats */
-	private JLabel lblOpenSeats = new JLabel("");
+	private JLabel lblDeliveryDate = new JLabel("");
 	/** Current user */
 	private Employee currentUser;
 	/** Course catalog */
-	private NioxCatalog catalog;
+	private OrderRecord orderRecord;
 	/** Current user's schedule */
 	private OrderSchedule schedule;
 	
@@ -113,17 +122,18 @@ public class VendorCompanyOrderSchedulePanel  extends JPanel implements ActionLi
 		super(new GridBagLayout());
 		
 		GRSManager manager = GRSManager.getInstance();
+	
 		currentUser = (Employee)manager.getCurrentUser();
-		catalog = manager.getNioxCatalog();
+		orderRecord = manager.getOrderRecord();
 		
 		//Set up the JPanel that will hold action buttons		
-		btnAddCourse = new JButton("Add Course");
-		btnAddCourse.addActionListener(this);
-		btnRemoveCourse = new JButton("Remove Course");
-		btnRemoveCourse.addActionListener(this);
-		btnReset = new JButton("Reset Schedule");
-		btnReset.addActionListener(this);
-		btnDisplay = new JButton("Display Final Schedule");
+		//btnModifyCourse = new JButton("Modify Order");
+		//btnModifyCourse.addActionListener(this);
+		//btnRemoveOrder = new JButton("Remove Order");
+		//btnRemoveOrder.addActionListener(this);
+		btnComplete = new JButton("Complete");
+		btnComplete.addActionListener(this);
+		//btnDisplay = new JButton("Display Final Schedule");
 //		btnDisplay.addActionListener(this);
 		btnDisplay.setEnabled(false);
 		lblScheduleTitle = new JLabel("Schedule Title: ");
@@ -133,20 +143,20 @@ public class VendorCompanyOrderSchedulePanel  extends JPanel implements ActionLi
 		
 		JPanel pnlActions = new JPanel();
 		pnlActions.setLayout(new GridLayout(3, 1));
-		JPanel pnlAddRemove = new JPanel();
-		pnlAddRemove.setLayout(new GridLayout(1, 2));
-		pnlAddRemove.add(btnAddCourse);
-		pnlAddRemove.add(btnRemoveCourse);
+		JPanel pnlComplete = new JPanel();
+		pnlComplete.setLayout(new GridLayout(1, 1));
+		pnlComplete.add(btnComplete);
+		//pnlComplete.add(btnRemoveOrder);
 		JPanel pnlResetDisplay = new JPanel();
 		pnlResetDisplay.setLayout(new GridLayout(1, 2));
-		pnlResetDisplay.add(btnReset);
+		pnlResetDisplay.add(btnComplete);
 		pnlResetDisplay.add(btnDisplay);
 		JPanel pnlScheduleTitle = new JPanel();
 		pnlScheduleTitle.setLayout(new GridLayout(1, 3));
 		pnlScheduleTitle.add(lblScheduleTitle);
 		pnlScheduleTitle.add(txtScheduleTitle);
 		pnlScheduleTitle.add(btnSetScheduleTitle);
-		pnlActions.add(pnlAddRemove);
+		pnlActions.add(pnlComplete);
 		pnlActions.add(pnlResetDisplay);
 		pnlActions.add(pnlScheduleTitle);
 		
@@ -156,8 +166,8 @@ public class VendorCompanyOrderSchedulePanel  extends JPanel implements ActionLi
 		pnlActions.setToolTipText("Scheduler Actions");
 					
 		//Set up Catalog table
-		catalogTableModel = new CourseTableModel(true);
-		orderSchedule = new JTable(catalogTableModel) {
+		orderTableModel = new OrderTableModel();
+		orderSchedule = new JTable(orderTableModel) {
 			private static final long serialVersionUID = 1L;
 			
 			/**
@@ -171,7 +181,7 @@ public class VendorCompanyOrderSchedulePanel  extends JPanel implements ActionLi
 				int colIndex = columnAtPoint(p);
 				int realColumnIndex = convertColumnIndexToModel(colIndex);
 				
-				return (String)catalogTableModel.getValueAt(rowIndex, realColumnIndex);
+				return (String)orderTableModel.getValueAt(rowIndex, realColumnIndex);
 			}
 		};
 		orderSchedule.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -183,71 +193,73 @@ public class VendorCompanyOrderSchedulePanel  extends JPanel implements ActionLi
 			public void valueChanged(ListSelectionEvent e) {
 				String name = orderSchedule.getValueAt(orderSchedule.getSelectedRow(), 0).toString();
 				String section = orderSchedule.getValueAt(orderSchedule.getSelectedRow(), 1).toString();
-				Product c = catalog.getProductFromCatalog(name, section);
-				updateProductDetails(c);
+				Order o = orderRecord.getOrderByPOAndStudy(name, section);
+				updateOrderDetails(o);
 			}
 			
 		});
 		
-		JScrollPane scrollCatalog = new JScrollPane(orderSchedule, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		JScrollPane scrollOrderSchedule = new JScrollPane(orderSchedule, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		
-		TitledBorder borderCatalog = BorderFactory.createTitledBorder(lowerEtched, "Course Catalog");
-		scrollCatalog.setBorder(borderCatalog);
-		scrollCatalog.setToolTipText("Course Catalog");
+		TitledBorder borderCatalog = BorderFactory.createTitledBorder(lowerEtched, "Order Schedule");
+		scrollOrderSchedule.setBorder(borderCatalog);
+		scrollOrderSchedule.setToolTipText("Order Schedule");
 		
 		//Set up Schedule table
-		scheduleTableModel = new CourseTableModel(false);
-		tableSchedule = new JTable(scheduleTableModel);
-		tableSchedule.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		tableSchedule.setPreferredScrollableViewportSize(new Dimension(500, 500));
-		tableSchedule.setFillsViewportHeight(true);
+		//scheduleTableModel = new OrderTableModel(false);
+		//tableSchedule = new JTable(scheduleTableModel);
+		//tableSchedule.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		//tableSchedule.setPreferredScrollableViewportSize(new Dimension(500, 500));
+		//tableSchedule.setFillsViewportHeight(true);
 		
-		scrollSchedule = new JScrollPane(tableSchedule, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		//scrollSchedule = new JScrollPane(tableSchedule, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		
-		borderSchedule = BorderFactory.createTitledBorder(lowerEtched, "");
-		scrollSchedule.setBorder(borderSchedule);
+		//borderSchedule = BorderFactory.createTitledBorder(lowerEtched, "");
+		//scrollSchedule.setBorder(borderSchedule);
 		
 		
 		updateTables();
 		
 		//Set up the course details panel
-		pnlCourseDetails = new JPanel();
-		pnlCourseDetails.setLayout(new GridLayout(5, 1));
-		JPanel pnlName = new JPanel(new GridLayout(1, 4));
-		pnlName.add(lblNameTitle);
-		pnlName.add(lblName);
-		pnlName.add(lblSectionTitle);
-		pnlName.add(lblSection);
+		pnlOrderDetails = new JPanel();
+		pnlOrderDetails.setLayout(new GridLayout(5, 1));
+		JPanel pnlOrderNumbers = new JPanel(new GridLayout(1, 4));
+		pnlOrderNumbers.add(lblGRSOrderNumberTitle);
+		pnlOrderNumbers.add(lblGRSManagerNumber);
+		pnlOrderNumbers.add(lblCustomerPONumberTitle);
+		pnlOrderNumbers.add(lblCustomerPONumber);
+		pnlOrderNumbers.add(lblNAVSalesOrderNumberTitle);
+		pnlOrderNumbers.add(lblNAVSalesOrder);
 		
 		JPanel pnlTitle = new JPanel(new GridLayout(1, 1));
 		pnlTitle.add(lblTitleTitle);
 		pnlTitle.add(lblTitle);
 		
-		JPanel pnlInstructor = new JPanel(new GridLayout(1, 4));
-		pnlInstructor.add(lblInstructorTitle);
-		pnlInstructor.add(lblInstructor);
-		pnlInstructor.add(lblCreditsTitle);
-		pnlInstructor.add(lblCredits);
+		JPanel pnlUserAndProductCount = new JPanel(new GridLayout(1, 4));
+		pnlUserAndProductCount.add(lblUserIDTitle);
+		pnlUserAndProductCount.add(lblUserID);
+		pnlUserAndProductCount.add(lblNumberOfProductsTitle);
+		pnlUserAndProductCount.add(lblNumberOfProducts);
 		
-		JPanel pnlMeeting = new JPanel(new GridLayout(1, 1));
-		pnlMeeting.add(lblMeetingTitle);
-		pnlMeeting.add(lblMeeting);
+		//JPanel pnlMeeting = new JPanel(new GridLayout(1, 1));
+		//pnlMeeting.add(lblCreatedDateTitle);
+		//pnlMeeting.add(lblCreatedDate);
 		
-		JPanel pnlEnrollment = new JPanel(new GridLayout(1, 4));
-		pnlEnrollment.add(lblEnrollmentCapTitle);
-		pnlEnrollment.add(lblEnrollmentCap);
-		pnlEnrollment.add(lblOpenSeatsTitle);
-		pnlEnrollment.add(lblOpenSeats);
+		JPanel pnlCapAndDelivery = new JPanel(new GridLayout(1, 4));
+		pnlCapAndDelivery.add(lblProductCapTitle);
+		pnlCapAndDelivery.add(lblProductCap);
+		pnlCapAndDelivery.add(lblDeliveryDateTitle);
+		pnlCapAndDelivery.add(lblDeliveryDate);
 		
-		pnlCourseDetails.add(pnlName);
-		pnlCourseDetails.add(pnlTitle);
-		pnlCourseDetails.add(pnlInstructor);
-		pnlCourseDetails.add(pnlMeeting);
-		pnlCourseDetails.add(pnlEnrollment);
+		pnlOrderDetails.add(pnlOrderNumbers);
+		pnlOrderDetails.add(pnlTitle);
+		pnlOrderDetails.add(pnlUserAndProductCount);
+		//pnlOrderDetails.add(pnlMeeting);
+		pnlOrderDetails.add(pnlCapAndDelivery);
 		
-		TitledBorder borderCourseDetails = BorderFactory.createTitledBorder(lowerEtched, "Course Details");
-		pnlCourseDetails.setBorder(borderCourseDetails);
-		pnlCourseDetails.setToolTipText("Course Details");
+		TitledBorder borderOrderDetails = BorderFactory.createTitledBorder(lowerEtched, "Order Details");
+		pnlOrderDetails.setBorder(borderOrderDetails);
+		pnlOrderDetails.setToolTipText("Order Details");
 		
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 0;
@@ -257,7 +269,7 @@ public class VendorCompanyOrderSchedulePanel  extends JPanel implements ActionLi
 		c.weighty = 1;
 		c.anchor = GridBagConstraints.FIRST_LINE_START;
 		c.fill = GridBagConstraints.BOTH;
-		add(scrollCatalog, c);
+		add(scrollOrderSchedule, c);
 		
 		c.gridx = 0;
 		c.gridy = 1;
@@ -275,7 +287,7 @@ public class VendorCompanyOrderSchedulePanel  extends JPanel implements ActionLi
 		c.weighty = 1;
 		c.anchor = GridBagConstraints.FIRST_LINE_START;
 		c.fill = GridBagConstraints.BOTH;
-		add(scrollSchedule, c);
+		//add(scrollSchedule, c);
 		
 		c.gridx = 0;
 		c.gridy = 3;
@@ -284,7 +296,7 @@ public class VendorCompanyOrderSchedulePanel  extends JPanel implements ActionLi
 		c.weighty = 1;
 		c.anchor = GridBagConstraints.FIRST_LINE_START;
 		c.fill = GridBagConstraints.BOTH;
-		add(pnlCourseDetails, c);
+		add(pnlOrderDetails, c);
 	}
 
 	/**
@@ -292,22 +304,22 @@ public class VendorCompanyOrderSchedulePanel  extends JPanel implements ActionLi
 	 * @param e user event that triggers an action.
 	 */
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == btnAddCourse) {
+		if (e.getSource() == btnComplete) {
 			int row = orderSchedule.getSelectedRow();
 			if (row == -1) {
-				JOptionPane.showMessageDialog(this, "No course selected in the catalog.");
+				JOptionPane.showMessageDialog(this, "No order selected");
 			} else {
 				try {
-					//if (!GRSManager.getInstance().enrollStudentInCourse(catalog.getProductFromCatalog(tableCatalog.getValueAt(row, 0).toString(), tableCatalog.getValueAt(row, 1).toString()))) {
-						//JOptionPane.showMessageDialog(this, "Course cannot be added to schedule.");
-					//}
+					
+					GRSManager.getInstance().getOrderRecord().getOrderByPOAndStudy(orderTableModel.getValueAt(row, 0).toString(), orderTableModel.getValueAt(row, 1).toString()).setStatus(Order.getProcessed()); 
+						
 				} catch (IllegalArgumentException iae) {
 					JOptionPane.showMessageDialog(this, iae.getMessage());
 				}
 			}
 			updateTables();
-		} else if (e.getSource() == btnRemoveCourse) {
-			int row = tableSchedule.getSelectedRow();
+		} else if (e.getSource() == btnComplete) {
+			int row = orderSchedule.getSelectedRow();
 			if (row == -1) {
 				JOptionPane.showMessageDialog(this, "No item selected in the schedule.");
 			} else {
@@ -316,7 +328,7 @@ public class VendorCompanyOrderSchedulePanel  extends JPanel implements ActionLi
 				//}
 			}
 			updateTables();
-		} else if (e.getSource() == btnReset) {
+		} else if (e.getSource() == btnComplete) {
 			GRSManager.getInstance().resetSchedule();
 			updateTables();
 		} else if (e.getSource() == btnSetScheduleTitle) {
@@ -336,7 +348,7 @@ public class VendorCompanyOrderSchedulePanel  extends JPanel implements ActionLi
 	 * Updates the catalog and schedule tables.
 	 */
 	public void updateTables() {
-		catalogTableModel.updateData();
+		orderTableModel.updateData();
 		scheduleTableModel.updateData();
 	}
 	
@@ -344,13 +356,13 @@ public class VendorCompanyOrderSchedulePanel  extends JPanel implements ActionLi
 	 * Updates the pnlCourseDetails with full information about the most
 	 * recently selected course.
 	 */
-	private void updateProductDetails(Product c) {
-		if (c != null) {
-			lblName.setText(c.getFamily());
-			lblSection.setText(c.getPartNumber());
-			lblTitle.setText(c.getDescription());
+	private void updateOrderDetails(Order o) {
+		if (o != null) {
+			lblCustomerPONumber.setText(o.getPo());
+			lblNAVSalesOrder.setText(o.getStudy());
+			lblGRSManagerNumber.setText(o.getStudy()); // TODO: change this to GRSNumber instead of study number
 			//lblInstructor.setText(c.getInstructorId());
-			lblCredits.setText("" + c.getPrice());
+			lblNumberOfProducts.setText("" + o.getAmount());
 			//lblMeeting.setText(c.getDeliveryDate());
 			//lblEnrollmentCap.setText("" + c.getCourseRoll().getCapacity());
 			//lblOpenSeats.setText("" + c.getProductRoll().getRemainingCapacity());
@@ -358,27 +370,24 @@ public class VendorCompanyOrderSchedulePanel  extends JPanel implements ActionLi
 	}
 	
 	/**
-	 * {@link CourseTableModel} is the object underlying the {@link JTable} object that displays
-	 * the list of {@link Mino}s to the user.
-	 * @author Sarah Heckman
+	 * {@link OrderTableModel} is the object underlying the {@link JTable} object that displays
+	 * the list of {@link Order} to the user.
+	 * @author Arthur Vargas
 	 */
-	private class CourseTableModel extends AbstractTableModel {
+	private class OrderTableModel extends AbstractTableModel {
 		
 		/** ID number used for object serialization. */
 		private static final long serialVersionUID = 1L;
 		/** Column names for the table */
-		private String [] columnNames = {"Name", "Section", "Title", "Meeting Days", "Open Seats"};
+		private String [] columnNames = {"Study", "Site", "City", "Country", "PO Number", "Note", "Email", "Date", "State", "Phone", "Fax"};
 		/** Data stored in the table */
 		private Object [][] data;
-		/** Boolean flag if the model applies to the catalog or schedule */
-		private boolean isCatalog;
 		
 		/**
-		 * Constructs the {@link CourseTableModel} by requesting the latest information
+		 * Constructs the {@link OrderTableModel} by requesting the latest information
 		 * from the {@link RequirementTrackerModel}.
 		 */
-		public CourseTableModel(boolean isCatalog) {
-			this.isCatalog = isCatalog;
+		public OrderTableModel() {
 			updateData();
 		}
 
@@ -433,8 +442,12 @@ public class VendorCompanyOrderSchedulePanel  extends JPanel implements ActionLi
 		 * Updates the given model with {@link Order} information from the {@link GRSManager}.
 		 */
 		private void updateData() {
-			if (isCatalog) {
-				data = catalog.getNioxCatalog();
+			try {
+				for(int i = 0; i < orderRecord.getShortOrderInfo().length; i++) {
+					// go through a list of orders in order record and remove any that are not open
+				}	
+				//get the shortOrderInfo
+				data = orderRecord.getShortOrderInfo();
 			} else {
 				currentUser = (Employee)GRSManager.getInstance().getCurrentUser();
 				if (currentUser != null) {
@@ -447,6 +460,9 @@ public class VendorCompanyOrderSchedulePanel  extends JPanel implements ActionLi
 					VendorCompanyOrderSchedulePanel.this.repaint();
 					VendorCompanyOrderSchedulePanel.this.validate();
 				}
+			}
+			}catch(IOException e) {
+				System.out.println("An IOException in VendorCompanyOrderSchedulePanel: " + e.getMessage());
 			}
 		}
 	}

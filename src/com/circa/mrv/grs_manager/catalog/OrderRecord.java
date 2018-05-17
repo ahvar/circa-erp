@@ -11,6 +11,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import com.circa.mrv.grs_manager.io.OrderRecordIO;
@@ -31,6 +32,8 @@ public class OrderRecord {
 	private String [][] noPTColumns;
 	/** A list of order record titles which are products */
 	private LinkedListRecursive<ProductTitle> productTitlesList = new LinkedListRecursive<ProductTitle>();
+	/** A list of all Orders */
+	private LinkedListRecursive<Order> orderRecordList = new LinkedListRecursive<Order>();
 	/** The last column containing order data*/
 	private int lastCol;
 	/** The first column that is a product title */
@@ -47,6 +50,10 @@ public class OrderRecord {
 	private static final String PRODUCT_TITLES = "test-files/product_titles.txt";
 	/** Name of the output file for all order record data; includes product titles */
 	private static final String RECORDS_PRODUCT_TITLES = "test-files/records_product_titles.txt";
+	/** Default study numbers */
+	private static final String[] DEFAULT_STUDY_NUMBERS = {"006155","006156","006186","107061"};
+	/** Number of ongoing studies */
+	private static final int STUDY_COUNT = 7;
 	
 
 	/**
@@ -54,7 +61,7 @@ public class OrderRecord {
 	 * Sets the last column to 0.
 	 */
 	public OrderRecord() {
-		unformattedRecords = new String [500][70];
+		unformattedRecords = new String [800][70];
 		lastCol = 0;
 		first = 0;
 		last = 0;
@@ -153,17 +160,17 @@ public class OrderRecord {
 		//String record = "";
 		String[][] shortOrderRecord = new String[unformattedRecords.length][11];
 		for(int row = 1; row < unformattedRecords.length; row++) {
-			shortOrderRecord[row][0] = unformattedRecords[row][0];
-			shortOrderRecord[row][1] = unformattedRecords[row][1];
-			shortOrderRecord[row][2] = unformattedRecords[row][33];
-			shortOrderRecord[row][3] = unformattedRecords[row][34];
-			shortOrderRecord[row][4] = unformattedRecords[row][48];
-			shortOrderRecord[row][5] = unformattedRecords[row][47];
-			shortOrderRecord[row][6] = unformattedRecords[row][39];
-			shortOrderRecord[row][7] = unformattedRecords[row][41];
-			shortOrderRecord[row][8] = unformattedRecords[row][35];
-			shortOrderRecord[row][9] = unformattedRecords[row][36];
-			shortOrderRecord[row][10] = unformattedRecords[row][37];
+			shortOrderRecord[row][0] = unformattedRecords[row][0]; //study
+			shortOrderRecord[row][1] = unformattedRecords[row][1]; //site
+			shortOrderRecord[row][2] = unformattedRecords[row][33]; //city
+			shortOrderRecord[row][3] = unformattedRecords[row][34]; //country
+			shortOrderRecord[row][4] = unformattedRecords[row][48]; //PO Number
+			shortOrderRecord[row][5] = unformattedRecords[row][47]; //Note
+			shortOrderRecord[row][6] = unformattedRecords[row][39]; //Email
+			shortOrderRecord[row][7] = unformattedRecords[row][41]; //Date
+			shortOrderRecord[row][8] = unformattedRecords[row][35]; //State
+			shortOrderRecord[row][9] = unformattedRecords[row][36]; //Phone
+			shortOrderRecord[row][10] = unformattedRecords[row][37];//Fax
 			
 		}
 		//br.close();
@@ -317,5 +324,50 @@ public class OrderRecord {
 			fileWriter.print('\n');
 		}
 	}
+	
+	/**
+	 * Updates the list of Orders from the 2D string array of order records
+	 */
+	public void updateOrderRecord() {
+		Order o = null;
+		for(int row = 0; row < unformattedRecords.length; row++) {
+			o = new Order(unformattedRecords[row][0],unformattedRecords[row][1],unformattedRecords[row][48],unformattedRecords[row][41]);
+		}
+	}
+	
+	/**
+	 * Returns an array of current study numbers.
+	 * @return the current study numbers
+	 * @throws IllegalArgumentException if records are null or empty or if the study number array is null or empty.
+	 */
+	public String[] getStudyNumbers() {
+		String[] studies = null;
+		try {
+		  ArrayList<String> studyList = new ArrayList<String>();
+		  String study = unformattedRecords[1][0];
+		  for(int row = 2; row < unformattedRecords.length; row++) {
+			  if(!study.equals(unformattedRecords[row][0])) {
+				  studyList.add(unformattedRecords[row][0]);
+				  study = unformattedRecords[row][0];
+			  }
+		  }
+		  studies = new String[studyList.size()];
+		  for(int i = 0; i < studies.length; i++) {
+			  studies[i] = studyList.get(i);
+		  }
+		} catch (NullPointerException e) {
+			throw new IllegalArgumentException();
+		}
+		if( studies.length == 0 || studies == null ) throw new IllegalArgumentException();
+		return studies;
+ 	}
 
+	/**
+	 * @return the defaultStudyNumbers
+	 */
+	public static String[] getDefaultStudyNumbers() {
+		return DEFAULT_STUDY_NUMBERS;
+	}
+
+			
 }

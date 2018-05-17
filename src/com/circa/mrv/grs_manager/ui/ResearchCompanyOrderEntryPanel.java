@@ -30,12 +30,13 @@ import javax.swing.table.AbstractTableModel;
 
 import com.circa.mrv.grs_manager.niox.Product;
 import com.circa.mrv.grs_manager.catalog.NioxCatalog;
+import com.circa.mrv.grs_manager.catalog.OrderRecord;
 import com.circa.mrv.grs_manager.manager.GRSManager;
 import com.circa.mrv.grs_manager.user.Employee;
 import com.circa.mrv.grs_manager.user.schedule.OrderSchedule;
 
 /**
- * .
+ * Order entry interface for a research company. 
  * 
  * @author Arthur Vargas.
  */
@@ -129,9 +130,13 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 	
 	
 	/** ComboBox for Order Details order entry research study number */
-	private JComboBox cmbBoxStudyNumber = new JComboBox();
+	private JComboBox cmbBoxStudyNumber;
+	/** ComboBoxModel for study numbers */
+	private DefaultComboBoxModel<String> studyModel;
 	/** ComboBox for Order Details order entry research site number */
-	private JComboBox cmbBoxSiteNumber = new JComboBox();
+	private JComboBox<String> cmbBoxSiteNumber;
+	/** ComboBoxModel for site numbers */
+	private DefaultComboBoxModel<String> siteModel;
 	/** Text Field for Order Details order entry NAV sales order number */
 	private JTextField txtFldNAVOrderNumber = new JTextField(10);
 	/** Text Field for Order Details customer purchase order number */
@@ -183,8 +188,12 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 	
 	/** Text Field for Product Details product name */
 	private JComboBox<String> cmbBoxProductName;
+	/** ComboBoxModel for product names */
+	private DefaultComboBoxModel<String> nameModel;
 	/** Text Field for Product Details product part number */
 	private JComboBox<String> cmbBoxProductPartNumber;
+	/** ComboBoxModel for product part numbers */
+	private DefaultComboBoxModel<String> numberModel;
 	/** Text Field for Product Details product description */
 	private JTextField txtFldProductDescription = new JTextField(30);
 	/** Text Field for Product Details product quantity */
@@ -209,8 +218,12 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 	private Employee currentUser;
 	/** Catalog of all available NIOX products */
 	private NioxCatalog catalog;
+	/** Array of product part numbers */
 	private String [] part = new String[19];
+	/** Array of product names */
 	private String [] name = new String[19];
+	/** Order records */
+	private OrderRecord orderRecord;
 	
 	/**
 	 * Constructs the ResearchCompanyOrderSchedulePanel and sets up the GUI 
@@ -221,6 +234,7 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 		pnlDateAndCustomer = new JPanel();
 		currentUser = (Employee)GRSManager.getInstance().getCurrentUser();
 		catalog = GRSManager.getInstance().getNioxCatalog();
+		orderRecord = GRSManager.getInstance().getOrderRecord();
 		GroupLayout grpLayout = new GroupLayout(pnlDateAndCustomer);
 		pnlDateAndCustomer.setLayout(grpLayout);
 		grpLayout.setAutoCreateGaps(true);
@@ -229,7 +243,7 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 		
 		GridBagConstraints c = new GridBagConstraints();
 		
-		/***************SET UP ORDER ENTRY PANEL CONTAINING DATE AND CUSTOMER NAME*********
+		/**********SET UP ORDER ENTRY PANEL CONTAINING DATE AND CUSTOMER NAME**************
 		 *																				  *
 		 * Define the horizontal and vertical layouts for date and customer information.  *
 		 *  																			  *
@@ -238,17 +252,28 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 		
 		int i = 0;
 		while( i < catalog.allProducts() ) {
-			//System.out.println(catalog.getNioxCatalog()[i][0]);
-			//System.out.println(catalog.getNioxCatalog()[i][1] + " " + catalog.getNioxCatalog()[i][2] + " " + catalog.getNioxCatalog()[i][3]);
 			part[i] = catalog.getNioxCatalog()[i][0];
 			name[i] = catalog.getNioxCatalog()[i][1] + " " + catalog.getNioxCatalog()[i][2] + " " + catalog.getNioxCatalog()[i][3];
 			i++;
 		}
-		DefaultComboBoxModel<String> numberModel = new DefaultComboBoxModel<String>(NioxCatalog.NUMBERS);
-		DefaultComboBoxModel<String> nameModel = new DefaultComboBoxModel<String>(NioxCatalog.NAMES);
+		try {
+			numberModel = new DefaultComboBoxModel<String>(catalog.getProductPartNumbers());
+			nameModel = new DefaultComboBoxModel<String>(catalog.getProductNames());
+			studyModel = new DefaultComboBoxModel<String>(orderRecord.getStudyNumbers());
+			siteModel = new DefaultComboBoxModel<String>();
+		} catch (IllegalArgumentException | NullPointerException e) {
+			numberModel = new DefaultComboBoxModel<String>(NioxCatalog.getDefaultProductPartNumbers());
+			nameModel = new DefaultComboBoxModel<String>(NioxCatalog.getDefaultProductNames());
+			//studyModel = new DefaultComboBoxModel<String>(OrderRecord.getDefaultStudyNumbers());
+			siteModel = new DefaultComboBoxModel<String>();
+		}
 		cmbBoxProductPartNumber = new JComboBox<String>(numberModel);
 		cmbBoxProductName = new JComboBox<String>(nameModel);
-		// define horizontal layout for date and customer information
+		cmbBoxStudyNumber = new JComboBox<String>();
+		cmbBoxSiteNumber = new JComboBox<String>(siteModel);
+		
+		
+		//DefaultComboBoxModel<String> siteModel = new DefaultComboBoxModel<String>(orderRecord.getSites());
 		grpLayout.setHorizontalGroup(grpLayout.createSequentialGroup()
 			.addGroup(grpLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
 				
