@@ -3,20 +3,21 @@
  */
 package com.circa.mrv.grs_manager.catalog;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.io.PrintWriter;
+
+import java.util.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.Calendar;
+
 
 import com.circa.mrv.grs_manager.io.OrderRecordIO;
 import com.circa.mrv.grs_manager.io.ProductTitle;
-import com.circa.mrv.grs_manager.niox.Product;
+import com.circa.mrv.grs_manager.niox.Component;
+
 import com.circa.mrv.grs_manager.util.LinkedListRecursive;
 import com.circa.mrv.grs_manager.document.Order;
 
@@ -136,12 +137,16 @@ public class OrderRecord {
 	
 	/**
 	 * Returns the Order whose ID matches the parameter id
+	 * If no order is found with the correct id, null is returned.
 	 * @param id the order id
-	 * @return the Order to return
+	 * @return the Order to return or null if the order is not found
 	 */
-	public Order getOrderById(String id) {
-		Order o = new Order();
-		return o;
+	public Order getOrderById(long id) {
+		for(int i = 0; i < orderRecordList.size(); i++) {
+			if(orderRecordList.get(i).getNumber() == id)
+				return orderRecordList.get(i);
+		}
+		return null;
 		
 	}
 	
@@ -216,7 +221,11 @@ public class OrderRecord {
 	 * @return the order to return
 	 */
 	public Order getOrderByPOAndStudy(String po, String study) {
-		Order o = new Order();
+		Order o = null;
+		for(int i = 0;i < orderRecordList.size(); i++) {
+			if(orderRecordList.get(i).getPo().equals(po) && orderRecordList.get(i).getStudy().equals(study))
+				o = orderRecordList.get(i);
+		}
 		return o;
 	}
 	
@@ -326,13 +335,94 @@ public class OrderRecord {
 	}
 	
 	/**
-	 * Updates the list of Orders from the 2D string array of order records
+	 * Converts all the String representations of order records into Orders and puts them in a list. 
+	 * Uses the first/last data fields to locate the product title that corresponds to the location 
+	 * currently begin read in the order record array. If digit x is at this location in the order record 
+	 * array then then the product family, generation, and description contained in the product title are 
+	 * used to create x number of products. Throws an IlleglArgumentException if there is a problem
+	 * parsing date strings from the order record array.
+	 * 
+	 * @throws IlleglArgumentException if date strings cannot be parsed
 	 */
-	public void updateOrderRecord() {
+	public void updateOrderList() {
 		Order o = null;
-		for(int row = 0; row < unformattedRecords.length; row++) {
-			o = new Order(unformattedRecords[row][0],unformattedRecords[row][1],unformattedRecords[row][48],unformattedRecords[row][41]);
+		// loop for rows in the record array
+		for(int row = 1; row < unformattedRecords.length; row++) {
+			
+			if(row == 1) {
+				o = new Order(00001);
+			} else {
+				o = new Order(getLastOrder().getNumber() + 1 ); 
+			}
+			
+			// loop for the product title range
+			for(int col = first; col <= last; col++) {
+				
+				if(unformattedRecords[row][col] != null) {
+					int prodTitle = 0;
+					String family = null;
+					String gen = null;
+					String desc = null;
+					while(prodTitle < productTitlesList.size()) {
+						
+						if(productTitlesList.get(prodTitle).getIndex() == col) {
+							family = productTitlesList.get(prodTitle).getFam();
+							gen = productTitlesList.get(prodTitle).getGen();
+							desc = productTitlesList.get(prodTitle).getDescription();
+							o.getProduct().push(new Component(family,gen,desc));
+						}
+						prodTitle++;
+					}
+					
+				}
+					
+			}
+			o.setStudy(unformattedRecords[row][0]);
+			o.setSite(unformattedRecords[row][1]);
+			o.setPo(unformattedRecords[row][48]);
+			try {
+				o.setCreation(getCalendarFromString(unformattedRecords[row][41]));
+			} catch (ParseException e) {
+				throw new IllegalArgumentException(e.getMessage() + " OrderRecord.updateOrderList()");
+			}
+			orderRecordList.add(o);
 		}
+	}
+	
+	/**
+	 * Returns the most recent order created from the list
+	 * @return order the most recently created order
+	 */
+	public Order getLastOrder() {
+		long id = 0;
+		for(int i = 0; i < orderRecordList.size(); i++) {
+			if(id < orderRecordList.get(i).getNumber())
+				id = orderRecordList.get(i).getNumber();
+		}
+		return getOrderById(id);
+		
+	}
+	
+	/**
+	 * Parses the different String formats in the order record array into Calendar objects
+	 * Returns the Calendar object for the parameter
+	 * @param date the date as a String
+	 * @return calendar the Calendar object representing the date
+	 * @throws ParseException if there is a problem parsing Date from String
+	 */
+	public Calendar getCalendarFromString(String date) throws ParseException {
+		SimpleDateFormat sdfSlash = new SimpleDateFormat("mm/dd/yyyy");
+		SimpleDateFormat sdfDash = new SimpleDateFormat("dd-MMM-yy");
+		Calendar calendar = Calendar.getInstance();
+		Date dat = null;
+		if(date.contains("/")) {
+			dat = sdfSlash.parse(date);
+			calendar.setTime(dat);
+		} else if (date.contains("-")) {
+			dat = sdfDash.parse(date);
+			calendar.setTime(dat);
+		}
+		return calendar;
 	}
 	
 	/**

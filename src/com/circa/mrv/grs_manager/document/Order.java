@@ -76,12 +76,14 @@ public class Order extends Document {
 	 * @param product the products for this order
 	 */
 	public Order(long number, String userID, Calendar creationDate, Calendar deliveryDate, LinkedStack<Product> products) {
-		super(number, userID, creationDate);
+		this(number);
+		setUserId(userID);
+		if(creationDate == null)
+			setCreation(Calendar.getInstance());
+		else
+			setCreation(creationDate);
 		setDelieryDate(deliveryDate);
 		setProduct(product);
-		//get the creator id from the grsmgr
-		//get the requested product from the grsmgr
-		
 	}
 	
 	/**
@@ -102,8 +104,12 @@ public class Order extends Document {
 		setSite(site);
 	}
 	
-	public Order(){
-		super();
+	/**
+	 * Constructs an Order with this order number.
+	 * @param ordNum the order number
+	 */
+	public Order(long ordNum){
+		super(ordNum);
 	}
 
 	/**

@@ -35,8 +35,7 @@ public abstract class Product {
 	 * @param partNumber partNumber for this Niox product
 	 */
 	public Product(String fam, String desc, String pn) {
-		setFamily(fam);
-		setDescription(desc);
+		this(fam,desc);
 		setPartNumber(pn);
 	}
 	
@@ -49,6 +48,17 @@ public abstract class Product {
 	public Product(String fam, String desc, String pn, double p ) {
 		this(fam,desc,pn);
 		setPrice(p);
+	}
+	
+	/**
+	 * Product is constructed from a family and description.
+	 * 
+	 * @param family the product family
+	 * @param description the product description
+	 */
+	public Product(String family, String description) {
+		setFamily(family);
+		setDescription(description);
 	}
 	
 	/**

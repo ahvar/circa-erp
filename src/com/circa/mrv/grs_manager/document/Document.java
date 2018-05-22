@@ -4,6 +4,7 @@
 package com.circa.mrv.grs_manager.document;
 
 import java.util.Calendar;
+import java.util.Date;
 
 import com.circa.mrv.grs_manager.manager.GRSManager;
 
@@ -26,18 +27,24 @@ public abstract class Document {
 	 * setting today's date as the creation instance variable if creation date is null.
 	 * @param number the unique ID number for this document
 	 * @param userID the id of the user creating this document
+	 * @param creationDate the Calendar object representing the date the order was created
 	 */
 	public Document(long number, String userID, Calendar creationDate) {
-		setNumber(number);
+		this(number);
 		if(creationDate == null)
-			setCreation(Calendar.getInstance());
+			setCreation(creationDate);
 		else 
 			setCreation(creationDate);
 		setUserId(userID);
 	}
 	
-	/** Default constructor for document */
-	public Document(){}
+	/**
+	 * Constructs a document with this document number.
+	 * @param ordNum the order number 
+	 */
+	public Document(long ordNum) {
+		setNumber(ordNum);
+	}
 
 	/**
 	 * Returns the unique number for this document

@@ -30,7 +30,7 @@ public class Component extends Product implements Consumable {
 	 * Constructs a component with a description, part number, price, package date, serial number, and product
 	 * generation.
 	 * 
-	 * @param the name of the product
+	 * @param family the product family
 	 * @param desc the description of the component
 	 * @param pn the part number
 	 * @param p the price
@@ -38,8 +38,8 @@ public class Component extends Product implements Consumable {
 	 * @param serial the serial number
 	 * @param generation the product generation
 	 */
-	public Component(String name, String desc, String pn, double p, Calendar packageDate, long serial, String generation) {
-		super(name, desc, pn, p);
+	public Component(String family, String desc, String pn, double p, Calendar packageDate, long serial, String generation) {
+		this(family, desc, pn, p);
 		setPackageDate(packageDate);
 		setSerial(serial);
 		setGeneration(generation);
@@ -48,13 +48,14 @@ public class Component extends Product implements Consumable {
 	/**
 	 * Constructs a component with a description, part number, price, package date, serial number, and product
 	 * generation.
-	 * @param name the name of the product
+	 * @param family the family of the product
 	 * @param desc the description of the component
 	 * @param pn the part number
 	 * @param p the price
 	 */
-	public Component(String name, String desc, String pn, double p) {
-		super(name, desc, pn, p);
+	public Component(String family, String desc, String pn, double p) {
+		this(family, desc, pn);
+		setPrice(p);
 		setPackageDate(null);
 		setSerial(0);
 		setGeneration(null);
@@ -64,15 +65,19 @@ public class Component extends Product implements Consumable {
 	 * Constructs a component with a name, description, part number,
 	 * @param family the product family
 	 * @param desc the description of the component
-	 * @param pn the part number
+	 * @param gen the product generation
 	 */
-	public Component(String fam, String desc, String pn) {
-		super(fam, desc, pn);
+	public Component(String fam, String gen, String desc) {
+		super(fam, desc);
+		setGeneration(gen);
 		setPackageDate(null);
 		setSerial(0);
 		setGeneration(null);
 	}
 	
+	/**
+	 * Default constructor for Component 
+	 */
 	public Component(){super("","","");}
 	
 
