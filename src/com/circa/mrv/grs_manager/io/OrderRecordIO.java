@@ -18,8 +18,9 @@ import com.circa.mrv.grs_manager.util.LinkedAbstractList;
 import com.circa.mrv.grs_manager.util.LinkedListRecursive;
 
 /**
- * StudyRecordIO handles IO of GRS data, including customers, research studies, sites, location information, etc.
- * This data is parsed from the purchase history of GRS customers. 
+ * StudyRecordIO handles IO of order records containing data on customers, research studies, sites, addresses,
+ * contact names, notes, products, and other information related to an order. 
+ * 
  * cx1DGB08f
  * 
  * @author Arthur  Vargas
@@ -124,12 +125,15 @@ public class OrderRecordIO {
     }
 	
 	/**
-	 * Reads the order record titles and cross references each title with the product names to identify 
-	 * product titles. The title must contain a valid product family, generation, and description to be considered
-	 * a product title. 
-	 * 
+	 * Reads the order record titles contained in the file passed into the filename parameter and cross 
+	 * references each title with the product names to identify product titles. The title must contain a 
+	 * valid product family, generation, and description to be considered a product title. If the title is 
+	 * identified as a product title, then it is added to the list of product titles passed into the productTitles parameter. 
+	 * All titles are assigned to the corresponding column in row 0 of the string array named records.
+	 *  
 	 * @param filename the filename
-	 * @return titles an array of order record titles
+	 * @param records the order records
+	 * @param productTitles the list of product titles
 	 * @throws IOException if there is a problem reading the file
 	 */
 	public static int readOrderTitles(String filename, String [][] records, LinkedListRecursive<ProductTitle> productTitles) throws IOException {

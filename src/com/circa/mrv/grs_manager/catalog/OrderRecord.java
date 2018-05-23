@@ -32,9 +32,9 @@ public class OrderRecord {
 	/** An order record array with no product title columns */
 	private String [][] noPTColumns;
 	/** A list of order record titles which are products */
-	private LinkedListRecursive<ProductTitle> productTitlesList = new LinkedListRecursive<ProductTitle>();
+	private LinkedListRecursive<ProductTitle> productTitlesList;
 	/** A list of all Orders */
-	private LinkedListRecursive<Order> orderRecordList = new LinkedListRecursive<Order>();
+	private LinkedListRecursive<Order> orderRecordList;
 	/** The last column containing order data*/
 	private int lastCol;
 	/** The first column that is a product title */
@@ -55,6 +55,8 @@ public class OrderRecord {
 	private static final String[] DEFAULT_STUDY_NUMBERS = {"006155","006156","006186","107061"};
 	/** Number of ongoing studies */
 	private static final int STUDY_COUNT = 7;
+	/** Open order count */
+	private int open;
 	
 
 	/**
@@ -62,10 +64,13 @@ public class OrderRecord {
 	 * Sets the last column to 0.
 	 */
 	public OrderRecord() {
+		productTitlesList = new LinkedListRecursive<ProductTitle>();
+		orderRecordList = new LinkedListRecursive<Order>();
 		unformattedRecords = new String [800][70];
 		lastCol = 0;
 		first = 0;
 		last = 0;
+		open = 0;
 	}
 	
 	/**
@@ -86,7 +91,7 @@ public class OrderRecord {
 			OrderRecordIO.readOrderRecord(filename,unformattedRecords,productTitlesList,lastCol);
 			writeUnFormattedToFile(RECORDS_NO_PRODUCT_TITLES);
 			printAllUnformattedToFile(RECORDS_PRODUCT_TITLES);
-			//removePTColumns();
+			countOpenOrders();
 		} catch (IOException e) {
 			throw new IllegalArgumentException("Unable to read file " + filename);
 		}
@@ -251,14 +256,14 @@ public class OrderRecord {
 	/**
 	 * Returns first order record title which is a product title.
 	 */
-	private int getFirst() {
+	public int getFirst() {
 		return first;
 	}
 	
 	/**
 	 * Returns last order record title which is a product title.
 	 */
-	private int getLast() {
+	public int getLast() {
 		return last;
 	}
 	
@@ -459,5 +464,57 @@ public class OrderRecord {
 		return DEFAULT_STUDY_NUMBERS;
 	}
 
+	/**
+	 * Returns the list of order records.
+	 * @return the orderRecordList
+	 */
+	public LinkedListRecursive<Order> getOrderRecordList() {
+		return orderRecordList;
+	}
+
+	/**
+	 * Sets the order record list
+	 * @param orderRecordList the orderRecordList to set
+	 */
+	public void setOrderRecordList(LinkedListRecursive<Order> orderRecordList) {
+		this.orderRecordList = orderRecordList;
+	}
+	
+	/**
+	 * Returns an array of the open orders
+	 */
+	public String[][] getOpenOrderArray() {
+		String [][] open = new String[this.open][7];
+		for(int i = 0; i < orderRecordList.size(); i++) {
+			if(orderRecordList.get(i).getStatus().equals(Order.getOpen())) {
+				open[i][0] = orderRecordList.get(i).getPo();
+				open[i][1] = orderRecordList.get(i).getStudy();
+				open[i][2] = orderRecordList.get(i).getSite();
+				open[i][3] = orderRecordList.get(i).getCity();
+				open[i][4] = orderRecordList.get(i).getState();
+				open[i][5] = orderRecordList.get(i).getZip();
+				open[i][6] = orderRecordList.get(i).getStatus();
+			}
+		}
+		return open;
+	}
+	
+	/**
+	 * Counts open orders in the order record list.
+	 */
+	public void countOpenOrders() {
+		for(int i = 0; i < orderRecordList.size(); i++) {
+			if(orderRecordList.get(i).getStatus().equals(Order.getOpen())) open++;
+		}
+	}
+	
+	/**
+	 * Returns the current number of open orders.
+	 * @return open the current number of open orders
+	 */
+	public int getOpenOrderCount() {
+		return open;
+	}
+	
 			
 }

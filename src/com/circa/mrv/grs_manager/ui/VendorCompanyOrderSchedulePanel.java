@@ -135,7 +135,7 @@ public class VendorCompanyOrderSchedulePanel  extends JPanel implements ActionLi
 		btnComplete.addActionListener(this);
 		//btnDisplay = new JButton("Display Final Schedule");
 //		btnDisplay.addActionListener(this);
-		btnDisplay.setEnabled(false);
+		//btnDisplay.setEnabled(false);
 		lblScheduleTitle = new JLabel("Schedule Title: ");
 		txtScheduleTitle = new JTextField("", 20); 
 		btnSetScheduleTitle = new JButton("Set Title");
@@ -442,28 +442,7 @@ public class VendorCompanyOrderSchedulePanel  extends JPanel implements ActionLi
 		 * Updates the given model with {@link Order} information from the {@link GRSManager}.
 		 */
 		private void updateData() {
-			try {
-				for(int i = 0; i < orderRecord.getShortOrderInfo().length; i++) {
-					// go through a list of orders in order record and remove any that are not open
-				}	
-				//get the shortOrderInfo
-				data = orderRecord.getShortOrderInfo();
-			} else {
-				currentUser = (Employee)GRSManager.getInstance().getCurrentUser();
-				if (currentUser != null) {
-					//schedule = currentUser.getSchedule();
-					txtScheduleTitle.setText(schedule.getOrderSchedule().toString());
-					borderSchedule.setTitle(schedule.getOrderSchedule().toString());
-					scrollSchedule.setToolTipText(schedule.getOrderSchedule().toString());
-					data = schedule.getScheduledOrders();
-					
-					VendorCompanyOrderSchedulePanel.this.repaint();
-					VendorCompanyOrderSchedulePanel.this.validate();
-				}
-			}
-			}catch(IOException e) {
-				System.out.println("An IOException in VendorCompanyOrderSchedulePanel: " + e.getMessage());
-			}
+			data = orderRecord.getOpenOrderArray();
 		}
 	}
 
