@@ -23,6 +23,7 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.AbstractTableModel;
 
+import com.circa.mrv.grs_manager.catalog.OrderRecord;
 import com.circa.mrv.grs_manager.manager.GRSManager;
 import com.circa.mrv.grs_manager.niox.Product;
 
@@ -58,8 +59,8 @@ public class ResearchCompanyOpenOrderPanel extends JPanel implements ActionListe
 	/** Table Model for schedule of currently open orders */
 	private OpenOrderTableModel openOrderTableModel;
 
-	/** The order schedule */
-	OrderSchedule orderSchedule;
+	/** The order record */
+	OrderRecord orderRecord;
 	/** The user currently logged in */
     private Employee currentUser;
 	
@@ -71,8 +72,8 @@ public class ResearchCompanyOpenOrderPanel extends JPanel implements ActionListe
 	    super(new GridBagLayout());
 	    
 		currentUser = (Employee)GRSManager.getInstance().getCurrentUser();
-		if (currentUser != null)
-			orderSchedule = currentUser.getSchedule();
+		
+		orderRecord = GRSManager.getInstance().getOrderRecord();
 	  
 		Border lowerEtched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
 		TitledBorder boarder = BorderFactory.createTitledBorder(lowerEtched, "Order Schedule Buttons");		
@@ -207,6 +208,7 @@ public class ResearchCompanyOpenOrderPanel extends JPanel implements ActionListe
 		c.fill = GridBagConstraints.BOTH;
 		add(pnlOrderDetails, c);
 	*/
+		updateTable();
 	}
 	
 	/**
@@ -231,11 +233,10 @@ public class ResearchCompanyOpenOrderPanel extends JPanel implements ActionListe
 	 * @author Arthur Vargas
 	 */
 	private class OpenOrderTableModel extends AbstractTableModel {
-		
 		/** ID number used for object serialization. */
 		private static final long serialVersionUID = 1L;
 		/** Column names for the table */
-		private String [] columnNames = {"Study", "Site", "PO Number", "Requested Delivery Date", "User ID"};
+		private String [] columnNames = {"Study", "Site", "City", "Country", "PO Number", "Note", "Email", "Date", "State","Phone","Fax"};
 		/** Data stored in the table */
 		private Object [][] data;
 		
@@ -297,13 +298,11 @@ public class ResearchCompanyOpenOrderPanel extends JPanel implements ActionListe
 		/**
 		 * Updates the given model with {@link Product} information from the {@link CustomerSchedule}.
 		 */
-		public void updateData() {
-			if (currentUser != null){
-				data = orderSchedule.getScheduledOrders();
-				//facultyScheduleTableModel.fireTableDataChanged();
-				ResearchCompanyOpenOrderPanel.this.repaint();
-				ResearchCompanyOpenOrderPanel.this.validate();
-			}
+		public void updateData() {			
+			data = orderRecord.getOpenOrderArray();
+			//facultyScheduleTableModel.fireTableDataChanged();
+			ResearchCompanyOpenOrderPanel.this.repaint();
+			ResearchCompanyOpenOrderPanel.this.validate();
 		}	
 	}
 

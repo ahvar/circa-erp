@@ -79,7 +79,7 @@ public class LinkedListRecursive<E> {
 	 * @throws IllegalArgumentException if the element already exists in the list
 	 * @throws IndexOutOfBoundsException if the index is less than 0 or greater than the size of the list. 
 	 */
-	public void add(int index, E element){
+	public void add(int index, E element) {
 		if(element == null)
 			throw new NullPointerException("Element is null");
 		if(contains(element))

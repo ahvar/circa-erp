@@ -67,7 +67,7 @@ public abstract class Company {
     	locations = new LinkedListRecursive<Location>();
     	locations.add(local);
     	setName(name);
-    	System.out.println("vendor locations" + locations.size());
+    	//System.out.println("vendor locations" + locations.size());
     }
     
     /**
@@ -107,6 +107,28 @@ public abstract class Company {
 	 */
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	/**
+	 * Iterates through the location list and returns the first name of the contact at the company office location.
+	 * Returns null if a billing location is not found.
+	 * @param name the first name of the billing contact
+	 */ 
+	public String getBillingContactFirst() {
+		for(int i = 0; i < locations.size(); i++) {
+			if(locations.get(i) instanceof BillTo) return locations.get(i).getEmployees().get(0).getFirstName();
+		}
+		return null;
+	}
+	
+	/**
+	 * Sets the first name of the billing contact in the BillTo for the company
+	 * @param first the first name of the billing contact
+	 */
+	public void setBillingContactFirst(String first) {
+		for(int i = 0; i < locations.size(); i++ ) {
+			if(locations.get(i) instanceof BillTo) return locations.get(i).getEmployees().get(0).setFirstName(first);
+		}
 	}
 	
 

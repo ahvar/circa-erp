@@ -150,7 +150,7 @@ public class VendorCompanyOrderSchedulePanel  extends JPanel implements ActionLi
 		JPanel pnlResetDisplay = new JPanel();
 		pnlResetDisplay.setLayout(new GridLayout(1, 2));
 		pnlResetDisplay.add(btnComplete);
-		pnlResetDisplay.add(btnDisplay);
+		//pnlResetDisplay.add(btnDisplay);
 		JPanel pnlScheduleTitle = new JPanel();
 		pnlScheduleTitle.setLayout(new GridLayout(1, 3));
 		pnlScheduleTitle.add(lblScheduleTitle);
@@ -349,7 +349,7 @@ public class VendorCompanyOrderSchedulePanel  extends JPanel implements ActionLi
 	 */
 	public void updateTables() {
 		orderTableModel.updateData();
-		scheduleTableModel.updateData();
+		//scheduleTableModel.updateData();
 	}
 	
 	/**
@@ -442,7 +442,9 @@ public class VendorCompanyOrderSchedulePanel  extends JPanel implements ActionLi
 		 * Updates the given model with {@link Order} information from the {@link GRSManager}.
 		 */
 		private void updateData() {
+			
 			data = orderRecord.getOpenOrderArray();
+			
 		}
 	}
 

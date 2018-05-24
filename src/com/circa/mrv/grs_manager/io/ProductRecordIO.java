@@ -60,7 +60,7 @@ public class ProductRecordIO {
 	private static Product readLine(String nextLine) throws IllegalArgumentException {
 		Scanner scan = new Scanner(nextLine);
 		String token = "";
-		Component c = new Component(Product.DEFAULT_PRODUCT_FAMILY,Product.DEFAULT_PRODUCT_DESCRIPTION,Product.DEFAULT_PRODUCT_PART_NUMBER);
+		Component c = new Component(Product.DEFAULT_PRODUCT_FAMILY,Product.DEFAULT_PRODUCT_DESCRIPTION);
 		scan.useDelimiter(",");
 		while(scan.hasNext()) {
 			token = scan.next();

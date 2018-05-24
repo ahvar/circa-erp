@@ -11,6 +11,8 @@ import com.circa.mrv.grs_manager.directory.UserDirectory;
 public class ShipTo extends Location {
 	/** The name of a contact in shipping department */
 	private String shippingContact;
+	/** Ship-to Description */
+	private static final String SHIP_TO = "Ship-To";
 	
 	/**
 	 * Constructs the ShipTo location.
@@ -46,6 +48,14 @@ public class ShipTo extends Location {
 
 	public void setShippingContact(String shippingContact) {
 		this.shippingContact = shippingContact;
+	}
+	
+	/**
+	 * Returns the description for a ship-to
+	 * @return String the description for ship-to
+	 */
+	public static String getShipTo() {
+		return SHIP_TO;
 	}
 
 	/**

@@ -29,11 +29,13 @@ import javax.swing.table.AbstractTableModel;
 
 import com.circa.mrv.grs_manager.directory.Company;
 import com.circa.mrv.grs_manager.directory.CompanyDirectory;
+import com.circa.mrv.grs_manager.directory.ResearchCompany;
 import com.circa.mrv.grs_manager.directory.UserDirectory;
 import com.circa.mrv.grs_manager.manager.GRSManager;
 import com.circa.mrv.grs_manager.user.Employee;
 import com.circa.mrv.grs_manager.location.BillTo;
 import com.circa.mrv.grs_manager.location.ResearchSite;
+import com.circa.mrv.grs_manager.location.ShipTo;
 
 /**
  * Creates a user interface for working with the ResearchEmployeeDirectory.
@@ -69,8 +71,20 @@ public class ResearchEmployeeDirectoryPanel extends JPanel implements ActionList
 	private JLabel lblPassword;
 	/** JLabel for repeat password */
 	private JLabel lblRepeatPassword;
-	/** JLabel for maxOrders */
-	private JLabel lblMaxOrders;
+	/** JLabel for the name of the research company */
+	private JLabel lblCompanyName;
+	/** JLabel for the street address of the company */
+	private JLabel lblCompanyStreetAddress;
+	/** JLabel for a building, suite, or unit at the company's street location */
+	private JLabel lblCompanyAddress2;
+	/** JLabel for the city of the company location */
+	private JLabel lblCompanyCity;
+	/** JLabel for the state/provice for the company location */
+	private JLabel lblCompanyState;
+	/** JLabel for the country of the company location */
+	private JLabel lblCompanyCountry;
+	/** JLabel for the zip code of the company location */
+	private JLabel lblCompanyZipCode;
 	/** JTextField for firstName */
 	private JTextField txtFirstName;
 	/** JTextField for lastName */
@@ -83,8 +97,22 @@ public class ResearchEmployeeDirectoryPanel extends JPanel implements ActionList
 	private JPasswordField txtPassword;
 	/** JPasswordField for repeat password */
 	private JPasswordField txtRepeatPassword;
-	/** JTextField for maxOrders */
-	private JComboBox<Integer> comboMaxOrders;
+	/** JTextField for location classification */
+	private JComboBox<String> comboLocationType;
+	/** JTextField for company name */
+	private JTextField txtCompanyName;
+	/** JTextField for company street address */
+	private JTextField txtCompanyStreetAddress;
+	/** JTextField for a building, suite, or unit number for the company */
+	private JTextField txtCompanyAddress2;
+	/** JTextField for the city of the company location */
+	private JTextField txtCompanyCity;
+	/** JTextField for the state/province where the company is located */
+	private JTextField txtCompanyState;
+	/** JTextField for the country where the company is located */
+	private JTextField txtCompanyCountry;
+	/** JTextField for the zip code the company is located in */
+	private JTextField txtCompanyZipCode;
 	/** Button for adding a new research employee */
 	private JButton btnAddResearchEmployee;
 	/** Button for removing the selected employee from the directory */
@@ -93,6 +121,7 @@ public class ResearchEmployeeDirectoryPanel extends JPanel implements ActionList
 	private UserDirectory userDirectory;
 	/** Reference to CompanyDirectory */
 	private CompanyDirectory companyDirectory;
+	
 	/** Hash algorithm */
 	private static final String HASH_ALGORITHM = "SHA-256";
 	
@@ -125,7 +154,6 @@ public class ResearchEmployeeDirectoryPanel extends JPanel implements ActionList
 		pnlDirectoryButton.setBorder(boarder);
 		pnlDirectoryButton.setToolTipText("Directory Buttons");
 		
-		//Set up Directory table
 		researchEmployeeDirectoryTableModel = new ResearchEmployeeDirectoryTableModel();
 		tableResearchEmployeeDirectory = new JTable(researchEmployeeDirectoryTableModel);
 		tableResearchEmployeeDirectory.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -153,28 +181,39 @@ public class ResearchEmployeeDirectoryPanel extends JPanel implements ActionList
 		pnlResearchEmployeeButtons.setBorder(boarder);
 		pnlResearchEmployeeButtons.setToolTipText("Employee Controls");
 		
-		//Set up Faculty form
 		lblFirstName = new JLabel("First Name");
 		lblLastName = new JLabel("Last Name");
 		lblId = new JLabel("ID");
 		lblEmail = new JLabel("Email");
 		lblPassword = new JLabel("Password");
 		lblRepeatPassword = new JLabel("Repeat Password");
-		lblMaxOrders = new JLabel("Max Orders");
+		lblCompanyName = new JLabel("Company Name: ");
+		lblCompanyStreetAddress = new JLabel("Address: ");
+		lblCompanyAddress2 = new JLabel("Suite or Unit: ");
+		lblCompanyCity = new JLabel("City: ");
+		lblCompanyState = new JLabel("State/Province: ");
+		lblCompanyCountry = new JLabel("Country: ");
+		lblCompanyZipCode = new JLabel("Zip Code: ");
+		comboLocationType = new JComboBox<String>();
 		txtFirstName = new JTextField(20);
 		txtLastName = new JTextField(20);
 		txtId = new JTextField(20);
 		txtEmail = new JTextField(20);
 		txtPassword = new JPasswordField(20);
 		txtRepeatPassword = new JPasswordField(20);
-		comboMaxOrders = new JComboBox<Integer>();
-		comboMaxOrders.addItem(1);
-		comboMaxOrders.addItem(2);
-		comboMaxOrders.addItem(3);
-		comboMaxOrders.setEditable(false);
+		comboLocationType.addItem(ShipTo.getShipTo());
+		comboLocationType.addItem(BillTo.getBillTo());
+		comboLocationType.setEditable(false);
+		txtCompanyName = new JTextField(20);
+		txtCompanyStreetAddress = new JTextField(30);
+		txtCompanyAddress2 = new JTextField(15);
+		txtCompanyCity = new JTextField(20);
+		txtCompanyState = new JTextField(20);
+		txtCompanyCountry = new JTextField(20);
+		txtCompanyZipCode = new JTextField(10);
 		
 		JPanel pnlResearchEmployeeForm = new JPanel();
-		pnlResearchEmployeeForm.setLayout(new GridLayout(7, 2));
+		pnlResearchEmployeeForm.setLayout(new GridLayout(14, 2));
 		pnlResearchEmployeeForm.add(lblFirstName);
 		pnlResearchEmployeeForm.add(txtFirstName);
 		pnlResearchEmployeeForm.add(lblLastName);
@@ -187,8 +226,8 @@ public class ResearchEmployeeDirectoryPanel extends JPanel implements ActionList
 		pnlResearchEmployeeForm.add(txtPassword);
 		pnlResearchEmployeeForm.add(lblRepeatPassword);
 		pnlResearchEmployeeForm.add(txtRepeatPassword);
-		pnlResearchEmployeeForm.add(lblMaxOrders);
-		pnlResearchEmployeeForm.add(comboMaxOrders);
+		pnlResearchEmployeeForm.add(lblCompanyName);
+		pnlResearchEmployeeForm.add(txtCompanyName);
 		
 		boarder = BorderFactory.createTitledBorder(lowerEtched, "Employee Information");
 		pnlResearchEmployeeForm.setBorder(boarder);
@@ -262,11 +301,18 @@ public class ResearchEmployeeDirectoryPanel extends JPanel implements ActionList
 			String email = txtEmail.getText();
 			char[] password = txtPassword.getPassword();
 			char[] repeatPassword = txtRepeatPassword.getPassword();
-			int maxCourses = 0;
+			String companyName = txtCompanyName.getText();
+			String streetAdd = txtCompanyStreetAddress.getText();
+			String add2 = txtCompanyAddress2.getText();
+			String city = txtCompanyCity.getText();
+			String state = txtCompanyState.getText();
+			String country = txtCompanyCountry.getText();
+			String zip = txtCompanyZipCode.getText();
+			String locationType = null;
 			try {
-				maxCourses = comboMaxOrders.getItemAt(comboMaxOrders.getSelectedIndex());
-			} catch (NumberFormatException nfe) {
-				JOptionPane.showMessageDialog(this, "Max orders must be a positive number between 1 and 3.");
+				locationType = comboLocationType.getItemAt(comboLocationType.getSelectedIndex());
+			} catch (NullPointerException npe) {
+				JOptionPane.showMessageDialog(this, "Select the correct location type.");
 				return;
 			}
 			
@@ -280,54 +326,72 @@ public class ResearchEmployeeDirectoryPanel extends JPanel implements ActionList
 				repeatPWString += repeatPassword[i];
 			}
 			
+			
 			try {
-				if (userDirectory.addUser(firstName,lastName,id,email,pwString,repeatPWString) ) {
-					txtFirstName.setText("");
-					txtLastName.setText("");
-					txtId.setText("");
-					txtEmail.setText("");
-					txtPassword.setText("");
-					txtRepeatPassword.setText("");
-					comboMaxOrders.setSelectedIndex(0);
+				if(locationType.equals(BillTo.getBillTo())) {
+					companyDirectory.addResearchCompany(new ResearchCompany(companyName,streetAdd,add2,city,state,zip,country));
+					companyDirectory.getCompanyByNameAndStreet(companyName, streetAdd);
+				} else {
+					String studyNumber = null;
+					studyNumber = JOptionPane.showInputDialog(this, "Enter the Site ID.");
+					Long study = Long.parseLong(studyNumber);
+					ResearchSite rc = new ResearchSite(streetAdd,add2,city,state,zip,country,study,0);
+					companyDirectory.addResearchCompany(new ResearchCompany(rc,companyName)); 
+				}
+				txtCompanyName.setText("");
+				txtCompanyStreetAddress.setText("");
+				txtCompanyAddress2.setText("");
+				txtCompanyCity.setText("");
+				txtCompanyState.setText("");
+				txtCompanyCountry.setText("");
+				txtCompanyZipCode.setText("");
+				comboLocationType.setSelectedIndex(0);
+				
+				txtFirstName.setText("");
+				txtLastName.setText("");
+				txtId.setText("");
+				txtEmail.setText("");
+				txtPassword.setText("");
+				txtRepeatPassword.setText("");
 					
-					if (companyDirectory.getCompanyList().size() == 0) { 
-						companyDirectory.addCompany("ERT","1818 Market Street","Suite 1000","Philadelphia","PA","19103","USA");
-					} else {
-					  Company c = null;
-					  for(int i = 0; i < companyDirectory.getCompanyList().size(); i++) {
-					      if(companyDirectory.getCompanyList().get(i).getName().equals("ERT"))
-					  		  c = companyDirectory.getCompanyList().get(i);
-					  }
-					  if (c == null) companyDirectory.addCompany("ERT","1818 Market Street","Suite 1000","Philadelphia","PA","19103","USA");
+				if (companyDirectory.getCompanyList().size() == 0) { 
+					companyDirectory.addCompany(companyName,streetAdd,add2,city,state,zip,country);
+				} else {
+				  Company c = null;
+				  for(int i = 0; i < companyDirectory.getCompanyList().size(); i++) {
+				      if(companyDirectory.getCompanyList().get(i).getName().equals("ERT"))
+				  		  c = companyDirectory.getCompanyList().get(i);
+				  }
+				  if (c == null) companyDirectory.addCompany("ERT","1818 Market Street","Suite 1000","Philadelphia","PA","19103","USA");
+				}
+					
+				Employee emp;
+				if((emp = companyDirectory.getEmployeeById(id)) == null) {
+					String hashPW = "";
+					String repeatHashPW = "";
+					
+					if (pwString == null || repeatPWString == null || pwString.equals("") || repeatPWString.equals("")) {
+						throw new IllegalArgumentException("Invalid password");
 					}
-					
-					Employee emp;
-					if((emp = companyDirectory.getEmployeeById(id)) == null) {
-						String hashPW = "";
-						String repeatHashPW = "";
-						
-						if (pwString == null || repeatPWString == null || pwString.equals("") || repeatPWString.equals("")) {
-							throw new IllegalArgumentException("Invalid password");
-						}
-						try {
-							MessageDigest digest1 = MessageDigest.getInstance(HASH_ALGORITHM);
-							digest1.update(pwString.getBytes());
-							hashPW = new String(digest1.digest());
+					try {
+						MessageDigest digest1 = MessageDigest.getInstance(HASH_ALGORITHM);
+						digest1.update(pwString.getBytes());
+						hashPW = new String(digest1.digest());
 							
-							MessageDigest digest2 = MessageDigest.getInstance(HASH_ALGORITHM);
-							digest2.update(repeatPWString.getBytes());
-							repeatHashPW = new String(digest2.digest());
+						MessageDigest digest2 = MessageDigest.getInstance(HASH_ALGORITHM);
+						digest2.update(repeatPWString.getBytes());
+						repeatHashPW = new String(digest2.digest());
 							
-						} catch (NoSuchAlgorithmException ex) {
-							throw new IllegalArgumentException("Cannot hash password");
-						}
+					} catch (NoSuchAlgorithmException ex) {
+						throw new IllegalArgumentException("Cannot hash password");
+					}
 						
-						if (!hashPW.equals(repeatHashPW)) {
-							throw new IllegalArgumentException("Passwords do not match");
-						}
+					if (!hashPW.equals(repeatHashPW)) {
+						throw new IllegalArgumentException("Passwords do not match");
+					}
 						
-						if(!companyDirectory.addEmployeeToBillToLocation(new Employee(firstName,lastName,id,email,hashPW), "ERT", "1818 Market Street"))
-							throw new IllegalArgumentException("Research company bill to not found in directory");
+					if(!companyDirectory.addEmployeeToBillToLocation(new Employee(firstName,lastName,id,email,hashPW), "ERT", "1818 Market Street"))
+						throw new IllegalArgumentException("Research company bill to not found in directory");
 						
 					}
 					

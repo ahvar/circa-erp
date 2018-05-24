@@ -62,7 +62,7 @@ public class Component extends Product implements Consumable {
 	}
 	
 	/**
-	 * Constructs a component with a name, description, part number,
+	 * Constructs a component with a name, generation, description
 	 * @param family the product family
 	 * @param desc the description of the component
 	 * @param gen the product generation
@@ -75,6 +75,12 @@ public class Component extends Product implements Consumable {
 		setGeneration(null);
 	}
 	
+	/**
+	 * Constructs a component with a name, description, and part number
+	 */
+	public Component(String fam, String desc) {
+		super(fam,desc);
+	}
 	/**
 	 * Default constructor for Component 
 	 */

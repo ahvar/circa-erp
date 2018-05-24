@@ -10,6 +10,8 @@ package com.circa.mrv.grs_manager.location;
 public class BillTo extends Location {
 	/** The name of someone in the billing dept. */
 	private String billingContact;
+	/** Bill-to Description */
+	private static final String BILL_TO = "Bill-To";
 
 	/**
 	 * Constructs this BillTo with address information and contact name.
@@ -54,6 +56,14 @@ public class BillTo extends Location {
 	 */
 	public void setBillingContact(String billingContact) {
 		this.billingContact = billingContact;
+	}
+	
+	/**
+	 * Return Bill-To description
+	 * @return bill-to the bill-to description 
+	 */
+	public static String getBillTo() {
+		return BILL_TO;
 	}
 
 	/** 

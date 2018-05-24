@@ -19,25 +19,7 @@ public class ResearchSite extends ShipTo {
 	/**
 	 * Constructs a research site for a particular study.
 	 * @param add1 the street address
-	 * @param city the city
-	 * @param state the state
-	 * @param zip the zip code
-	 * @param country the country
-	 * @param num the unique ID for this site
-	 * @param name the name of a health care professional associated with the study at this site
-	 * @param devices the number of devices at this site
-	 */
-	public ResearchSite(String add1, String city, String state, String zip, String country, long num, String name, int devices) {
-		super(add1,city,state,zip,country);
-		this.num = num;
-		this.name = name;
-		this.devices = devices;
-	}
-	
-	/**
-	 * Constructs a research site for a particular study.
-	 * @param add1 the street address
-	 * @param add2 the suite or building number
+	 * @param add2 the building, suite or unit number
 	 * @param city the city
 	 * @param state the state
 	 * @param zip the zip code
@@ -47,9 +29,28 @@ public class ResearchSite extends ShipTo {
 	 * @param devices the number of devices at this site
 	 */
 	public ResearchSite(String add1, String add2, String city, String state, String zip, String country, long num, String name, int devices) {
-		this(add1,city,state,zip,country,num,name,devices);
-		setAddress2(add2);
+		this(add1,add2,city,state,zip,country,num,devices);
+		this.name = name;
 	}
+
+	/**
+	 * Constructs a research site for a particular study.
+	 * @param add1 the street address
+	 * @param add2 the suite or building number
+	 * @param city the city
+	 * @param state the state
+	 * @param zip the zip code
+	 * @param country the country
+	 * @param num the unique ID for this site
+	 * @param devices the number of devices at this site
+	 */
+	public ResearchSite(String add1, String add2, String city, String state, String zip, String country, long num, int devices) {
+		super(add1,city,state,zip,country);
+		setAddress2(add2);
+		setNum(num);
+		setDevices(devices);
+	}
+	
 	
 	/**
 	 * Returns the unique id number.

@@ -160,6 +160,20 @@ public class CompanyDirectory {
 	}
 	
 	/**
+	 * Adds the ResearchCompany parameter to the list of companies instance variable.
+	 * @param researchCompany the research company to add
+	 * @throws IllegalArgumentException if this company already exists in the list
+	 */
+	public void addResearchCompany(ResearchCompany rc) {
+		try{
+			companyDirectory.add(rc);
+		} catch(IllegalArgumentException e) {
+			throw new IllegalArgumentException(e.getMessage());
+		}
+		
+	}
+	
+	/**
 	 * Removes the company with the given name from the list of companies.
 	 * Returns true if the company is removed and false if the employee is not in the list.
 	 * @param name the name of the company
