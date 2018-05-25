@@ -12,6 +12,7 @@ import java.security.NoSuchAlgorithmException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -29,9 +30,13 @@ import javax.swing.table.AbstractTableModel;
 import com.circa.mrv.grs_manager.manager.GRSManager;
 import com.circa.mrv.grs_manager.directory.Company;
 import com.circa.mrv.grs_manager.location.BillTo;
+import com.circa.mrv.grs_manager.location.Location;
+import com.circa.mrv.grs_manager.location.ResearchSite;
 import com.circa.mrv.grs_manager.user.Employee;
 import com.circa.mrv.grs_manager.directory.CompanyDirectory;
+import com.circa.mrv.grs_manager.directory.ResearchCompany;
 import com.circa.mrv.grs_manager.directory.UserDirectory;
+import com.circa.mrv.grs_manager.directory.VendorCompany;
 
 /**
  * Creates a user interface for working with the VendorCompanyEmployeeDirectory.
@@ -67,9 +72,20 @@ public class VendorEmployeeDirectoryPanel extends JPanel implements ActionListen
 	private JLabel lblPassword;
 	/** JLabel for repeat password */
 	private JLabel lblRepeatPassword;
-	
-	/** JLabel for maxCredits */
-	private JLabel lblMaxCredits;
+	/** JLabel for the name of the research company */
+	private JLabel lblCompanyName;
+	/** JLabel for the street address of the company */
+	private JLabel lblCompanyStreetAddress;
+	/** JLabel for a building, suite, or unit at the company's street location */
+	private JLabel lblCompanyAddress2;
+	/** JLabel for the city of the company location */
+	private JLabel lblCompanyCity;
+	/** JLabel for the state/provice for the company location */
+	private JLabel lblCompanyState;
+	/** JLabel for the country of the company location */
+	private JLabel lblCompanyCountry;
+	/** JLabel for the zip code of the company location */
+	private JLabel lblCompanyZipCode;
 	
 	/** JTextField for firstName */
 	private JTextField txtFirstName;
@@ -83,9 +99,22 @@ public class VendorEmployeeDirectoryPanel extends JPanel implements ActionListen
 	private JPasswordField txtPassword;
 	/** JPasswordField for repeat password */
 	private JPasswordField txtRepeatPassword;
-	
-	/** JTextField for maxCredits */
-	private JTextField txtMaxCredits;
+
+	/** JTextField for company name */
+	private JTextField txtCompanyName;
+	/** JTextField for company street address */
+	private JTextField txtCompanyStreetAddress;
+	/** JTextField for a building, suite, or unit number for the company */
+	private JTextField txtCompanyAddress2;
+	/** JTextField for the city of the company location */
+	private JTextField txtCompanyCity;
+	/** JTextField for the state/province where the company is located */
+	private JTextField txtCompanyState;
+	/** JTextField for the country where the company is located */
+	private JTextField txtCompanyCountry;
+	/** JTextField for the zip code the company is located in */
+	private JTextField txtCompanyZipCode;
+
 	
 	/** Button for adding the selected employee in the catalog to the schedule */
 	private JButton btnAddEmployee;
@@ -163,14 +192,26 @@ public class VendorEmployeeDirectoryPanel extends JPanel implements ActionListen
 		lblEmail = new JLabel("Email");
 		lblPassword = new JLabel("Password");
 		lblRepeatPassword = new JLabel("Repeat Password");
-		lblMaxCredits = new JLabel("Max Products");
+		lblCompanyName = new JLabel("Company Name: ");
+		lblCompanyStreetAddress = new JLabel("Address: ");
+		lblCompanyAddress2 = new JLabel("Suite or Unit: ");
+		lblCompanyCity = new JLabel("City: ");
+		lblCompanyState = new JLabel("State/Province: ");
+		lblCompanyCountry = new JLabel("Country: ");
+		lblCompanyZipCode = new JLabel("Zip Code: ");
 		txtFirstName = new JTextField(20);
 		txtLastName = new JTextField(20);
 		txtId = new JTextField(20);
 		txtEmail = new JTextField(20);
 		txtPassword = new JPasswordField(20);
 		txtRepeatPassword = new JPasswordField(20);
-		txtMaxCredits = new JTextField(20);
+		txtCompanyName = new JTextField(20);
+		txtCompanyStreetAddress = new JTextField(30);
+		txtCompanyAddress2 = new JTextField(15);
+		txtCompanyCity = new JTextField(20);
+		txtCompanyState = new JTextField(20);
+		txtCompanyCountry = new JTextField(20);
+		txtCompanyZipCode = new JTextField(10);
 		
 		JPanel pnlEmployeeForm = new JPanel();
 		pnlEmployeeForm.setLayout(new GridLayout(7, 2));
@@ -186,8 +227,20 @@ public class VendorEmployeeDirectoryPanel extends JPanel implements ActionListen
 		pnlEmployeeForm.add(txtPassword);
 		pnlEmployeeForm.add(lblRepeatPassword);
 		pnlEmployeeForm.add(txtRepeatPassword);
-		pnlEmployeeForm.add(lblMaxCredits);
-		pnlEmployeeForm.add(txtMaxCredits);
+		pnlEmployeeForm.add(lblCompanyName);
+		pnlEmployeeForm.add(txtCompanyName);
+		pnlEmployeeForm.add(lblCompanyStreetAddress);
+		pnlEmployeeForm.add(txtCompanyStreetAddress);
+		pnlEmployeeForm.add(lblCompanyAddress2);
+		pnlEmployeeForm.add(txtCompanyAddress2);
+		pnlEmployeeForm.add(lblCompanyCity);
+		pnlEmployeeForm.add(txtCompanyCity);
+		pnlEmployeeForm.add(lblCompanyState);
+		pnlEmployeeForm.add(txtCompanyState);
+		pnlEmployeeForm.add(lblCompanyZipCode);
+		pnlEmployeeForm.add(txtCompanyZipCode);
+		pnlEmployeeForm.add(lblCompanyCountry);
+		pnlEmployeeForm.add(txtCompanyCountry);
 		
 		boarder = BorderFactory.createTitledBorder(lowerEtched, "Employee Information");
 		pnlEmployeeForm.setBorder(boarder);
@@ -263,13 +316,26 @@ public class VendorEmployeeDirectoryPanel extends JPanel implements ActionListen
 			String email = txtEmail.getText();
 			char[] password = txtPassword.getPassword();
 			char[] repeatPassword = txtRepeatPassword.getPassword();
-			int maxCredits = 0;
-			try {
-				maxCredits = Integer.parseInt(txtMaxCredits.getText());
-			} catch (NumberFormatException nfe) {
-				JOptionPane.showMessageDialog(this, "Price must be a positive number between 3 and 18.");
-				return;
-			}
+			String companyName = txtCompanyName.getText();
+			String streetAdd = txtCompanyStreetAddress.getText();
+			String add2 = txtCompanyAddress2.getText();
+			String city = txtCompanyCity.getText();
+			String state = txtCompanyState.getText();
+			String country = txtCompanyCountry.getText();
+			String zip = txtCompanyZipCode.getText();
+			txtFirstName.setText("");
+			txtLastName.setText("");
+			txtId.setText("");
+			txtEmail.setText("");
+			txtPassword.setText("");
+			txtRepeatPassword.setText("");
+			txtCompanyName.setText("");
+			txtCompanyStreetAddress.setText("");
+			txtCompanyAddress2.setText("");
+			txtCompanyCity.setText("");
+			txtCompanyState.setText("");
+			txtCompanyCountry.setText("");
+			txtCompanyZipCode.setText("");
 			
 			String pwString = "";
 			for (int i = 0; i < password.length; i++) {
@@ -281,64 +347,37 @@ public class VendorEmployeeDirectoryPanel extends JPanel implements ActionListen
 				repeatPWString += repeatPassword[i];
 			}
 			
+			String hashPW = "";
+			String repeatHashPW = "";
+			
+			if (pwString == null || repeatPWString == null || pwString.equals("") || repeatPWString.equals("")) {
+				throw new IllegalArgumentException("Invalid password");
+			}
+			
 			try {
-				if (userDirectory.addUser(firstName, lastName, id, email, pwString, repeatPWString)) {
+				MessageDigest digest1 = MessageDigest.getInstance(HASH_ALGORITHM);
+				digest1.update(pwString.getBytes());
+				hashPW = new String(digest1.digest());
 					
-					txtFirstName.setText("");
-					txtLastName.setText("");
-					txtId.setText("");
-					txtEmail.setText("");
-					txtPassword.setText("");
-					txtRepeatPassword.setText("");
-					txtMaxCredits.setText("");
+				MessageDigest digest2 = MessageDigest.getInstance(HASH_ALGORITHM);
+				digest2.update(repeatPWString.getBytes());
+				repeatHashPW = new String(digest2.digest());
 					
-					if (companyDirectory.getCompanyList().size() == 0) { 
-						companyDirectory.addCompany("Circassia Pharmaceuticals","5151 McCrimmon Parkway","Suite 260","Morrisville","NC","27560","USA");
-					} else {
-					  Company c = null;
-					  for(int i = 0; i < companyDirectory.getCompanyList().size(); i++) {
-					      if(companyDirectory.getCompanyList().get(i).getName().equals("Circassia Pharmaceuticals"))
-					  		  c = companyDirectory.getCompanyList().get(i);
-					  }
-					  if (c == null) companyDirectory.addCompany("Circassia Pharmaceuticals","5151 McCrimmon Parkway","Suite 260","Morrisville","NC","27560","USA");
-					}
-					
-					Employee emp;
-					if((emp = companyDirectory.getEmployeeById(id)) == null) {
-						
-						String hashPW = "";
-						String repeatHashPW = "";
-						
-						if (pwString == null || repeatPWString == null || pwString.equals("") || repeatPWString.equals("")) {
-							throw new IllegalArgumentException("Invalid password");
-						}
-						try {
-							MessageDigest digest1 = MessageDigest.getInstance(HASH_ALGORITHM);
-							digest1.update(pwString.getBytes());
-							hashPW = new String(digest1.digest());
-							
-							MessageDigest digest2 = MessageDigest.getInstance(HASH_ALGORITHM);
-							digest2.update(repeatPWString.getBytes());
-							repeatHashPW = new String(digest2.digest());
-							
-						} catch (NoSuchAlgorithmException ex) {
-							throw new IllegalArgumentException("Cannot hash password");
-						}
-						
-						if (!hashPW.equals(repeatHashPW)) {
-							throw new IllegalArgumentException("Passwords do not match");
-						}
-						
-						
-					    if(!companyDirectory.addEmployeeToBillToLocation(new Employee(firstName,lastName,id,email,hashPW), "Circassia Pharmaceuticals", "5151 McCrimmon Parkway"))
-							throw new IllegalArgumentException("Vendor company bill to not found in directory");
-						
-					}
-					
-					
-				} else {
-					JOptionPane.showMessageDialog(this, "Employee already in system.");
-				}
+			} catch (NoSuchAlgorithmException ex) {
+				throw new IllegalArgumentException("Cannot hash password");
+			}
+				
+			if (!hashPW.equals(repeatHashPW)) {
+				throw new IllegalArgumentException("Passwords do not match");
+			}
+			
+			try {
+				userDirectory.addUser(firstName, lastName, id, email, hashPW); 
+				
+				VendorCompany vc = new VendorCompany(companyName,streetAdd,add2,city,state,zip,country);
+				vc.getBillTo().addEmployee(firstName, lastName, id, email, hashPW);
+				companyDirectory.addVendorCompany(vc);
+				
 			} catch (IllegalArgumentException iae) {
 				JOptionPane.showMessageDialog(this, iae.getMessage());
 			}

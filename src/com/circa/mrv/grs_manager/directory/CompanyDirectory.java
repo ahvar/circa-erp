@@ -174,6 +174,19 @@ public class CompanyDirectory {
 	}
 	
 	/**
+	 * Adds the VendorCompany parameter to the list of companies.
+	 * @param vendorCompany the vendor company to add
+	 * @throws IllegalArgumentException if this company already exists in the list
+	 */
+	public void addVendorCompany(VendorCompany vc) {
+		try {
+			companyDirectory.add(vc);
+		} catch (IllegalArgumentException iae) {
+			throw new IllegalArgumentException(iae.getMessage());
+		}
+	}
+	
+	/**
 	 * Removes the company with the given name from the list of companies.
 	 * Returns true if the company is removed and false if the employee is not in the list.
 	 * @param name the name of the company
@@ -299,4 +312,5 @@ public class CompanyDirectory {
 		}
 		return false;
 	}
+
 }

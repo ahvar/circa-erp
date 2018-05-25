@@ -33,24 +33,8 @@ public class Employee extends User implements Comparable<Employee> {
 	public Employee(String firstName, String lastName, String id, String email, String hashPW){
 			
 		super(firstName, lastName, id, email, hashPW); 
-		schedule = new OrderSchedule(getId());
 	}
-		
-		/**
-		 * Constructs an instance of Employee with first name, last name, id, email, and password. 
-	     * Initializes the employee's order schedule capacity to 10.
-	     * 
-		 * @param firstName employee first name
-		 * @param lastName employee last name
-		 * @param id employee id
-		 * @param email employee email
-		 * @param hashPW employee password
-		 * @param schedule the orders schedule for that employee
-		 */
-		public Employee(String firstName, String lastName, String id, String email, String hashPW, OrderSchedule schedule) {
-			this(firstName, lastName, id, email, hashPW);
-			this.schedule = schedule;
-		}
+
 
 		/**
 		 * gets the employee maxOrders
@@ -80,8 +64,8 @@ public class Employee extends User implements Comparable<Employee> {
 		 */
 		@Override
 		public String toString() {
-			return getFirstName() + " " + getLastName() + " " + getId() + " " + getEmail() + " " + getPassword() + " " + "Total Orders: " + 
-		    schedule.getNumScheduledOrders();
+			return getFirstName() + " " + getLastName() + " " + getId() + " " + getEmail() + " " + getPassword(); 
+		    
 			
 		}
 		
@@ -163,8 +147,8 @@ public class Employee extends User implements Comparable<Employee> {
 		 * @return true if the employee exceeded the maximum number of orders
 		 */
 		public boolean isOverloaded(){
-			if (schedule.getNumScheduledOrders() > maxOrders)
-				return true;
+			//if (schedule.getNumScheduledOrders() > maxOrders)
+				//return true;
 			return false;
 		}
 }

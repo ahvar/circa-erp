@@ -37,7 +37,7 @@ public abstract class Company {
      */
     public Company(String name, String add1, String city, String state, String zip, String country) {
     	locations = new LinkedListRecursive<Location>();
-    	locations.add(new BillTo(add1,city,state,zip,country,""));
+    	locations.add(new BillTo(add1,city,state,zip,country));
     	setName(name);
     }
     
@@ -122,14 +122,14 @@ public abstract class Company {
 	}
 	
 	/**
-	 * Sets the first name of the billing contact in the BillTo for the company
-	 * @param first the first name of the billing contact
+	 * Returns the BillTo location for this company
+	 * @return Location the BillTo location 
 	 */
-	public void setBillingContactFirst(String first) {
-		for(int i = 0; i < locations.size(); i++ ) {
-			if(locations.get(i) instanceof BillTo) return locations.get(i).getEmployees().get(0).setFirstName(first);
+	public Location getBillTo() {
+		for(int i = 0; i < locations.size(); i++) {
+			if(locations.get(i) instanceof BillTo) return locations.get(i);
 		}
+		return null;
 	}
-	
 
 }

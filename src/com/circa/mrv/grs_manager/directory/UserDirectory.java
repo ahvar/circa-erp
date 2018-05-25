@@ -85,33 +85,9 @@ public class UserDirectory {
 	 * @param repeatPassword employee repeated password
 	 * @return true if added
 	 */
-	public boolean addUser(String firstName, String lastName, String id, String email, String password, String repeatPassword) {
-		String hashPW = "";
-		String repeatHashPW = "";
-		if (password == null || repeatPassword == null || password.equals("") || repeatPassword.equals("")) {
-			throw new IllegalArgumentException("Invalid password");
-		}
-		try {
-			MessageDigest digest1 = MessageDigest.getInstance(HASH_ALGORITHM);
-			digest1.update(password.getBytes());
-			hashPW = new String(digest1.digest());
-			
-			MessageDigest digest2 = MessageDigest.getInstance(HASH_ALGORITHM);
-			digest2.update(repeatPassword.getBytes());
-			repeatHashPW = new String(digest2.digest());
-		} catch (NoSuchAlgorithmException e) {
-			throw new IllegalArgumentException("Cannot hash password");
-		}
-		
-		if (!hashPW.equals(repeatHashPW)) {
-			throw new IllegalArgumentException("Passwords do not match");
-		}
-		
-		//If an IllegalArgumentException is thrown, it's passed up from faculty
-		//to the GUI 
-		Employee employee = new Employee( firstName, lastName, id, email, hashPW );
+	public boolean addUser(String firstName, String lastName, String id, String email, String hashPW) {
 
-		return this.getUsers().add(employee);
+		return this.users.add(new Employee(firstName,lastName,id,email,hashPW));
 	}
 	
 	/**

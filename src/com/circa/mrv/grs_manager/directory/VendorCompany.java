@@ -17,15 +17,19 @@ public class VendorCompany extends Company {
 	private NioxCatalog products;
 
 	/**
-	 * Constructs a VendorCompany with a list of locations, the name of the business, and 
-	 * the NIOX product catalog.
-	 * 
-	 * @param locations the different locations for the ClinicalClient
-	 * @param name the name of the business 
+	 * Constructs a VendorCompany with with a list of locations, the name of the business,
+	 * @param locations
+	 * @param name
+	 * @param studies
 	 */
-	public VendorCompany(LinkedListRecursive<Location> locations, String name) {
+	public VendorCompany( LinkedListRecursive<Location> locations, String name){
 		super(locations, name);
-		
+
+	}
+	
+	public  VendorCompany( String name, String add1, String add2, String city, String state, String zip, String country ){
+		super(name,add1,add2,city,state,country,zip);
+	
 	}
 
 	/**

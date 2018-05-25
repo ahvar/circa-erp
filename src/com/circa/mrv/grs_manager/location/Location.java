@@ -141,8 +141,6 @@ public abstract class Location {
 	}
 	
 	
-	
-	
 	/**
 	 * Returns the zip code
 	 * @return the zip
@@ -192,6 +190,21 @@ public abstract class Location {
 				return employees.get(i);
 		}
 		return null;
+	}
+	
+	/**
+	 * Adds an employee with fist name, last name, and user id. If the employee cannot be added, throws
+	 * an IllegalArgumentException.
+	 * 
+	 * @param first the first name of the employee
+	 * @param last the last name of the employee
+	 * @param userid the userid of the employee
+	 */
+	public void addEmployee(String first, String last, String userid, String email, String hashPW) throws IllegalArgumentException {
+		if(userid == null || userid.equals("") || first == null || first.equals("") || last == null || last.equals("") )
+			throw new IllegalArgumentException("Employee name or id is invalid.");
+		Employee ee = new Employee(first,last,userid,email,hashPW);
+		employees.add(ee);
 	}
 
 	/**

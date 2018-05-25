@@ -85,6 +85,8 @@ public class ResearchEmployeeDirectoryPanel extends JPanel implements ActionList
 	private JLabel lblCompanyCountry;
 	/** JLabel for the zip code of the company location */
 	private JLabel lblCompanyZipCode;
+	/** JLabel for the location type */
+	private JLabel lblCompanyLocationType;
 	/** JTextField for firstName */
 	private JTextField txtFirstName;
 	/** JTextField for lastName */
@@ -194,6 +196,7 @@ public class ResearchEmployeeDirectoryPanel extends JPanel implements ActionList
 		lblCompanyState = new JLabel("State/Province: ");
 		lblCompanyCountry = new JLabel("Country: ");
 		lblCompanyZipCode = new JLabel("Zip Code: ");
+		lblCompanyLocationType = new JLabel("Location Type: ");
 		comboLocationType = new JComboBox<String>();
 		txtFirstName = new JTextField(20);
 		txtLastName = new JTextField(20);
@@ -213,7 +216,7 @@ public class ResearchEmployeeDirectoryPanel extends JPanel implements ActionList
 		txtCompanyZipCode = new JTextField(10);
 		
 		JPanel pnlResearchEmployeeForm = new JPanel();
-		pnlResearchEmployeeForm.setLayout(new GridLayout(14, 2));
+		pnlResearchEmployeeForm.setLayout(new GridLayout(7, 2));
 		pnlResearchEmployeeForm.add(lblFirstName);
 		pnlResearchEmployeeForm.add(txtFirstName);
 		pnlResearchEmployeeForm.add(lblLastName);
@@ -226,8 +229,23 @@ public class ResearchEmployeeDirectoryPanel extends JPanel implements ActionList
 		pnlResearchEmployeeForm.add(txtPassword);
 		pnlResearchEmployeeForm.add(lblRepeatPassword);
 		pnlResearchEmployeeForm.add(txtRepeatPassword);
+		
 		pnlResearchEmployeeForm.add(lblCompanyName);
 		pnlResearchEmployeeForm.add(txtCompanyName);
+		pnlResearchEmployeeForm.add(lblCompanyStreetAddress);
+		pnlResearchEmployeeForm.add(txtCompanyStreetAddress);
+		pnlResearchEmployeeForm.add(lblCompanyAddress2);
+		pnlResearchEmployeeForm.add(txtCompanyAddress2);
+		pnlResearchEmployeeForm.add(lblCompanyCity);
+		pnlResearchEmployeeForm.add(txtCompanyCity);
+		pnlResearchEmployeeForm.add(lblCompanyState);
+		pnlResearchEmployeeForm.add(txtCompanyState);
+		pnlResearchEmployeeForm.add(lblCompanyZipCode);
+		pnlResearchEmployeeForm.add(txtCompanyZipCode);
+		pnlResearchEmployeeForm.add(lblCompanyCountry);
+		pnlResearchEmployeeForm.add(txtCompanyCountry);
+		pnlResearchEmployeeForm.add(lblCompanyLocationType);
+		pnlResearchEmployeeForm.add(comboLocationType);
 		
 		boarder = BorderFactory.createTitledBorder(lowerEtched, "Employee Information");
 		pnlResearchEmployeeForm.setBorder(boarder);
@@ -265,6 +283,8 @@ public class ResearchEmployeeDirectoryPanel extends JPanel implements ActionList
 		c.anchor = GridBagConstraints.LINE_START;
 		c.fill = GridBagConstraints.BOTH;
 		this.add(pnlResearchEmployeeForm, c);
+		
+
 		
 	}
 
@@ -326,17 +346,43 @@ public class ResearchEmployeeDirectoryPanel extends JPanel implements ActionList
 				repeatPWString += repeatPassword[i];
 			}
 			
+			String hashPW = "";
+			String repeatHashPW = "";
+			
+			if (pwString == null || repeatPWString == null || pwString.equals("") || repeatPWString.equals("")) {
+				throw new IllegalArgumentException("Invalid password");
+			}
+			try {
+				MessageDigest digest1 = MessageDigest.getInstance(HASH_ALGORITHM);
+				digest1.update(pwString.getBytes());
+				hashPW = new String(digest1.digest());
+					
+				MessageDigest digest2 = MessageDigest.getInstance(HASH_ALGORITHM);
+				digest2.update(repeatPWString.getBytes());
+				repeatHashPW = new String(digest2.digest());
+					
+			} catch (NoSuchAlgorithmException ex) {
+				throw new IllegalArgumentException("Cannot hash password");
+			}
+				
+			if (!hashPW.equals(repeatHashPW)) {
+				throw new IllegalArgumentException("Passwords do not match");
+			}
 			
 			try {
 				if(locationType.equals(BillTo.getBillTo())) {
-					companyDirectory.addResearchCompany(new ResearchCompany(companyName,streetAdd,add2,city,state,zip,country));
-					companyDirectory.getCompanyByNameAndStreet(companyName, streetAdd);
-				} else {
+					
+					ResearchCompany rc = new ResearchCompany(companyName,streetAdd,add2,city,state,zip,country);
+					rc.getBillTo().addEmployee(firstName, lastName, id, email, hashPW);
+					companyDirectory.addResearchCompany(rc);
+					
+				} else if(locationType.equals(ShipTo.getShipTo())) {
 					String studyNumber = null;
 					studyNumber = JOptionPane.showInputDialog(this, "Enter the Site ID.");
 					Long study = Long.parseLong(studyNumber);
-					ResearchSite rc = new ResearchSite(streetAdd,add2,city,state,zip,country,study,0);
-					companyDirectory.addResearchCompany(new ResearchCompany(rc,companyName)); 
+					ResearchSite rs = new ResearchSite(streetAdd,add2,city,state,zip,country,study,0);
+					rs.addEmployee(firstName, lastName, id, email, hashPW);
+					companyDirectory.addResearchCompany(new ResearchCompany(rs,companyName)); 
 				}
 				txtCompanyName.setText("");
 				txtCompanyStreetAddress.setText("");
@@ -354,52 +400,15 @@ public class ResearchEmployeeDirectoryPanel extends JPanel implements ActionList
 				txtPassword.setText("");
 				txtRepeatPassword.setText("");
 					
-				if (companyDirectory.getCompanyList().size() == 0) { 
-					companyDirectory.addCompany(companyName,streetAdd,add2,city,state,zip,country);
-				} else {
-				  Company c = null;
-				  for(int i = 0; i < companyDirectory.getCompanyList().size(); i++) {
-				      if(companyDirectory.getCompanyList().get(i).getName().equals("ERT"))
-				  		  c = companyDirectory.getCompanyList().get(i);
-				  }
-				  if (c == null) companyDirectory.addCompany("ERT","1818 Market Street","Suite 1000","Philadelphia","PA","19103","USA");
-				}
-					
-				Employee emp;
-				if((emp = companyDirectory.getEmployeeById(id)) == null) {
-					String hashPW = "";
-					String repeatHashPW = "";
-					
-					if (pwString == null || repeatPWString == null || pwString.equals("") || repeatPWString.equals("")) {
-						throw new IllegalArgumentException("Invalid password");
-					}
-					try {
-						MessageDigest digest1 = MessageDigest.getInstance(HASH_ALGORITHM);
-						digest1.update(pwString.getBytes());
-						hashPW = new String(digest1.digest());
-							
-						MessageDigest digest2 = MessageDigest.getInstance(HASH_ALGORITHM);
-						digest2.update(repeatPWString.getBytes());
-						repeatHashPW = new String(digest2.digest());
-							
-					} catch (NoSuchAlgorithmException ex) {
-						throw new IllegalArgumentException("Cannot hash password");
-					}
-						
-					if (!hashPW.equals(repeatHashPW)) {
-						throw new IllegalArgumentException("Passwords do not match");
-					}
-						
-					if(!companyDirectory.addEmployeeToBillToLocation(new Employee(firstName,lastName,id,email,hashPW), "ERT", "1818 Market Street"))
-						throw new IllegalArgumentException("Research company bill to not found in directory");
-						
-					}
-					
-				} else {
-					JOptionPane.showMessageDialog(this, "Employee already in system.");
-				}
+	
 			} catch (IllegalArgumentException iae) {
 				JOptionPane.showMessageDialog(this, iae.getMessage());
+			}
+
+			try {
+				userDirectory.addUser(firstName, lastName, id, email, hashPW);
+			} catch (IllegalArgumentException iae) {
+				JOptionPane.showMessageDialog(this,iae.getMessage());
 			}
 			researchEmployeeDirectoryTableModel.updateData();
 		} else if (e.getSource() == btnRemoveResearchEmployee) {

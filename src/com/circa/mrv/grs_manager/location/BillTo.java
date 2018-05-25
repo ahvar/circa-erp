@@ -21,11 +21,10 @@ public class BillTo extends Location {
 	 * @param state the state
 	 * @param zip the zip code
 	 * @param country the country
-	 * @param billingContact the name of the billing contact
 	 */
-	public BillTo(String address1, String city, String state, String zip, String country, String billingContact) {
+	public BillTo(String address1, String city, String state, String zip, String country) {
 		super(address1, city, state, zip, country);
-		setBillingContact(billingContact);
+		
 	}
 	
 	/**
@@ -35,10 +34,9 @@ public class BillTo extends Location {
 	 * @param city the city
 	 * @param state the state
 	 * @param country the country
-	 * @param billingContact the name of the billing contact
 	 */
-	public BillTo(String address1, String address2, String city, String state, String zip, String country, String billingContact) {
-		this(address1, city, state, zip, country, billingContact);
+	public BillTo(String address1, String address2, String city, String state, String zip, String country) {
+		this(address1, city, state, zip, country);
 		setAddress2(address2);
 	}
 
