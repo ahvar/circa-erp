@@ -464,7 +464,7 @@ public class ResearchEmployeeDirectoryPanel extends JPanel implements ActionList
 		/** ID number used for object serialization. */
 		private static final long serialVersionUID = 1L;
 		/** Column names for the table */
-		private String [] columnNames = {"First Name", "Last Name", "Employee ID"};
+		private String [] columnNames = {"First Name", "Last Name", "Employee ID", "Employee Email"};
 		/** Data stored in the table */
 		private Object [][] data;
 		
@@ -527,7 +527,7 @@ public class ResearchEmployeeDirectoryPanel extends JPanel implements ActionList
 		 * Updates the given model with {@link Employee} information from the {@link CustomerDirectory}.
 		 */
 		public void updateData() {
-			data = userDirectory.getEmployeeDirectory();
+			data = companyDirectory.getResearchEmployeeData();
 		}
 	}
 

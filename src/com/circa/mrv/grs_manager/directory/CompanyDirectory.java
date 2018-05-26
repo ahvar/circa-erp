@@ -312,5 +312,51 @@ public class CompanyDirectory {
 		}
 		return false;
 	}
+	
+	/**
+	 * Returns string array with research company employee data.
+	 * @return employees the research employees
+	 */
+	public String[][] getResearchEmployeeData() {
+		int p = 0;
+		String [][] employees = new String[companyDirectory.size()][4];
+		for(int i = 0; i < companyDirectory.size(); i++) {
+			if(companyDirectory.get(i) instanceof ResearchCompany) {
+			  for(int j = 0; j < companyDirectory.get(i).getLocations().size();j++) {
+				  for(int k = 0; k < companyDirectory.get(i).getLocations().get(j).getEmployees().size(); k++ ) {
+					  employees[p][0] = companyDirectory.get(i).getLocations().get(j).getEmployees().get(k).getFirstName();
+					  employees[p][1] = companyDirectory.get(i).getLocations().get(j).getEmployees().get(k).getLastName();
+					  employees[p][2] = companyDirectory.get(i).getLocations().get(j).getEmployees().get(k).getId();
+					  employees[p][3] = companyDirectory.get(i).getLocations().get(j).getEmployees().get(k).getEmail();
+					  p++;
+				  }
+			  }
+			}
+		}
+		return employees;
+	}
+	
+	/**
+	 * Returns string array with vendor company employee data.
+	 * @return employees the research employees
+	 */
+	public String[][] getVendorEmployeeData() {
+		int p = 0;
+		String [][] employees = new String[companyDirectory.size()][4];
+		for(int i = 0; i < companyDirectory.size(); i++) {
+			if(companyDirectory.get(i) instanceof VendorCompany) {
+			  for(int j = 0; j < companyDirectory.get(i).getLocations().size();j++) {
+				  for(int k = 0; k < companyDirectory.get(i).getLocations().get(j).getEmployees().size(); k++ ) {
+					  employees[p][0] = companyDirectory.get(i).getLocations().get(j).getEmployees().get(k).getFirstName();
+					  employees[p][1] = companyDirectory.get(i).getLocations().get(j).getEmployees().get(k).getLastName();
+					  employees[p][2] = companyDirectory.get(i).getLocations().get(j).getEmployees().get(k).getId();
+					  employees[p][3] = companyDirectory.get(i).getLocations().get(j).getEmployees().get(k).getEmail();
+					  p++;
+				  }
+			  }
+			}
+		}
+		return employees;
+	}
 
 }

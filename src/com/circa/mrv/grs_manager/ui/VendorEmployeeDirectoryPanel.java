@@ -437,7 +437,7 @@ public class VendorEmployeeDirectoryPanel extends JPanel implements ActionListen
 		/** ID number used for object serialization. */
 		private static final long serialVersionUID = 1L;
 		/** Column names for the table */
-		private String [] columnNames = {"First Name", "Last Name", "Employee ID"};
+		private String [] columnNames = {"First Name", "Last Name", "Employee ID", "Employee Email"};
 		/** Data stored in the table */
 		private Object [][] data;
 		
@@ -500,7 +500,8 @@ public class VendorEmployeeDirectoryPanel extends JPanel implements ActionListen
 		 * Updates the given model with {@link Product} information from the {@link VendorDirectory}.
 		 */
 		public void updateData() {
-			data = userDirectory.getEmployeeDirectory();
+			
+			data = companyDirectory.getVendorEmployeeData();
 		}
 	}
 
