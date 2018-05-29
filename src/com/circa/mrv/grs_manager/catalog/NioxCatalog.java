@@ -55,18 +55,42 @@ public class NioxCatalog {
 	}
 	
 	/**
-	 * Adds a product to the catalog if the name and part number of the product to be added does not match one of the 
-	 * products in the catalog. If the product exists on the catalog, the new course is not added.
+	 * Adds a product to the catalog if it does not already exist. 
+	 * If the product exists on the catalog, the product is not added and the method
+	 * returns false.
 	 *  
-	 * @param name the name of the product to add
+	 * @param family the product family
 	 * @param description the description of the product to add
 	 * @param partNumber the partNumber of the product to add
 	 * @param price the price of the product to add
 	 * @return true if the product is added to the catalog
 	 */
-	public boolean addProductToCatalog(String name, String description, String partNumber, double price) {
+	public boolean addProductToCatalog(String fam, String description, String partNumber, double price) {
 			
-		Product c = new Component(name, description, partNumber, price);
+		Product c = new Component(fam, description, partNumber, price);
+			
+		for (int i = 0 ; i < catalog.size(); i++) {
+			if( catalog.get(i).equals(c) )
+				return false;
+	
+		}
+		catalog.add(c);
+		return true;
+	}
+	
+	/**
+	 * Adds a product to the catalog if it does not already exist. 
+	 * If the product exists on the catalog, product is not added at the method returns false.
+	 *  
+	 * @param family the product family
+	 * @param description the description of the product to add
+	 * @param partNumber the partNumber of the product to add
+	 * @param price the price of the product to add
+	 * @return true if the product is added to the catalog
+	 */
+	public boolean addProductToCatalog(String fam, String description, String partNumber, String price) {
+			
+		Product c = new Component(fam, description, partNumber, price);
 			
 		for (int i = 0 ; i < catalog.size(); i++) {
 			if( catalog.get(i).equals(c) )

@@ -133,19 +133,24 @@ public abstract class Product {
 	public void setPrice(double p) { price = p; }
 	
 	/**
-	 * Sets the price for this product to the value passed in by 'p'.
+	 * Returns the price
 	 * @param p the price for the product.
 	 */
-	public void setPrice(String p) {
-		Double d = Double.parseDouble(p);
-		price = d; 
+	public Double getPrice() {
+		return this.price;
 	}
 	
 	/**
-	 * Returns the price for this product
-	 * @return price the price
+	 * Sets the price for this product to the value passed in by 'p'.
+	 * @param p the price for the product.
 	 */
-	public double getPrice() { return price; }
+	public void setPrice(String p) { 
+		if(p == null || p.equals("null") || p.equals(""))
+			throw new IllegalArgumentException("No price for this item");
+		Double price = Double.parseDouble(p);
+		this.price = price; 
+	}
+
 	
 	/**
 	 * Generates and returns an array with two strings representing the partNumber and the product

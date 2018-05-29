@@ -27,9 +27,9 @@ public class Component extends Product implements Consumable {
 	public static final String MISC_ID_ERROR = "Miscellaneous ID Error";
 	
 	/**
-	 * Constructs a component with a description, part number, price, package date, serial number, and product
-	 * generation.
-	 * 
+	 * Constructs a component with a miscID, part-number, product family, product generation, product description,
+	 * price, and notes.
+	 * @param miscID the miscellaneous ID number
 	 * @param family the product family
 	 * @param desc the description of the component
 	 * @param pn the part number
@@ -38,12 +38,35 @@ public class Component extends Product implements Consumable {
 	 * @param serial the serial number
 	 * @param generation the product generation
 	 */
-	public Component(String family, String desc, String pn, double p, Calendar packageDate, long serial, String generation) {
-		this(family, desc, pn, p);
-		setPackageDate(packageDate);
-		setSerial(serial);
-		setGeneration(generation);
+	public Component(String miscID, String pn, String family, String gen, String desc, String price, String note) {
+		this(family, desc, pn, price);
+		
+		setGeneration(gen);
+		setMiscIDNumber(miscID);
+		setNote(note);
 	}
+	
+	/**
+	 * Constructs a component with a family, description, part number, price, package date, serial number, and product
+	 * generation.
+	 * @param miscID the miscellaneous ID number
+	 * @param family the product family
+	 * @param desc the description of the component
+	 * @param pn the part number
+	 * @param p the price
+	 * @param packageDate the package date
+	 * @param serial the serial number
+	 * @param generation the product generation
+	 */
+	public Component(String family, String desc, String pn, double price, String gen, long serial, Calendar packageDate) {
+		this(family, gen, desc, price);
+		setPartNumber(pn);
+		setMiscIDNumber(0);
+		setSerial(serial);
+		setPackageDate(packageDate);
+	}
+	
+
 	
 	/**
 	 * Constructs a component with a description, part number, price, package date, serial number, and product
@@ -53,8 +76,9 @@ public class Component extends Product implements Consumable {
 	 * @param pn the part number
 	 * @param p the price
 	 */
-	public Component(String family, String desc, String pn, double p) {
-		this(family, desc, pn);
+	public Component(String family, String desc, String pn, String p) {
+		super(family, desc, pn);
+		System.out.println("component");
 		setPrice(p);
 		setPackageDate(null);
 		setSerial(0);
@@ -68,11 +92,25 @@ public class Component extends Product implements Consumable {
 	 * @param gen the product generation
 	 */
 	public Component(String fam, String gen, String desc) {
-		super(fam, desc);
+		this(fam, desc);
 		setGeneration(gen);
 		setPackageDate(null);
 		setSerial(0);
-		setGeneration(null);
+	}
+	
+	/**
+	 * Constructs a component with a name, generation, description
+	 * @param family the product family
+	 * @param desc the description of the component
+	 * @param gen the product generation
+	 * @param price the price of this component
+	 */
+	public Component(String fam, String gen, String desc, double price) {
+		this(fam, desc);
+		setGeneration(gen);
+		setPackageDate(null);
+		setSerial(0);
+		setPrice(price);
 	}
 	
 	/**
@@ -80,6 +118,8 @@ public class Component extends Product implements Consumable {
 	 */
 	public Component(String fam, String desc) {
 		super(fam,desc);
+		setMiscIDNumber(0);
+		
 	}
 	/**
 	 * Default constructor for Component 
@@ -180,10 +220,10 @@ public class Component extends Product implements Consumable {
 	 * Sets the miscellaneous ID number data field to number parameter. If number parameter is <= 0 an 
 	 * IllegalArgumentException is thrown.
 	 * @param number the miscellaneous ID number
-	 * @throws IllegalArgumentException if the number is <=0
+	 * @throws IllegalArgumentException if the number is < 0
 	 */
 	public void setMiscIDNumber(long number) {
-		if( number <= 0 )
+		if( number < 0 )
 			throw new IllegalArgumentException(MISC_ID_ERROR);
 		miscIDNumber = number;
 	}
@@ -192,11 +232,11 @@ public class Component extends Product implements Consumable {
 	 * Sets the miscellaneous ID number data field to number parameter. If number parameter is <= 0 an 
 	 * IllegalArgumentException is thrown.
 	 * @param number the miscellaneous ID number
-	 * @throws IllegalArgumentException if the number is <=0
+	 * @throws IllegalArgumentException if the number is < 0
 	 */
 	public void setMiscIDNumber(String number) {
 		Long l = Long.parseLong(number);
-		if( l <= 0 )
+		if( l < 0 || l == null)
 			throw new IllegalArgumentException(MISC_ID_ERROR);
 		miscIDNumber = l;
 	}

@@ -579,7 +579,7 @@ public class ProductCatalogPanel extends JPanel implements ActionListener {
 		 * Updates the given model with {@link NIOX} information from the {@link NioxCatalog}.
 		 */
 		public void updateData() {
-			data = GRSManager.getInstance().getNioxCatalog().getNioxCatalog();
+			data = catalog.getNioxCatalog();
 		}
 	}
 

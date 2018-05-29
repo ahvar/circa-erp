@@ -36,14 +36,22 @@ public class ProductRecordIO {
 	 */
 	public static LinkedListRecursive<Product> readProductRecords(String fileName) throws FileNotFoundException {
 		Scanner fileReader = new Scanner(new File(fileName));
+		//while(fileReader.hasNextLine())
+			//System.out.println(fileReader.nextLine());
 		LinkedListRecursive<Product> products = new LinkedListRecursive<Product>();
+		String line = null;
 		while (fileReader.hasNextLine()) {
-			try {
-				products.add( ProductRecordIO.readLine( fileReader.nextLine() ) ); 
 			
+			line = fileReader.nextLine();
+			
+			try {
+				
+				products.add( ProductRecordIO.readLine( line ) ); 
+				
 			} catch (IllegalArgumentException e) {
 				throw new IllegalArgumentException(e.getMessage());
 			}
+			
 		}
 		fileReader.close();
 		return products;
@@ -57,52 +65,17 @@ public class ProductRecordIO {
 	 * @throws IllegalArgumentException if the parameters are not in the correct order or if there
 	 * is an incorrect number of parameters.
 	 */
-	private static Product readLine(String nextLine) throws IllegalArgumentException {
+	public static Product readLine(String nextLine) throws IllegalArgumentException {
 		Scanner scan = new Scanner(nextLine);
-		String token = "";
-		Component c = new Component(Product.DEFAULT_PRODUCT_FAMILY,Product.DEFAULT_PRODUCT_DESCRIPTION);
+		System.out.println(nextLine);
 		scan.useDelimiter(",");
-		while(scan.hasNext()) {
-			token = scan.next();
-			
-			try {
-				
-				if( c.getMiscIDNumber() == 0  && ProductRecordIO.verifyCharacters(token) && c.getMiscIDNumber() != 1) {
-					
-					c.setMiscIDNumber(token);
-				} else if( token.contains("-") && Character.isDigit(token.charAt(0)) && Character.isDigit(token.charAt(1)) &&
-						c.getPartNumber().equals(Product.DEFAULT_PRODUCT_PART_NUMBER) )  {
-			
-					c.setPartNumber(token);
-				} else if(token.equals("NIOX") && c.getFamily().equals(Product.DEFAULT_PRODUCT_FAMILY)) { 
-				
-					c.setFamily(token);
-				} else if (token.equals("MINO") || token.equals("VERO")) { 
-					
-					c.setGeneration(token);
-				} else if( ProductRecordIO.attemptPriceParse(token) && c.getPrice() == 0 ) { 
-					
-					c.setPrice(Double.parseDouble(token));
-				} else if( c.getDescription().equals(Product.DEFAULT_PRODUCT_DESCRIPTION)  ) {
-					
-					c.setDescription(token);
-				} else if ( !c.getDescription().equals(Product.DEFAULT_PRODUCT_DESCRIPTION) && (c.getNote() == null || c.getDescription().equals("") ) ) {
-					c.setNote(token);
-				} else throw new IllegalArgumentException("error");
-				
-
-			} catch (IllegalArgumentException e) {
-				if(e.getMessage().equals(Component.MISC_ID_ERROR)) 
-					c.setMiscIDNumber(1);
-				else  if (e.getMessage().equals(Component.PART_NUMBER_ERROR)) 
-					c.setPartNumber(" ");
-				else if (e.getMessage().equals(Component.PRODUCT_FAMILY_ERROR)) 
-					c.setFamily("NIOX");
-				 else throw new IllegalArgumentException(e.getMessage());
-			} 
+		try {
+			Component c = new Component(scan.next(),scan.next(),scan.next(),scan.next(),scan.next(),scan.next(),scan.next());
+			scan.close();
+			return c;
+		} catch (IllegalArgumentException iae) {
+			throw new IllegalArgumentException(iae.getMessage());
 		}
-		scan.close();
-		return c;
 		
 	}
 

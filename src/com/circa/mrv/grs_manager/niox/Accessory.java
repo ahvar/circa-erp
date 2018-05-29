@@ -3,14 +3,14 @@ package com.circa.mrv.grs_manager.niox;
 import java.util.Calendar;
 
 /**
- * The accessory class extends the Component class and implements the Expiration interface. A accessory's expiration
+ * The accessory class extends the Component class and implements the Consumable interface. A accessory's expiration
  * can be calculated in two ways: 
  * 
  * 1.) based on the package date 
  * 2.) based on the date the accessory is installed into a Niox monitor. 
  * 
  * The date of installation is defined by the instance variable 'install'
- * A accessory contains a certain number of tests which is defined by the instance variable 'size'.
+ * An accessory contains a certain number of tests which is defined by the instance variable 'size'.
  * 
  * @author Arthur Vargas
  *
@@ -22,10 +22,10 @@ public class Accessory extends Component implements Consumable {
 	private Calendar install;
     
 	/**
-	 * Constructs an instance of accessory with a description (e.g. Test Kit 100), a part number, a price, and the 
+	 * Constructs an instance of accessory with a family, description (e.g. Test Kit 100), a part number, a price, and the 
 	 * number of tests the accessory contains.
 	 * 
-	 * @param name the name of the accessory
+	 * @param family the product family for the accessory
 	 * @param description the accessory description
 	 * @param partNumber the accessory part number
 	 * @param price the price of the accessory
@@ -35,9 +35,9 @@ public class Accessory extends Component implements Consumable {
 	 * @param generation the product generation
 	 * @param size the number of tests on the accessory
 	 */
-	public Accessory(String name, String description, String partNumber, double price, long serial, Calendar packageDate, 
+	public Accessory(String family, String description, String partNumber, double price, long serial, Calendar packageDate, 
 			Calendar installDate, String generation, int size) {
-		super(name, description,partNumber, price, packageDate,serial,generation);
+		super(family, description,partNumber, price, generation,serial,packageDate);
 		setSize(size);
 		setInstall(install);
 	}
