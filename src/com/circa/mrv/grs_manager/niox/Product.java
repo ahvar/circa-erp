@@ -26,6 +26,8 @@ public abstract class Product {
 	public static final String DEFAULT_PRODUCT_FAMILY = "Family";
 	/** Default String for product part number data field */
 	public static final String DEFAULT_PRODUCT_PART_NUMBER = "Part-Number";
+	/** Error msg for missing miscellaneous ID number */
+	public static final String LESS_THAN_ZERO = "Value cannot be less than 0";
 	
 	/**
 	 * Niox is constructed from a description, part number, and price for the product.
@@ -99,9 +101,9 @@ public abstract class Product {
 	 */
 	public void setDescription(String d) {
 	
-		if (d == null || d.isEmpty()) {
-			throw new IllegalArgumentException("Invalid description.");
-		}
+		//if (d == null || d.isEmpty()) {
+			//throw new IllegalArgumentException("Invalid description.");
+		//}
 	
 		this.description = d;
 	}
@@ -115,8 +117,8 @@ public abstract class Product {
 	 * @throws IllegalArgumentException if pn parameter is null
 	 */
 	public void setPartNumber(String pn) {
-		if( pn == null || pn.equals("") ) 
-			throw new IllegalArgumentException(PART_NUMBER_ERROR);
+		//if( pn == null || pn.equals("") ) 
+			//throw new IllegalArgumentException(PART_NUMBER_ERROR);
 		partNumber = pn; 
 	}
     
@@ -141,14 +143,31 @@ public abstract class Product {
 	}
 	
 	/**
-	 * Sets the price for this product to the value passed in by 'p'.
+	 * Sets the price for this product to the value passed in by 'p'. If there is a problem parsing the value
+	 * or if the parsed value is less than 0, an IllegalArgumentException is thrown.
 	 * @param p the price for the product.
+	 * @throws IllegalArgumentException if the 'p' parameter is invalid
 	 */
 	public void setPrice(String p) { 
-		if(p == null || p.equals("null") || p.equals(""))
-			throw new IllegalArgumentException("No price for this item");
-		Double price = Double.parseDouble(p);
-		this.price = price; 
+		if(p.equals("") || p == null || p.equals("null")) {
+			price = 0;
+		} else {
+			if(0 < Double.parseDouble(p)) price = Double.parseDouble(p);
+			else price = 0;
+		}/*
+		try {
+			Double d = Double.parseDouble(p);
+			if( d < 0 ) {
+				this.price = 0;
+				System.out.println("price is less than zero" + " " + price);
+				throw new IllegalArgumentException(LESS_THAN_ZERO);
+			}
+			this.price = d;
+		} catch (Exception pe) {
+			this.price = 0;
+			System.out.println("problem parsing" + " " + price);
+			throw new IllegalArgumentException(pe.getMessage());
+		}*/
 	}
 
 	

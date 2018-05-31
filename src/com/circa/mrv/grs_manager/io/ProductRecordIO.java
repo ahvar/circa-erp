@@ -35,7 +35,8 @@ public class ProductRecordIO {
 	 *             
 	 */
 	public static LinkedListRecursive<Product> readProductRecords(String fileName) throws FileNotFoundException {
-		Scanner fileReader = new Scanner(new File(fileName));
+		File file = new File(fileName);
+		Scanner fileReader = new Scanner(file);
 		//while(fileReader.hasNextLine())
 			//System.out.println(fileReader.nextLine());
 		LinkedListRecursive<Product> products = new LinkedListRecursive<Product>();
@@ -67,17 +68,31 @@ public class ProductRecordIO {
 	 */
 	public static Product readLine(String nextLine) throws IllegalArgumentException {
 		Scanner scan = new Scanner(nextLine);
-		System.out.println(nextLine);
+		String[] data = new String[7];
+		String word = null;
+		Component c = null;
 		scan.useDelimiter(",");
 		try {
-			Component c = new Component(scan.next(),scan.next(),scan.next(),scan.next(),scan.next(),scan.next(),scan.next());
-			scan.close();
-			return c;
-		} catch (IllegalArgumentException iae) {
-			throw new IllegalArgumentException(iae.getMessage());
+		for(int i = 0;scan.hasNext();i++) {
+			
+			word = scan.next();
+			if(word != null && !word.equals("")) {
+				data[i] = word;
+			} else {
+				data[i] = "no value";
+			}
+			System.out.println(data[i] + " " + i);
+		}
+		c = new Component(data[0],data[1],data[2],data[3],data[4],data[5],data[6]);
+		scan.close();
+		} catch (Exception e) {
+			System.out.println("An Exception was caught: " + e.getMessage());
 		}
 		
+		return c;
 	}
+	
+	
 
 	/**
 	 * If the line contains

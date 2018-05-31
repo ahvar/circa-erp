@@ -3,6 +3,7 @@
  */
 package com.circa.mrv.grs_manager.niox;
 
+import java.text.ParseException;
 import java.util.Calendar;
 
 /**
@@ -23,8 +24,6 @@ public class Component extends Product implements Consumable {
 	private String generation;
 	/** Notes about this specific component */
 	private String note;
-	/** Error msg for missing miscellaneous ID number */
-	public static final String MISC_ID_ERROR = "Miscellaneous ID Error";
 	
 	/**
 	 * Constructs a component with a miscID, part-number, product family, product generation, product description,
@@ -78,7 +77,7 @@ public class Component extends Product implements Consumable {
 	 */
 	public Component(String family, String desc, String pn, String p) {
 		super(family, desc, pn);
-		System.out.println("component");
+	
 		setPrice(p);
 		setPackageDate(null);
 		setSerial(0);
@@ -223,22 +222,38 @@ public class Component extends Product implements Consumable {
 	 * @throws IllegalArgumentException if the number is < 0
 	 */
 	public void setMiscIDNumber(long number) {
-		if( number < 0 )
-			throw new IllegalArgumentException(MISC_ID_ERROR);
+		//if( number < 0 )
+			//throw new IllegalArgumentException(MISC_ID_ERROR);
 		miscIDNumber = number;
 	}
 	
 	/**
-	 * Sets the miscellaneous ID number data field to number parameter. If number parameter is <= 0 an 
-	 * IllegalArgumentException is thrown.
+	 * Sets the miscellaneous ID number data field to number parameter. If number parameter is < 0 or 
+	 * there is a problem parsing the long value, an IllegalArgumentException is thrown.
 	 * @param number the miscellaneous ID number
 	 * @throws IllegalArgumentException if the number is < 0
 	 */
 	public void setMiscIDNumber(String number) {
-		Long l = Long.parseLong(number);
-		if( l < 0 || l == null)
-			throw new IllegalArgumentException(MISC_ID_ERROR);
-		miscIDNumber = l;
+		if(number.equals("") || number == null || number.equals("null")) {
+			miscIDNumber = 0;
+		} else {
+			if(0 < Long.parseLong(number)) miscIDNumber = Long.parseLong(number);
+			else miscIDNumber = 0;
+		}
+		/*
+		try {
+			Long l = Long.parseLong(number);
+			if( l < 0 ) {
+				miscIDNumber = 0;
+				System.out.println("miscID less than 0" + " " + miscIDNumber);
+				throw new IllegalArgumentException(Product.LESS_THAN_ZERO);
+			}
+			miscIDNumber = l;
+		} catch (Exception pe) {
+			miscIDNumber = 0;
+			System.out.println("problem parsing miscID" + " " + miscIDNumber);
+			throw new IllegalArgumentException(pe.getMessage());
+		}*/
 	}
 
 	/**

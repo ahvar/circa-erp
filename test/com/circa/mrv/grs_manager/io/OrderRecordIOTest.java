@@ -18,7 +18,7 @@ import com.circa.mrv.grs_manager.util.LinkedListRecursive;
  */
 public class OrderRecordIOTest {
 	/** Test order records */
-	private static final String orderRecordFileName = "test-files/order-record-test/order-records.txt";
+	private static final String orderRecordFileName = "test-files/order-record-test/order-records";
 	/** Study id 006155 */
 	private static final String study0011655 = "0011655";
 	/** Study id 145986 */
@@ -28,9 +28,9 @@ public class OrderRecordIOTest {
 	/** Number of order records */
 	private static final int orderRecordCount = 7;
 	/** Total number of order record columns */
-	private static final int orderRecordColumns = 53;
+	private static final int orderRecordColumns = 54;
 	/** Test order record titles */
-	private static final String orderRecordTitleFileName = "test-files/order-record-test/titles.txt";
+	private static final String orderRecordTitleFileName = "test-files/order-record-test/titles";
 
 	/**
 	 * Test method for {@link com.circa.mrv.grs_manager.io.OrderRecordIO#readOrderRecord(java.lang.String, java.lang.String[][], com.circa.mrv.grs_manager.util.LinkedListRecursive, int)}.
@@ -42,7 +42,7 @@ public class OrderRecordIOTest {
 		try {
 			OrderRecordIO.readOrderRecord(orderRecordFileName,orders,ptList,orderRecordColumns);
 		} catch (IOException ioe) {
-			fail();
+			fail(ioe.getMessage());
 			if(ioe instanceof FileNotFoundException) throw new FileNotFoundException(ioe.getMessage());
 			else throw new IllegalArgumentException(ioe.getMessage());
 			
@@ -80,7 +80,7 @@ public class OrderRecordIOTest {
 		try {
 			OrderRecordIO.readOrderTitles(orderRecordTitleFileName, titles, ptList);
 		} catch (IOException e) {
-			fail();
+			fail(e.getMessage());
 		}
 	}
 
