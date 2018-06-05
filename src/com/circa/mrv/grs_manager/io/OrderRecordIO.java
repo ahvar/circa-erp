@@ -7,14 +7,13 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.PrintStream;
-import java.io.PrintWriter;
-import java.util.ArrayList;
+import java.io.StringReader;
+import java.util.Scanner;
 
 import com.circa.mrv.grs_manager.catalog.NioxCatalog;
-import com.circa.mrv.grs_manager.document.Order;
+
 import com.circa.mrv.grs_manager.manager.GRSManager;
-import com.circa.mrv.grs_manager.util.LinkedAbstractList;
+
 import com.circa.mrv.grs_manager.util.LinkedListRecursive;
 
 /**
@@ -32,6 +31,7 @@ public class OrderRecordIO {
 	private static final String FAMILY_DEFAULT = "family";
 	private static final String GENERATION_DEFAULT = "generation";
 	private static final String DESCRIPTION_DEFAULT = "description";
+	private static final String EXPIRATION_DATE = "expiration date";
 
 	
 	/**
@@ -42,7 +42,7 @@ public class OrderRecordIO {
 	 * @return students a list of 
 	 * @throws FileNotFoundException if the file is not found at given location
 	 */
-	public static void readOrderRecord(String filename, String [][] orders, LinkedListRecursive<ProductTitle> pt, int lastCol) throws FileNotFoundException, IOException {
+	public static void readOrderRecord(String filename, String [][] orders,LinkedListRecursive<ProductTitle> pt, int lastCol) throws FileNotFoundException, IOException {
 		
 		char delim = 0;
     	StringBuilder segment = new StringBuilder();
@@ -212,32 +212,47 @@ public class OrderRecordIO {
 	 * 
 	 * @param title the order record title
 	 * @return pt the ProductTitle
+	 * @throws IOException 
 	 */
-	private static ProductTitle matchProductTitle(String title) {
-		String gen = null; String fam = null; String desc = null; 
+	private static ProductTitle matchProductTitle(String title) throws IOException {
+		String gen = null; String desc = null; String fam = null;
+		String noWSTitle = OrderRecordIO.removeWhiteSpace(title);
+		noWSTitle = noWSTitle.toLowerCase();
+		//System.out.println(noWSTitle);
+		if(noWSTitle.contains(NioxCatalog.NIOX)) fam = NioxCatalog.NIOX;
+		if(noWSTitle.contains(NioxCatalog.VERO)) gen = NioxCatalog.VERO;
+		else if(noWSTitle.contains(NioxCatalog.MINO)) gen = NioxCatalog.MINO;
 		
-		title = title.toLowerCase();
-		//System.out.println("title: " + title);
-		for(int i = 0;i < GRSManager.getInstance().getNioxCatalog().NAMES.length;i++) {
-			if(title.contains(OrderRecordIO.NIOX_LOWER)) fam = OrderRecordIO.NIOX_LOWER;
-			if(title.contains(OrderRecordIO.VERO_LOWER)) gen = OrderRecordIO.VERO_LOWER;
-			else if(title.contains(OrderRecordIO.MINO_LOWER)) gen = OrderRecordIO.MINO_LOWER;
-		}
-		
-		for(int i = 0;i < GRSManager.getInstance().getNioxCatalog().DESCRIPTIONS.length;i++) {
-			
-			if(title.contains(GRSManager.getInstance().getNioxCatalog().DESCRIPTIONS[i]) ) {
-				desc = NioxCatalog.DESCRIPTIONS[i];
-				
-				break;
+		for(int i = 0;i < NioxCatalog.DESCRIPTIONS.length;i++) {
+	
+			if(noWSTitle.contains(NioxCatalog.DESCRIPTIONS[i])) {
+				if(desc == null) 
+					desc = NioxCatalog.DESCRIPTIONS[i] + " ";
+				else 
+					desc = desc + NioxCatalog.DESCRIPTIONS[i] + " "; 
 			}
+	
 		}
+		ProductTitle pt = null;
+		System.out.println(fam + " " + gen + " " + desc);
+		if(desc != null)
+			pt = new ProductTitle(gen,fam,desc);
+		return pt;
 		
-		if(gen != null && fam != null && desc != null) {
-			ProductTitle pt = new ProductTitle(gen,fam,desc);
-			return pt;
-		}
-		return null;
+	}
+	
+	
+	private static String removeWhiteSpace(String title) throws IOException {
+		//System.out.println("NEW TITLE" + '\n');
+		Scanner scan = new Scanner(title);
+		String newTitle = "";
+		while(scan.hasNext())
+			if(newTitle.isEmpty()) newTitle = scan.next() + " ";
+			else newTitle = newTitle + scan.next() + " ";
+		//System.out.println(newTitle);
+		//System.out.println(newTitle.length() + '\n');
+		scan.close();
+		return newTitle;
 	}
 
 }

@@ -8,34 +8,10 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 /**
- * @author ahvar
- *
+ * Tests GRSManager
+ * @author Arthur Vargas
  */
 public class GRSManagerTest {
-
-	/**
-	 * Test method for {@link com.circa.mrv.grs_manager.manager.GRSManager#getInstance()}.
-	 */
-	@Test
-	public void testGetInstance() {
-		fail("Not yet implemented");
-	}
-
-	/**
-	 * Test method for {@link com.circa.mrv.grs_manager.manager.GRSManager#getNioxCatalog()}.
-	 */
-	@Test
-	public void testGetNioxCatalog() {
-		fail("Not yet implemented");
-	}
-
-	/**
-	 * Test method for {@link com.circa.mrv.grs_manager.manager.GRSManager#getOrderRecord()}.
-	 */
-	@Test
-	public void testGetOrderRecord() {
-		fail("Not yet implemented");
-	}
 
 	/**
 	 * Test method for {@link com.circa.mrv.grs_manager.manager.GRSManager#login(java.lang.String, java.lang.String)}.

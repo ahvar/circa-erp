@@ -162,26 +162,27 @@ public class OrderRecord {
 	 * @throws IOException if there is a problem reading the file
 	 */
 	public String[][] getShortOrderInfo() throws NullPointerException, IOException {
-		System.out.println("ENTER getShortOrderInfo" + '\n');
+		//System.out.println("ENTER getShortOrderInfo" + '\n');
 		//BufferedReader br = new BufferedReader(new FileReader(RECORDS_NO_PRODUCT_TITLES));
 		//Scanner scan;
 		//String line = br.readLine(); //blank
 		//line = br.readLine(); //titles
 		//String record = "";
 		String[][] shortOrderRecord = new String[unformattedRecords.length][11];
+		int shortOrderRow = 0;
 		for(int row = 1; row < unformattedRecords.length; row++) {
-			shortOrderRecord[row][0] = unformattedRecords[row][0]; //study
-			shortOrderRecord[row][1] = unformattedRecords[row][1]; //site
-			shortOrderRecord[row][2] = unformattedRecords[row][33]; //city
-			shortOrderRecord[row][3] = unformattedRecords[row][34]; //country
-			shortOrderRecord[row][4] = unformattedRecords[row][48]; //PO Number
-			shortOrderRecord[row][5] = unformattedRecords[row][47]; //Note
-			shortOrderRecord[row][6] = unformattedRecords[row][39]; //Email
-			shortOrderRecord[row][7] = unformattedRecords[row][41]; //Date
-			shortOrderRecord[row][8] = unformattedRecords[row][35]; //State
-			shortOrderRecord[row][9] = unformattedRecords[row][36]; //Phone
-			shortOrderRecord[row][10] = unformattedRecords[row][37];//Fax
-			
+			shortOrderRecord[shortOrderRow][0] = unformattedRecords[row][0]; //study
+			shortOrderRecord[shortOrderRow][1] = unformattedRecords[row][1]; //site
+			shortOrderRecord[shortOrderRow][2] = unformattedRecords[row][33]; //city
+			shortOrderRecord[shortOrderRow][3] = unformattedRecords[row][34]; //country
+			shortOrderRecord[shortOrderRow][4] = unformattedRecords[row][48]; //PO Number
+			shortOrderRecord[shortOrderRow][5] = unformattedRecords[row][47]; //Note
+			shortOrderRecord[shortOrderRow][6] = unformattedRecords[row][39]; //Email
+			shortOrderRecord[shortOrderRow][7] = unformattedRecords[row][41]; //Date
+			shortOrderRecord[shortOrderRow][8] = unformattedRecords[row][35]; //State
+			shortOrderRecord[shortOrderRow][9] = unformattedRecords[row][36]; //Phone
+			shortOrderRecord[shortOrderRow][10] = unformattedRecords[row][37];//Fax
+			shortOrderRow++;
 		}
 		//br.close();
 		return shortOrderRecord;
@@ -272,7 +273,7 @@ public class OrderRecord {
 	 * @param column the column of the title 
 	 * @return true if the column is within the range of product titles
 	 */
-	private boolean isProductTitle(int column) {
+	public boolean isProductTitle(int column) {
 		if( first <= column && column <= last) 
 			return true;
 		return false;
@@ -340,12 +341,13 @@ public class OrderRecord {
 	}
 	
 	/**
-	 * Converts all the String representations of order records into Orders and puts them in a list. 
-	 * Uses the first/last data fields to locate the product title that corresponds to the location 
-	 * currently begin read in the order record array. If digit x is at this location in the order record 
-	 * array then then the product family, generation, and description contained in the product title are 
-	 * used to create x number of products. Throws an IlleglArgumentException if there is a problem
-	 * parsing date strings from the order record array.
+	 * Beginning with the second row, this method iterates over the order record array and constructs an Order 
+	 * from the data in each column of the row. The column titles are listed in the first row and within this 
+	 * list exist product titles, which are a consecutive set of titles that correspond to a product that the 
+	 * customer can order. In each of the following rows, integers in the product title columns indicate which 
+	 * and how many products were selected. Using OrderRecord’s “first” and “last” instance variables, which 
+	 * were set when the order record titles were read into the program, updateOrderList() can determine the 
+	 * beginning and ending titles on the upper and lower bounds of the product title range.
 	 * 
 	 * @throws IlleglArgumentException if date strings cannot be parsed
 	 */
@@ -353,6 +355,9 @@ public class OrderRecord {
 		Order o = null;
 		// loop for rows in the record array
 		for(int row = 1; row < unformattedRecords.length; row++) {
+			// rows without study numbers, site numbers, and location are skipped
+			if(unformattedRecords[row][0] == null && unformattedRecords[row][1] == null && unformattedRecords[row][2] == null)
+				continue;
 			
 			if(row == 1) {
 				o = new Order(00001);
@@ -360,7 +365,7 @@ public class OrderRecord {
 				o = new Order(getLastOrder().getNumber() + 1 ); 
 			}
 			
-			// loop for the product title range
+			// loop for the product title range to see which products were ordered
 			for(int col = first; col <= last; col++) {
 				
 				if(unformattedRecords[row][col] != null) {
@@ -382,16 +387,19 @@ public class OrderRecord {
 				}
 					
 			}
+			
 			o.setStudy(unformattedRecords[row][0]);
 			o.setSite(unformattedRecords[row][1]);
 			o.setPo(unformattedRecords[row][48]);
 			try {
-				o.setCreation(getCalendarFromString(unformattedRecords[row][41]));
+				if(unformattedRecords[row][41] != null)
+					o.setCreation(getCalendarFromString(unformattedRecords[row][41]));
 			} catch (ParseException e) {
 				throw new IllegalArgumentException(e.getMessage() + " OrderRecord.updateOrderList()");
 			}
 			orderRecordList.add(o);
 		}
+		
 	}
 	
 	/**
@@ -439,6 +447,7 @@ public class OrderRecord {
 		String[] studies = null;
 		try {
 		  ArrayList<String> studyList = new ArrayList<String>();
+		  studyList.add(unformattedRecords[1][0]);
 		  String study = unformattedRecords[1][0];
 		  for(int row = 2; row < unformattedRecords.length; row++) {
 			  if(!study.equals(unformattedRecords[row][0])) {
@@ -514,6 +523,14 @@ public class OrderRecord {
 	 */
 	public int getOpenOrderCount() {
 		return open;
+	}
+	
+	/**
+	 * Return list of product titles
+	 * @return list list of product titles
+	 */
+	public LinkedListRecursive<ProductTitle> getProductTitles() {
+		return productTitlesList;
 	}
 	
 			

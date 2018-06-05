@@ -81,7 +81,7 @@ public class ProductRecordIO {
 			} else {
 				data[i] = "no value";
 			}
-			System.out.println(data[i] + " " + i);
+			//System.out.println(data[i] + " " + i);
 		}
 		c = new Component(data[0],data[1],data[2],data[3],data[4],data[5],data[6]);
 		scan.close();

@@ -5,6 +5,8 @@ package com.circa.mrv.grs_manager.catalog;
 
 import static org.junit.Assert.*;
 
+import java.io.IOException;
+
 import org.junit.Test;
 
 /**
@@ -14,10 +16,18 @@ import org.junit.Test;
 public class OrderRecordTest {
 	/** The filename for order records */
 	private static final String orderRecordFile = "test-files/order-record-test/order-records";
+	/** The filename for order record titles */
+	private static final String orderRecordTitles = "test-files/order-record-test/titles";
+	/** Order count */
+	private int orderCount = 7;
+	/** ProductTitle count */
+	private int ptCount = 22;
+	/** Column count */
+	private int columnCount = 52;
 	
 	
 	/**
-	 * Test method for {@link com.circa.mrv.grs_manager.catalog.OrderRecord#OrderRecord()}.
+	 * Tests OrderRecord constructor
 	 */
 	@Test
 	public void testOrderRecord() {
@@ -27,49 +37,51 @@ public class OrderRecordTest {
 		assertEquals(or.getFirst(),0);
 		assertEquals(or.getLast(),0);
 		assertEquals(or.getOpenOrderCount(),0);
-		
-		
 	}
 
 	/**
-	 * Test method for {@link com.circa.mrv.grs_manager.catalog.OrderRecord#newOrderRecord()}.
-	 */
-	@Test
-	public void testNewOrderRecord() {
-		fail("Not yet implemented");
-	}
-
-	/**
-	 * Test method for {@link com.circa.mrv.grs_manager.catalog.OrderRecord#loadOrdersFromFile(java.lang.String)}.
+	 * Tests loadOrdersFromFile() method. Loads
 	 */
 	@Test
 	public void testLoadOrdersFromFile() {
 		
-		fail("Not yet implemented");
+		OrderRecord or = new OrderRecord();
+		or.loadTitlesFromFile(orderRecordTitles);
+		or.loadOrdersFromFile(orderRecordFile);
+		assertEquals(or.getFirst(),3); // the first column that is a product title
+		assertEquals(or.getLast(),24); //  the last column that is a product title
+		for(int i = 3; i <= 24; i++) { // if a column title is within this range, it is a produc title
+			if(!or.isProductTitle(i))
+				fail();
+		}
+		assertEquals(or.getProductTitles().size(), ptCount);
+		try {
+		assertEquals(or.getShortOrderInfo().length, 800);
+		}catch(IOException ioe ) {
+			throw new IllegalArgumentException(ioe.getMessage());
+		}catch(NullPointerException npe ) {
+			throw new NullPointerException(npe.getMessage());
+		}
+		assertEquals(or.getOrderRecordList().size(),0);
+		or.updateOrderList();
+		assertEquals(or.getOrderRecordList().size(),7);
+		
 	}
 
 	/**
-	 * Test method for {@link com.circa.mrv.grs_manager.catalog.OrderRecord#loadTitlesFromFile(java.lang.String)}.
+	 * Tests loadTitlesFromFile
 	 */
 	@Test
 	public void testLoadTitlesFromFile() {
-		fail("Not yet implemented");
-	}
-
-	/**
-	 * Test method for {@link com.circa.mrv.grs_manager.catalog.OrderRecord#getRecord()}.
-	 */
-	@Test
-	public void testGetRecord() {
-		fail("Not yet implemented");
-	}
-
-	/**
-	 * Test method for {@link com.circa.mrv.grs_manager.catalog.OrderRecord#setRecord(java.lang.String[][])}.
-	 */
-	@Test
-	public void testSetRecord() {
-		fail("Not yet implemented");
+		OrderRecord or = new OrderRecord();
+		or.loadTitlesFromFile(orderRecordTitles);
+		//String product = null;
+		//for(int i = 0; i < or.getProductTitles().size(); i++) {
+			//product = or.getProductTitles().get(i).getFam() + " " + or.getProductTitles().get(i).getGen() + " " + 
+				//	or.getProductTitles().get(i).getDescription();
+			//System.out.println(product);
+		//}
+		assertEquals(or.getProductTitles().size(),ptCount);
 	}
 
 	/**
@@ -77,7 +89,7 @@ public class OrderRecordTest {
 	 */
 	@Test
 	public void testGetOrderById() {
-		fail("Not yet implemented");
+		//fail("Not yet implemented");
 	}
 
 	/**
@@ -85,7 +97,7 @@ public class OrderRecordTest {
 	 */
 	@Test
 	public void testGetShortOrderInfo() {
-		fail("Not yet implemented");
+		//fail("Not yet implemented");
 	}
 
 	/**
@@ -93,7 +105,7 @@ public class OrderRecordTest {
 	 */
 	@Test
 	public void testGetOrderByPOAndStudy() {
-		fail("Not yet implemented");
+		//fail("Not yet implemented");
 	}
 
 	/**
@@ -101,7 +113,7 @@ public class OrderRecordTest {
 	 */
 	@Test
 	public void testUpdateOrderList() {
-		fail("Not yet implemented");
+		//fail("Not yet implemented");
 	}
 
 	/**
@@ -109,7 +121,7 @@ public class OrderRecordTest {
 	 */
 	@Test
 	public void testGetLastOrder() {
-		fail("Not yet implemented");
+		//fail("Not yet implemented");
 	}
 
 	/**
@@ -117,7 +129,7 @@ public class OrderRecordTest {
 	 */
 	@Test
 	public void testGetCalendarFromString() {
-		fail("Not yet implemented");
+		//fail("Not yet implemented");
 	}
 
 	/**
@@ -125,7 +137,7 @@ public class OrderRecordTest {
 	 */
 	@Test
 	public void testGetStudyNumbers() {
-		fail("Not yet implemented");
+		//fail("Not yet implemented");
 	}
 
 	/**
@@ -133,7 +145,7 @@ public class OrderRecordTest {
 	 */
 	@Test
 	public void testGetDefaultStudyNumbers() {
-		fail("Not yet implemented");
+		//fail("Not yet implemented");
 	}
 
 }

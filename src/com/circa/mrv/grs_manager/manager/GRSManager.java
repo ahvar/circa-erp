@@ -218,6 +218,7 @@ public class GRSManager {
 	/**
 	 * Returns true if the order is added to the employee's order schedule.
 	 * Only an employee of a research company or the GRS manager administrator can drop an order from the schedule.
+	 * 
 	 * @param o order the order to be added to the employee's (current user's) schedule
 	 * @return true if enrolled
 	 * @throws IllegalArgumentException if current user is null or company is not a research company

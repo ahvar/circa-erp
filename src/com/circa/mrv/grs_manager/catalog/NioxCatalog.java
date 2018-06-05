@@ -18,13 +18,24 @@ import com.circa.mrv.grs_manager.util.LinkedListRecursive;
  * @author Arthur Vargas 
  */
 public class NioxCatalog {
+	/** Niox product family */
+	public static final String NIOX = "niox";
+	/** Mino product generation */
+	public static final String MINO = "mino";
+	/** Vero product generation */
+	public static final String VERO = "vero";
 	/** Product part numbers */
 	public static final String [] NUMBERS = {"12-1200","12-1806-US","12-1810-US","12-1010","12-1220","12-1009","12-1008","12-1230","12-1250","03-4002-US","03-4000-US","09-1300","09-1015","09-1005","Part-Number"};
 	/** Product names */
 	public static final String [] NAMES = {"NIOX VERO device","NIOX VERO test kit 60","NIOX VERO test kit 100","NIOX VERO breathing handle","NIOX VERO Power Adapter","NIOX VERO Handle Cap","NIOX VERO Battery Lid","NIOX VERO Power Cord","NIOX VERO Battery","NIOX VERO hardcase","NIOX VERO Boveda Bag for Hardcase","NIOX VERO Training device",
 			"NIOX MINO Unit Model 2009 US Aerocrine eNO System","NIOX MINO Test Kit 50","NIOX MINO Test Kit 100","NIOX MINO NO Scrubber 2009","NIOX MINO QC Plug Niox Mino Unit","NIOX MINO Power Supply NIOX MINO 2009"};
-	public static final String [] DESCRIPTIONS = {"device","test kit 60","test kit 100","breathing handle","power adapter","handle cap","batter lid","power cord","battery","hardcase","boveda bag","training device",
-			"unit model 2009","test kit 50","no scrubber","qc plug","power supply","no scrubber 2009"};
+	public static final String [] DESCRIPTIONS = {"device","test kit 60","test kit 100","breathing handle","power adapter","handle cap","battery lid","power cord","battery","hardcase","boveda bag","training device",
+			"unit model 2009","test kit 50","no scrubber","qc plug","power supply","no scrubber 2009","feno","expiration date","boveda bags"};
+	public static final String DEFAULT_GEN = "generation";
+	public static final String DEFAULT_FAM = "family";
+	public static final String TRAINING_DEVICE = "training device";
+	public static final String BREATHING_HANDLE = "breathing handle";
+	public static final String NO_SCRUBBER = "no scrubber";
 	/** The catalog for products */
 	private LinkedListRecursive<Product> catalog;
 	

@@ -20,6 +20,8 @@ public class Order extends Document {
 	private Calendar statusDate;
 	/** The list of products for this order */
 	private LinkedStack<Product> product;
+	/** Default length for product stack */
+	private final int DEFAULT_SIZE = 50;
 	/** 
 	 * Describes the "open" status for an order. An Order is "open" if it has not been acknowledged by the vendor.
 	 */
@@ -110,6 +112,7 @@ public class Order extends Document {
 	 */
 	public Order(long ordNum){
 		super(ordNum);
+		product = new LinkedStack<Product>(DEFAULT_SIZE);
 	}
 
 	/**
