@@ -20,9 +20,24 @@ public class OrderRecordIOTest {
 	/** Test order records */
 	private static final String orderRecordFileName = "test-files/order-record-test/order-records";
 	/** Study id 006155 */
-	private static final String study0011655 = "0011655";
+	private static final String study006155 = "006155";
 	/** Study id 145986 */
 	private static final String study145986 = "145986";
+	/** Research ship-to on line 5 / column 30 of order-records */
+	private final String siteName = "Clinical Research of Gastonia";
+	/** fax number on line 5 / column 37 of order-records */
+	private final String faxNumber = "0017046712322";
+	/** PO number on line 5 / column 48 of order records */
+	private String po = "15003907 OD";
+	
+	/** Research ship-to on line 9 / column 30 of order-records */
+	private final String siteNameLine9 = "Clinical Research of Charlotte";
+	/** fax number on line 9 / column 37 of order-records */
+	private final String faxNumberLine9 = "0017043419996";
+	/** PO number on line 9 / column 48 of order records */
+	private String poLine9 = "15003912 OD";
+	
+	
 	/** Number of product titles */
 	private static final int productTitleCount = 22;
 	/** Number of order records */
@@ -37,7 +52,7 @@ public class OrderRecordIOTest {
 	 */
 	@Test
 	public void testReadOrderRecord() throws FileNotFoundException,IllegalArgumentException {
-		String [][] orders = new String[orderRecordCount][55]; 
+		String [][] orders = new String[10][55]; 
 		LinkedListRecursive<ProductTitle> ptList = new LinkedListRecursive<ProductTitle>();
 		try {
 			OrderRecordIO.readOrderRecord(orderRecordFileName,orders,ptList,orderRecordColumns);
@@ -47,13 +62,16 @@ public class OrderRecordIOTest {
 			else throw new IllegalArgumentException(ioe.getMessage());
 			
 		}
-		//assertEquals(ptList.size(),0);
-		assertEquals(orders.length + 1,orderRecordCount);
-		
-		for(int i = 0; i < orders.length;i++) {
-			if(orders[i][0] != study0011655 && orders[i][0] != study145986) fail();
-			if(orders[i][1] == null || orders[i][2] == null) fail();
+		for(int i = 0; i < orders.length; i++) {
+			for(int j = 0; j < 55; j++) {
+				System.out.println("row: " + i + "column: " + j + " " + orders[i][j]);
+			}
 		}
+		if(!orders[1][0].equals(study006155) || !orders[1][30].equals(siteName) || !orders[1][48].equals(po) )
+			fail();
+		if(!orders[3][0].equals(study145986) || !orders[3][30].equals(siteNameLine9) || !orders[3][48].equals(poLine9) )
+			fail();
+		
 	}
 
 	/**

@@ -25,14 +25,6 @@ import com.circa.mrv.grs_manager.util.LinkedListRecursive;
  * @author Arthur  Vargas
  */
 public class OrderRecordIO {
-	private static final String NIOX_LOWER = "niox";
-	private static final String VERO_LOWER = "vero";
-	private static final String MINO_LOWER = "mino";
-	private static final String FAMILY_DEFAULT = "family";
-	private static final String GENERATION_DEFAULT = "generation";
-	private static final String DESCRIPTION_DEFAULT = "description";
-	private static final String EXPIRATION_DATE = "expiration date";
-
 	
 	/**
 	 * Reads in a master file containing all data for a particular GRS customer. 
@@ -102,12 +94,7 @@ public class OrderRecordIO {
         	
         	
     	}
-    	//for(int i = 1; i < row; i++ ) {
-    		//for( int j = 0; j < lastCol; j++ ) {
-    			//if(j == 0) System.out.println('\n' + "NEW ROW" + '\n');
-    			//System.out.println("row: " + i + " col: " + j + " content: " + orders[i][j]);
-    		//}
-    	//}
+
     	reader.close();
     	
     }
@@ -234,7 +221,7 @@ public class OrderRecordIO {
 	
 		}
 		ProductTitle pt = null;
-		System.out.println(fam + " " + gen + " " + desc);
+		//System.out.println(fam + " " + gen + " " + desc);
 		if(desc != null)
 			pt = new ProductTitle(gen,fam,desc);
 		return pt;

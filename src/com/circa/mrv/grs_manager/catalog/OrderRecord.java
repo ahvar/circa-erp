@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 
 import java.util.Date;
+import java.util.Scanner;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import com.circa.mrv.grs_manager.io.ProductTitle;
 import com.circa.mrv.grs_manager.niox.Component;
 
 import com.circa.mrv.grs_manager.util.LinkedListRecursive;
+import com.circa.mrv.grs_manager.util.LinkedStack;
 import com.circa.mrv.grs_manager.document.Order;
 
 /**
@@ -35,6 +37,10 @@ public class OrderRecord {
 	private LinkedListRecursive<ProductTitle> productTitlesList;
 	/** A list of all Orders */
 	private LinkedListRecursive<Order> orderRecordList;
+	/** A list of studies */
+	private ArrayList<String> studyList;
+	/** A list of research sites */
+	private ArrayList<String> siteList;
 	/** The last column containing order data*/
 	private int lastCol;
 	/** The first column that is a product title */
@@ -53,6 +59,10 @@ public class OrderRecord {
 	private static final String RECORDS_PRODUCT_TITLES = "test-files/records_product_titles.txt";
 	/** Default study numbers */
 	private static final String[] DEFAULT_STUDY_NUMBERS = {"006155","006156","006186","107061"};
+	/** Default study stack size */
+	private static final int STUDY_LIST_SIZE = 50;
+	/** Default research site size */
+	private static final int RESEARCH_SITE_SIZE = 200;
 	/** Number of ongoing studies */
 	private static final int STUDY_COUNT = 7;
 	/** Open order count */
@@ -66,6 +76,8 @@ public class OrderRecord {
 	public OrderRecord() {
 		productTitlesList = new LinkedListRecursive<ProductTitle>();
 		orderRecordList = new LinkedListRecursive<Order>();
+		studyList = new ArrayList<String>(STUDY_LIST_SIZE);
+		siteList = new ArrayList<String>(RESEARCH_SITE_SIZE);
 		unformattedRecords = new String [800][70];
 		lastCol = 0;
 		first = 0;
@@ -189,36 +201,63 @@ public class OrderRecord {
 	}
 	
 	/**
-	 * Reads data from the unformatted order record 2D array into another 2D array, eliminating columns that were 
-	 * identified as containing product information.
-	 * 
-	 * @return array the abbreviated order information
+	 * Steps through the order record list and adding each new study number to the study stack.
 	 */
-	private void removePTColumns() {
-		try {
-			int noPTRow = 0;
-			int noPTCol = 0;
-			noPTColumns = new String[unformattedRecords.length][lastCol - productTitlesList.size()];
-			for(int row = 0; row < unformattedRecords.length; row++) {
-				for(int col = 0; col < lastCol; col++) {
-					if( isProductTitle(col) ) continue;
-					if ( unformattedRecords[row][col] == null ) {
-						noPTColumns[noPTRow][noPTCol] = "empty";
-					} else { 
-						noPTColumns[noPTRow][noPTCol] = unformattedRecords[row][col];
-						noPTCol++;
-						//System.out.println("UFR Column: " + col + '\t' + unformattedRecords[noPTRow][noPTCol] + '\n' + 
-								//"no PT Column: " + noPTCol + '\t' + noPTColumns[noPTRow][noPTCol]);
+	public void updateStudyList() {
+		Scanner scan;
+		String study = null;
+		if( !this.orderRecordList.isEmpty() ) {
+			for(int i = 0; i < this.orderRecordList.size(); i++) {
+				scan = new Scanner(this.orderRecordList.get(i).getStudy());
+				if(!scan.hasNext()) break;
+				study = scan.next();
+				scan.close();
+				if(this.studyList.isEmpty()) this.studyList.add(study);
+				else {
+					String s = null;
+					for(int j = 0; j < studyList.size(); j++) {
+						if(studyList.get(j).equals(study)) s = study;
 					}
+					try {
+					if(s == null) studyList.add(study);
+					}catch(IndexOutOfBoundsException ibe) {
+						throw new  IllegalArgumentException(ibe.getMessage());
+					}
+						
 				}
-				noPTRow++;
 			}
-		} catch (ArrayIndexOutOfBoundsException e) {
-			System.out.println("removePTColumns() attempted to step outside the array");
 		}
-		
 	}
 	
+	/**
+	 * Steps through order record list and adds each research site number to the list.
+	 */
+	public void updateSiteList() {
+		Scanner scan;
+		String site = null;
+		if( !this.orderRecordList.isEmpty() ) {
+			for(int i = 0; i < this.orderRecordList.size(); i++) {
+				scan = new Scanner(this.orderRecordList.get(i).getSite());
+				if(!scan.hasNext()) break;
+				site = scan.next();
+				scan.close();
+				if(this.siteList.isEmpty()) this.siteList.add(site);
+				else {
+					String s = null;
+					for(int j = 0; j < siteList.size(); j++) {
+						if(siteList.get(j).equals(site)) s = site;
+					}
+					try {
+					if(s == null) siteList.add(site);
+					}catch(IndexOutOfBoundsException ibe) {
+						throw new  IllegalArgumentException(ibe.getMessage());
+					}
+						
+				}
+			}
+		}
+	}
+	 
 	/**
 	 * Returns the order whose purchase order and study match the parameters
 	 * for purchase order and study.
@@ -531,6 +570,22 @@ public class OrderRecord {
 	 */
 	public LinkedListRecursive<ProductTitle> getProductTitles() {
 		return productTitlesList;
+	}
+	
+	/**
+	 * Returns an array-based list with study numbers
+	 * @return studyList the list of studies
+	 */
+	public ArrayList<String> getStudyList() {
+		return studyList;
+	}
+	
+	/**
+	 * Returns an array-based list with site numbers
+	 * @return studyList the list of sites
+	 */
+	public ArrayList<String> getSiteList() {
+		return siteList;
 	}
 	
 			

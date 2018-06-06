@@ -7,7 +7,7 @@ import java.util.AbstractList;
  * The ArrayList class provides functionality for the creation of generic array list collections. It offers methods to 
  * add and remove elements at various indices, for getting an element at a specific location, and for getting the number
  * of elements stored in the list. 
- * @author Ben W Ioppolo
+ * @author Arthur Vargas
  * @param <E> Generic type parameter which allows the class to be used to store any object type.
  */
 public class ArrayList<E> extends AbstractList<E> {

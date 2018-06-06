@@ -15,9 +15,35 @@ import org.junit.Test;
  */
 public class OrderRecordTest {
 	/** The filename for order records */
-	private static final String orderRecordFile = "test-files/order-record-test/order-records";
+	private final String orderRecordFile = "test-files/order-record-test/order-records";
+	/** The filename for order records */
+	private final String moreOrderRecords = "test-files/order-record-test/order-record-2";
 	/** The filename for order record titles */
 	private static final String orderRecordTitles = "test-files/order-record-test/titles";
+	/** study 006155 */
+	private final String study006155 = "006155";
+	/** study 145986 */
+	private final String study145986 = "145986";
+	/** study 006156 */
+	private final String study006156 = "006156";
+	/** study 006186 */
+	private final String study006186 = "006186";
+	/** site for the 21st order in the order-record-2 file */
+	private final String site5005 = "5005";
+	/** site for the 2nd order in the order-record-2 file */
+	private final String site5002 = "5002";
+	/** site for the 2nd order in the order-record-2 file */
+	private final String site5007 = "5007";
+	/** site for the 5th order in the order-record-2 file */
+	private final String site5015 = "5015";
+	/** site for the 6th order in the order-record-2 file */
+	private final String site5018 = "5018";
+	/** order number one*/
+	private final long one = 1;
+	/** order number three */
+	private final long three = 3;
+	/** order number 6 */
+	private final long six = 6;
 	/** Order count */
 	private int orderCount = 7;
 	/** ProductTitle count */
@@ -62,9 +88,61 @@ public class OrderRecordTest {
 		}catch(NullPointerException npe ) {
 			throw new NullPointerException(npe.getMessage());
 		}
+		// order list is empty before update method is called and contains 7 orders after method completes
 		assertEquals(or.getOrderRecordList().size(),0);
+		// since order record list is empty, nothing will be added to study and site lists
+		or.updateStudyList();
+		or.updateSiteList();
+		assertEquals(or.getStudyList().size(),0);
+		assertEquals(or.getSiteList().size(),0);
+		
+		// updateOrderList / updateStudyList and then check sizes
+		// there are 7 orders within 2 studies
 		or.updateOrderList();
+		or.updateStudyList();
+		or.updateSiteList();
+		
 		assertEquals(or.getOrderRecordList().size(),7);
+		if(!or.getStudyList().get(0).equals(study006155))
+			fail();
+		if(!or.getStudyList().get(1).equals(study145986))
+			fail();
+		assertEquals(or.getSiteList().size(),7);
+		if(!or.getSiteList().get(1).equals(site5002))
+			fail();
+		if(!or.getSiteList().get(2).equals(site5007))
+			fail();
+		if(!or.getSiteList().get(5).equals(site5015))
+			fail();
+		if(!or.getSiteList().get(6).equals(site5018))
+			fail();
+		if(or.getOrderRecordList().get(0).getNumber() != one )
+			fail();
+		if(or.getOrderRecordList().get(2).getNumber() != three )
+			fail();
+		if(or.getOrderRecordList().get(5).getNumber() != six )
+			fail();
+		
+		
+		// create new order record with more orders and check study list
+		OrderRecord or2 = new OrderRecord();
+		or2.loadTitlesFromFile(orderRecordTitles);
+		or2.loadOrdersFromFile(moreOrderRecords);
+		or2.updateOrderList();
+		or2.updateStudyList();
+		or2.updateSiteList();
+		
+		if(!or2.getStudyList().get(0).equals(study006155))
+			fail();
+		if(!or2.getStudyList().get(1).equals(study145986))
+			fail();
+		if(!or2.getStudyList().get(2).equals(study006156))
+			fail();
+		//if(!or2.getStudyList().get(3).equals(study006156))
+			//fail();
+		if(!or2.getSiteList().get(21).equals(site5005))
+			fail();
+		
 		
 	}
 
