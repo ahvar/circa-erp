@@ -237,6 +237,7 @@ public class OrderRecord {
 		String site = null;
 		if( !this.orderRecordList.isEmpty() ) {
 			for(int i = 0; i < this.orderRecordList.size(); i++) {
+				//System.out.println(this.orderRecordList.get(i).getSite());
 				scan = new Scanner(this.orderRecordList.get(i).getSite());
 				if(!scan.hasNext()) break;
 				site = scan.next();

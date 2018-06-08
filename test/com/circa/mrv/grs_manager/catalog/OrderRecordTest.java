@@ -34,6 +34,8 @@ public class OrderRecordTest {
 	private final String site5002 = "5002";
 	/** site for the 2nd order in the order-record-2 file */
 	private final String site5007 = "5007";
+	/** site for 2nd order in the order-record file */
+	private final String site5008 = "5008";
 	/** site for the 5th order in the order-record-2 file */
 	private final String site5015 = "5015";
 	/** site for the 6th order in the order-record-2 file */
@@ -102,19 +104,17 @@ public class OrderRecordTest {
 		or.updateStudyList();
 		or.updateSiteList();
 		
-		assertEquals(or.getOrderRecordList().size(),7);
+		assertEquals(or.getOrderRecordList().size(),6);
 		if(!or.getStudyList().get(0).equals(study006155))
 			fail();
 		if(!or.getStudyList().get(1).equals(study145986))
 			fail();
-		assertEquals(or.getSiteList().size(),7);
-		if(!or.getSiteList().get(1).equals(site5002))
+		assertEquals(or.getSiteList().size(),6);
+		if(!or.getSiteList().get(1).equals(site5007))
 			fail();
-		if(!or.getSiteList().get(2).equals(site5007))
+		if(!or.getSiteList().get(2).equals(site5008))
 			fail();
-		if(!or.getSiteList().get(5).equals(site5015))
-			fail();
-		if(!or.getSiteList().get(6).equals(site5018))
+		if(!or.getSiteList().get(5).equals(site5018))
 			fail();
 		if(or.getOrderRecordList().get(0).getNumber() != one )
 			fail();
@@ -140,7 +140,7 @@ public class OrderRecordTest {
 			fail();
 		//if(!or2.getStudyList().get(3).equals(study006156))
 			//fail();
-		if(!or2.getSiteList().get(21).equals(site5005))
+		if(!or2.getSiteList().get(21).equals("5004"))
 			fail();
 		
 		

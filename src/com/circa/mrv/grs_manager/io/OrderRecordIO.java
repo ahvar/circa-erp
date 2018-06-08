@@ -36,7 +36,7 @@ public class OrderRecordIO {
 	 */
 	public static void readOrderRecord(String filename, String [][] orders,LinkedListRecursive<ProductTitle> pt, int lastCol) throws FileNotFoundException, IOException {
 		
-		char delim = 0;
+		char delim = ',';
     	StringBuilder segment = new StringBuilder();
     	FileReader fr = new FileReader(filename);
     	BufferedReader reader = new BufferedReader(fr);
@@ -47,52 +47,70 @@ public class OrderRecordIO {
     	char c; // current character
     	while( (x = reader.read()) != -1 ) {
     		c = (char)x;
-    		
-    		if(col == lastCol)  {
-        		row++;
-        		col = 0;
-        	}
+   
+    		if(col == lastCol) {
+    			while( !Character.isWhitespace(c)) {
+    				x = reader.read(); 
+    				c = (char)x;
+        			segment.append(c);
+    			}
+    			if(0 < segment.length()) {
+    				Scanner scan = new Scanner(segment.toString());
+    				while(scan.hasNext()) {
+    					if(orders[row][col] == null) orders[row][col] = scan.next();
+    					else orders[row][col] = orders[row][col] + " " + scan.next();
+    				}
+    				scan.close();
+        		} else orders[row][col] = null;
+    	    	col = 0;
+    	    	row++;
+    	    	continue;
+    		} 
     		
     	    if(Character.isWhitespace(c)) {
-    	    	
     	    	segment.append(' ');
     	    	continue;
     	    }
     	    	
     	    /** ending comma for a segment. print line, clear builder, clear delimiter */
-        	if( (x == ',' && delim == ',' && 0 < segment.length()) || (x == ',' && delim == 0 && 0 < segment.length())) {  
-        		
-        		orders[row][col] = segment.toString();
+        	if( c == ',' && delim == ',' && 0 < segment.length()) {  
+        		Scanner scan = new Scanner(segment.toString());
+        		while(scan.hasNext()) {
+        			if(orders[row][col] == null) orders[row][col] = scan.next();
+        			else orders[row][col] = orders[row][col] + " " + scan.next();
+        		}
         		segment = OrderRecordIO.clearStringBuilder(segment);
-        		delim = c; 
         		col++;
+        		scan.close();
     			
         	/** quoted information within a comma separate segment. */
-    		} else if ( x == '"' && delim == ',' ) { 
+    		} else if ( c == '"' && delim == ',' ) { 
     			delim = c;
     			
     		/** all characters between quotation marks or commas are part of the segment */
-    		} else if ( (delim == '"' && x != '"') || (delim == 0 && x != '"') || (delim == ',' && x != ',') || (delim == 0 && x != ',')) { 
+    		} else if ( (delim == '"' && c != '"') || (delim == ',' && c != '"' && c != ',') ) { 
     		    
     			segment.append(c);
     			
-    			/** the end of a segment between quotation marks. print line, clear builder, clear delim list. 
-    		    won't increment current until reading ending comma */
-    		} else if ( delim == '"' && x == '"') { 
-    			orders[row][lastCol] = segment.toString();
+    		/** the end of a segment between quotation marks. print line, clear builder, clear delim list. 
+    		won't increment current until reading ending comma */
+    		} else if ( delim == '"' && c == '"') { 
+    			Scanner scan = new Scanner(segment.toString());
+    			while(scan.hasNext()) {
+        			if(orders[row][col] == null) orders[row][col] = scan.next();
+        			else orders[row][col] = orders[row][col] + " " + scan.next();
+        		}
     			segment = OrderRecordIO.clearStringBuilder(segment);
     			delim = ','; // a comma always follows ending quotation
-    			reader.skip(1);
+    			reader.read();
     			col++;
+    			scan.close();
     			
     			/** double commas describe empty column condition */
-    		} else if ( x == ',' && delim == ',' ) {
-    			
-    			delim = c;
+    		} else if ( c == ',' && delim == ',' ) {
+    			orders[row][col] = null;
     			col++;
-    		}
-        	
-        	
+    		} 
     	}
 
     	reader.close();
@@ -124,7 +142,7 @@ public class OrderRecordIO {
 	 * @throws IOException if there is a problem reading the file
 	 */
 	public static int readOrderTitles(String filename, String [][] records, LinkedListRecursive<ProductTitle> productTitles) throws IOException {
-		char delim = 0;
+		char delim = ',';
     	StringBuilder segment = new StringBuilder();
 		ProductTitle pt = null;
 		FileReader fr = new FileReader(filename);
@@ -135,54 +153,77 @@ public class OrderRecordIO {
     	while( (x = reader.read()) != -1 ) {
     		c = (char)x;
     		
-    		/** any whitespace is a single blank space */
-    	    if(Character.isWhitespace(c)) {
+    		if(lastCol == 53) {
+    			if(Character.isWhitespace(c)) segment.append(' ');
+    			else segment.append(c);
+    			while( (x = reader.read()) != -1) {
+    				c = (char)x;
+    				if(Character.isWhitespace(c)) segment.append(' ');
+        			else segment.append(c);
+    			}
+    			Scanner scan = new Scanner(segment.toString());
+    	    	while(scan.hasNext()) {
+        			if(records[0][lastCol] == null) records[0][lastCol] = scan.next();
+        			else records[0][lastCol] = records[0][lastCol] + " " + scan.next();
+        		}
+    	    	
+    	    	scan.close();
+    	    	break;
+    		} 
+    		
+    		if(Character.isWhitespace(c) ) {
     	    	segment.append(' ');
     	    	continue;
     	    } 
-    	    	
+
     	    /** ending comma for a segment. add a ProductTitle if matched, assign to title array, clear builder, clear delimiter */
-        	if( (x == ',' && delim == ',' && 0 < segment.length()) || (x == ',' && delim == 0 && 0 < segment.length())) {  
-        		pt = OrderRecordIO.matchProductTitle(segment.toString());
+        	if( c == ',' && delim == ',' && 0 < segment.length() ) {  
+        		Scanner scan = new Scanner(segment.toString());
+        		while(scan.hasNext()) {
+        			if(records[0][lastCol] == null) records[0][lastCol] = scan.next();
+        			else records[0][lastCol] = records[0][lastCol] + " " + scan.next();
+        		}
+        		//System.out.println(records[0][lastCol]);
+        		pt = OrderRecordIO.matchProductTitle(records[0][lastCol]);
         		if( pt != null) {
         			//System.out.println("product title: " + pt.getDescription() + " " + lastCol);
         			pt.setIndex(lastCol);
         			productTitles.add(pt);
         		}
-        		records[0][lastCol] = segment.toString();
         		segment = OrderRecordIO.clearStringBuilder(segment);
-        		delim = 0; 
+        		delim = ','; 
         		lastCol++;
-    			
+    			scan.close();
         	/** quoted information within a comma separate segment. clear delim list and assign starting quotation character */
-    		} else if ( x == '"' && delim == ',' ) { 
+    		} else if ( c == '"' && delim == ',' ) { 
     			
     			delim = c;
     			
     		/** all characters between quotation marks are valid characters to be added to the segment */
-    		} else if ( (delim == '"' && x != '"') || (delim == 0 && x != '"') ) { 
+    		} else if ( (delim == '"' && c != '"') || (delim == ',' && c != '"' && c != ',') ) { 
     		    
     			segment.append(c);
     			
     		/** the end of a segment between quotation marks. look for product matches, assign to title array, clear builder, 
     			clear delim list. skip the next character which is always a comma */
     		} else if ( delim == '"' && x == '"') { 
-    			pt = OrderRecordIO.matchProductTitle(segment.toString());
+    			Scanner scan = new Scanner(segment.toString());
+        		while(scan.hasNext()) {
+        			if(records[0][lastCol] == null) records[0][lastCol] = scan.next();
+        			else records[0][lastCol] = records[0][lastCol] + " " + scan.next();
+        		}
+        		//System.out.println(records[0][lastCol]);
+    			pt = OrderRecordIO.matchProductTitle(records[0][lastCol]);
     			if(  pt != null ) {
     				//System.out.println("product title: " + pt.getDescription() + " " + lastCol);
     				pt.setIndex(lastCol);
     				productTitles.add(pt);
     			}
-    			records[0][lastCol] = segment.toString();
     			segment = OrderRecordIO.clearStringBuilder(segment);
-    			delim = 0;
-    			reader.skip(1);
+    			delim = ',';
+    			reader.read();
     			lastCol++;
-    			
-    		/** comma following comma describes empty column. clear delim,and add most recent comma character. */
-    		} else if ( x == ',' && delim == ',' ) {
-    			delim = c;
-    			lastCol++;
+    			scan.close();
     		}
         	
         	

@@ -249,6 +249,8 @@ public class Order extends Document {
 	 * @param site the site to set
 	 */
 	public void setSite(String site) {
+		if(site == null || site.equals("") )
+			this.site = "xxxx";
 		this.site = site;
 	}
 
