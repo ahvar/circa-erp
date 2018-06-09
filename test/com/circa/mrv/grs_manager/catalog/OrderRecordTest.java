@@ -15,11 +15,13 @@ import org.junit.Test;
  */
 public class OrderRecordTest {
 	/** The filename for order records */
-	private final String orderRecordFile = "test-files/order-record-test/order-records";
+	private final String orderRecordFile = "test-files/order-record-test/order-records-least";
 	/** The filename for order records */
-	private final String moreOrderRecords = "test-files/order-record-test/order-record-2";
+	private final String moreOrderRecords = "test-files/order-record-test/order-record-all";
 	/** The filename for order record titles */
 	private static final String orderRecordTitles = "test-files/order-record-test/titles";
+	/** the filename for order records */
+	private static final String someOrderRecords = "test-files/order-record-test/order-record-and-more";
 	/** study 006155 */
 	private final String study006155 = "006155";
 	/** study 145986 */
@@ -72,7 +74,6 @@ public class OrderRecordTest {
 	 */
 	@Test
 	public void testLoadOrdersFromFile() {
-		
 		OrderRecord or = new OrderRecord();
 		or.loadTitlesFromFile(orderRecordTitles);
 		or.loadOrdersFromFile(orderRecordFile);
@@ -123,7 +124,6 @@ public class OrderRecordTest {
 		if(or.getOrderRecordList().get(5).getNumber() != six )
 			fail();
 		
-		
 		// create new order record with more orders and check study list
 		OrderRecord or2 = new OrderRecord();
 		or2.loadTitlesFromFile(orderRecordTitles);
@@ -138,11 +138,18 @@ public class OrderRecordTest {
 			fail();
 		if(!or2.getStudyList().get(2).equals(study006156))
 			fail();
-		//if(!or2.getStudyList().get(3).equals(study006156))
-			//fail();
-		if(!or2.getSiteList().get(21).equals("5004"))
+		if(!or2.getStudyList().get(7).equals("006186"))
 			fail();
-		
+		if(!or2.getSiteList().get(0).equals("5002") || !or2.getSiteList().get(1).equals("5007") || !or2.getSiteList().get(2).equals("5008"))
+			fail();
+		if(!or2.getSiteList().get(10).equals("2352") || !or2.getSiteList().get(11).equals("2353") || !or2.getSiteList().get(12).equals("2354"))
+			fail();
+		if(!or2.getSiteList().get(23).equals("2034") || !or2.getSiteList().get(24).equals("SHP") )
+			fail();
+		if(!or2.getSiteList().get(92).equals("2539") || !or2.getSiteList().get(93).equals("5017") || !or2.getSiteList().get(94).equals("2211") ||
+				!or2.getSiteList().get(97).equals("2533") || !or2.getSiteList().get(98).equals("2502") || !or2.getSiteList().get(99).equals("5053")	)
+			fail();
+
 		
 	}
 

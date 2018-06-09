@@ -45,9 +45,10 @@ public class OrderRecordIO {
     	int row = 1; // current row
     	int x; 
     	char c; // current character
+    	//System.out.print("row: " + row + " ");
     	while( (x = reader.read()) != -1 ) {
     		c = (char)x;
-   
+    		
     		if(col == lastCol) {
     			while( !Character.isWhitespace(c)) {
     				x = reader.read(); 
@@ -62,8 +63,10 @@ public class OrderRecordIO {
     				}
     				scan.close();
         		} else orders[row][col] = null;
+    			//System.out.print(col + "   " + orders[row][col] + '\n');
     	    	col = 0;
     	    	row++;
+    	    	//System.out.print("row: " + row + " ");
     	    	continue;
     		} 
     		
@@ -79,6 +82,7 @@ public class OrderRecordIO {
         			if(orders[row][col] == null) orders[row][col] = scan.next();
         			else orders[row][col] = orders[row][col] + " " + scan.next();
         		}
+        		//System.out.print(col + "   " + orders[row][col] + " ");
         		segment = OrderRecordIO.clearStringBuilder(segment);
         		col++;
         		scan.close();
@@ -100,6 +104,7 @@ public class OrderRecordIO {
         			if(orders[row][col] == null) orders[row][col] = scan.next();
         			else orders[row][col] = orders[row][col] + " " + scan.next();
         		}
+    			//System.out.print(col + "   " + orders[row][col] + " ");
     			segment = OrderRecordIO.clearStringBuilder(segment);
     			delim = ','; // a comma always follows ending quotation
     			reader.read();
@@ -109,10 +114,12 @@ public class OrderRecordIO {
     			/** double commas describe empty column condition */
     		} else if ( c == ',' && delim == ',' ) {
     			orders[row][col] = null;
+    			//System.out.print(col + "  " + orders[row][col] + " ");
     			col++;
     		} 
+        	
     	}
-
+    	
     	reader.close();
     	
     }

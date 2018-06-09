@@ -62,7 +62,7 @@ public class OrderRecord {
 	/** Default study stack size */
 	private static final int STUDY_LIST_SIZE = 50;
 	/** Default research site size */
-	private static final int RESEARCH_SITE_SIZE = 200;
+	private static final int RESEARCH_SITE_SIZE = 600;
 	/** Number of ongoing studies */
 	private static final int STUDY_COUNT = 7;
 	/** Open order count */
@@ -78,7 +78,7 @@ public class OrderRecord {
 		orderRecordList = new LinkedListRecursive<Order>();
 		studyList = new ArrayList<String>(STUDY_LIST_SIZE);
 		siteList = new ArrayList<String>(RESEARCH_SITE_SIZE);
-		unformattedRecords = new String [800][70];
+		unformattedRecords = new String [800][54];
 		lastCol = 0;
 		first = 0;
 		last = 0;
