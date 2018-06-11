@@ -59,13 +59,35 @@ public class ProductRecordIOTest {
 	public void testReadProductRecords() {
 	
 		try {
-			list = ProductRecordIO.readProductRecords(fourProducts);
+			list = ProductRecordIO.readProductRecords(allProducts);
 		} catch (IOException e) {
 			fail(e.getMessage());
 		}
 		
 		if (list.isEmpty()) fail();
-
+		if(!list.get(0).getPartNumber().equals("12-1200")) fail();
+		if(!list.get(1).getPartNumber().equals("12-1806-US")) fail();
+		if(!list.get(2).getPartNumber().equals("12-1810-US")) fail();
+		if(!list.get(3).getPartNumber().equals("12-1010")) fail();
+		if(!list.get(4).getPartNumber().equals("12-1220")) fail();
+		if(!list.get(5).getPartNumber().equals("12-1009")) fail();
+		if(!list.get(6).getPartNumber().equals("12-1008")) fail();
+		if(!list.get(7).getPartNumber().equals("12-1230")) fail();
+		if(!list.get(8).getPartNumber().equals("12-1250")) fail();
+		if(!list.get(9).getPartNumber().equals("xxxxx")) fail();
+		if(!list.get(10).getPartNumber().equals("xxxxx")) fail();
+		if(!list.get(11).getPartNumber().equals("xxxxx")) fail();
+		if(!list.get(12).getPartNumber().equals("xxxxx")) fail();
+		if(!list.get(13).getPartNumber().equals("xxxxx")) fail();
+		if(!list.get(14).getPartNumber().equals("03-4002-US")) fail();
+		if(!list.get(15).getPartNumber().equals("no value")) fail();
+		if(!list.get(16).getPartNumber().equals("03-4000-US")) fail();
+		if(!list.get(17).getPartNumber().equals("no value")) fail();
+		if(!list.get(18).getPartNumber().equals("09-1300")) fail();
+		if(!list.get(19).getPartNumber().equals("no value")) fail();
+		if(!list.get(20).getPartNumber().equals("09-1015")) fail();
+		if(!list.get(21).getPartNumber().equals("09-1005")) fail();
+		
 	}
 	
 	/**

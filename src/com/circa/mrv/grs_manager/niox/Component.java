@@ -39,7 +39,6 @@ public class Component extends Product implements Consumable {
 	 */
 	public Component(String miscID, String pn, String family, String gen, String desc, String price, String note) {
 		this(family, desc, pn, price);
-		
 		setGeneration(gen);
 		setMiscIDNumber(miscID);
 		setNote(note);
@@ -237,8 +236,12 @@ public class Component extends Product implements Consumable {
 		if(number.equals("") || number == null || number.equals("null")) {
 			miscIDNumber = 0;
 		} else {
+			try {
 			if(0 < Long.parseLong(number)) miscIDNumber = Long.parseLong(number);
 			else miscIDNumber = 0;
+			}catch(Exception e) {
+				miscIDNumber = 0;
+			}
 		}
 		/*
 		try {

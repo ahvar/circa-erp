@@ -59,6 +59,8 @@ public class OrderRecord {
 	private static final String RECORDS_PRODUCT_TITLES = "test-files/records_product_titles.txt";
 	/** Default study numbers */
 	private static final String[] DEFAULT_STUDY_NUMBERS = {"006155","006156","006186","107061"};
+	/** Default site numbers */
+	private static final String[] DEFAULT_SITE_NUMBERS = {"2344","3456","3456","2345"};
 	/** Default study stack size */
 	private static final int STUDY_LIST_SIZE = 50;
 	/** Default research site size */
@@ -107,7 +109,6 @@ public class OrderRecord {
 		} catch (IOException e) {
 			throw new IllegalArgumentException("Unable to read file " + filename);
 		}
-	
 	}
 	
 	/**
@@ -511,6 +512,13 @@ public class OrderRecord {
 	 */
 	public static String[] getDefaultStudyNumbers() {
 		return DEFAULT_STUDY_NUMBERS;
+	}
+	
+	/**
+	 * @return the defaultStudyNumbers
+	 */
+	public static String[] getDefaultStiteNumbers() {
+		return DEFAULT_SITE_NUMBERS;
 	}
 
 	/**

@@ -117,8 +117,8 @@ public abstract class Product {
 	 * @throws IllegalArgumentException if pn parameter is null
 	 */
 	public void setPartNumber(String pn) {
-		//if( pn == null || pn.equals("") ) 
-			//throw new IllegalArgumentException(PART_NUMBER_ERROR);
+		if( pn == null || pn.equals("") ) 
+			partNumber = "xxxxx";
 		partNumber = pn; 
 	}
     
@@ -152,22 +152,13 @@ public abstract class Product {
 		if(p.equals("") || p == null || p.equals("null")) {
 			price = 0;
 		} else {
+			try {
 			if(0 < Double.parseDouble(p)) price = Double.parseDouble(p);
 			else price = 0;
-		}/*
-		try {
-			Double d = Double.parseDouble(p);
-			if( d < 0 ) {
-				this.price = 0;
-				System.out.println("price is less than zero" + " " + price);
-				throw new IllegalArgumentException(LESS_THAN_ZERO);
+			}catch (Exception e) {
+			price = 0;
 			}
-			this.price = d;
-		} catch (Exception pe) {
-			this.price = 0;
-			System.out.println("problem parsing" + " " + price);
-			throw new IllegalArgumentException(pe.getMessage());
-		}*/
+		}
 	}
 
 	

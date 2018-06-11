@@ -76,6 +76,7 @@ public class ProductRecordIO {
 		for(int i = 0;scan.hasNext();i++) {
 			
 			word = scan.next();
+		
 			if(word != null && !word.equals("")) {
 				data[i] = word;
 			} else {
@@ -86,9 +87,10 @@ public class ProductRecordIO {
 		c = new Component(data[0],data[1],data[2],data[3],data[4],data[5],data[6]);
 		scan.close();
 		} catch (Exception e) {
+			c = new Component("xxxx","xxxxx","NIOX","generation","description","10.00","note");
 			System.out.println("An Exception was caught: " + e.getMessage());
 		}
-		
+		//System.out.println();
 		return c;
 	}
 	

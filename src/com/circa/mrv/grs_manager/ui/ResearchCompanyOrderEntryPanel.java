@@ -130,13 +130,13 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 	
 	
 	/** ComboBox for Order Details order entry research study number */
-	private JComboBox cmbBoxStudyNumber;
+	private JComboBox<Object> cmbBoxStudyNumber;
 	/** ComboBoxModel for study numbers */
-	private DefaultComboBoxModel<String> studyModel;
+	private DefaultComboBoxModel<Object> studyModel;
 	/** ComboBox for Order Details order entry research site number */
-	private JComboBox<String> cmbBoxSiteNumber;
+	private JComboBox<Object> cmbBoxSiteNumber;
 	/** ComboBoxModel for site numbers */
-	private DefaultComboBoxModel<String> siteModel;
+	private DefaultComboBoxModel<Object> siteModel;
 	/** Text Field for Order Details order entry NAV sales order number */
 	private JTextField txtFldNAVOrderNumber = new JTextField(10);
 	/** Text Field for Order Details customer purchase order number */
@@ -259,18 +259,18 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 		try {
 			numberModel = new DefaultComboBoxModel<String>(catalog.getProductPartNumbers());
 			nameModel = new DefaultComboBoxModel<String>(catalog.getProductNames());
-			studyModel = new DefaultComboBoxModel<String>(orderRecord.getStudyNumbers());
-			siteModel = new DefaultComboBoxModel<String>();
+			studyModel = new DefaultComboBoxModel<Object>(orderRecord.getStudyList().toArray());
+			siteModel = new DefaultComboBoxModel<Object>(orderRecord.getSiteList().toArray());
 		} catch (IllegalArgumentException | NullPointerException e) {
 			numberModel = new DefaultComboBoxModel<String>(NioxCatalog.getDefaultProductPartNumbers());
 			nameModel = new DefaultComboBoxModel<String>(NioxCatalog.getDefaultProductNames());
-			//studyModel = new DefaultComboBoxModel<String>(OrderRecord.getDefaultStudyNumbers());
-			siteModel = new DefaultComboBoxModel<String>();
+			studyModel = new DefaultComboBoxModel<Object>(OrderRecord.getDefaultStudyNumbers());
+			siteModel = new DefaultComboBoxModel<Object>(OrderRecord.getDefaultStiteNumbers());
 		}
 		cmbBoxProductPartNumber = new JComboBox<String>(numberModel);
 		cmbBoxProductName = new JComboBox<String>(nameModel);
-		cmbBoxStudyNumber = new JComboBox<String>();
-		cmbBoxSiteNumber = new JComboBox<String>(siteModel);
+		cmbBoxStudyNumber = new JComboBox<Object>(studyModel);
+		cmbBoxSiteNumber = new JComboBox<Object>(siteModel);
 		
 		
 		//DefaultComboBoxModel<String> siteModel = new DefaultComboBoxModel<String>(orderRecord.getSites());

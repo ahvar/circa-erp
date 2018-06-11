@@ -7,90 +7,80 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import com.circa.mrv.grs_manager.niox.Component;
+
 /**
- * @author ahvar
- *
+ * Tests NioxCatalog
+ * @author Arthur Vargas
  */
 public class NioxCatalogTest {
-
+	/** the text file with all product records */
+	private final String allProducts = "test-files/product-record-test/all-products";
+	/** the number of products in the file */
+	private final int productCount = 22;
 	/**
-	 * Test method for {@link com.circa.mrv.grs_manager.catalog.NioxCatalog#NioxCatalog()}.
+	 * Tests NioxCatalog constructor
 	 */
 	@Test
 	public void testNioxCatalog() {
-		fail("Not yet implemented");
+		NioxCatalog nc = new NioxCatalog();
+		if(nc.allProducts() != 0) fail();
 	}
 
 	/**
-	 * Test method for {@link com.circa.mrv.grs_manager.catalog.NioxCatalog#newNioxCatalog()}.
-	 */
-	@Test
-	public void testNewNioxCatalog() {
-		fail("Not yet implemented");
-	}
-
-	/**
-	 * Test method for {@link com.circa.mrv.grs_manager.catalog.NioxCatalog#loadProductsFromFile(java.lang.String)}.
+	 * Tests loadProductsFromFile()
 	 */
 	@Test
 	public void testLoadProductsFromFile() {
-		fail("Not yet implemented");
+		NioxCatalog nc = new NioxCatalog();
+		nc.loadProductsFromFile(allProducts);
+		if(nc.allProducts() != productCount) fail();
+		nc.newNioxCatalog();
+		if(nc.allProducts() != 0) fail();
 	}
 
 	/**
-	 * Test method for {@link com.circa.mrv.grs_manager.catalog.NioxCatalog#addProductToCatalog(java.lang.String, java.lang.String, java.lang.String, double)}.
+	 * Test methods addProductToCatalog.
 	 */
 	@Test
-	public void testAddProductToCatalogStringStringStringDouble() {
-		fail("Not yet implemented");
+	public void testAddProductToCatalog() {
+		Component c = new Component("992040","12-1200","NIOX","VERO","device","1600.00","(Device handle handle cap power adapter power cord battery manual)");
+		Component c2 = new Component("841630","xxxxx","NIOX","VERO","Boveda Bag for Hardcase","20.00","xxxx");
+		NioxCatalog nc = new NioxCatalog();
+		nc.addProductToCatalog(c);
+		nc.addProductToCatalog(c2);
+		if(nc.allProducts() != 2) fail();
+		assertEquals(nc.getProductFromCatalog("NIOX", "device", "12-1200").getPartNumber(),"12-1200");
+		assertEquals(nc.getProductFromCatalog("NIOX", "Boveda Bag for Hardcase", "xxxxx").getPartNumber(),"xxxxx");
+		assertEquals(nc.getProductFromCatalog("NIOX", "12-1200").getFamily(),"NIOX");
+		assertEquals(nc.getProductFromCatalog("NIOX", "xxxxx").getDescription(),"Boveda Bag for Hardcase");
+		Component c3 = new Component("992048","12-1250","NIOX","VERO","Battery","45.00","xxxx");
+		Component c4 = new Component("707171","12-1810-US","NIOX","VERO","test kit 100","1350.00","(1 sensor for 100 tests 140 filters)");
+		nc.addProductToCatalog(c3);
+		nc.addProductToCatalog(c4);
+		if(nc.allProducts() != 4) fail();
+		assertEquals(nc.getProductFromCatalog("NIOX", "12-1250").getPartNumber(),"12-1250");
+		assertEquals(nc.getProductFromCatalog("NIOX", "test kit 100","12-1810-US").getDescription(),"test kit 100");
 	}
 
-	/**
-	 * Test method for {@link com.circa.mrv.grs_manager.catalog.NioxCatalog#addProductToCatalog(com.circa.mrv.grs_manager.niox.Product)}.
-	 */
-	@Test
-	public void testAddProductToCatalogProduct() {
-		fail("Not yet implemented");
-	}
 
 	/**
-	 * Test method for {@link com.circa.mrv.grs_manager.catalog.NioxCatalog#removeProductFromCatalog(java.lang.String, java.lang.String, java.lang.String)}.
+	 * Tests removeProductFromCatalog
 	 */
 	@Test
-	public void testRemoveProductFromCatalogStringStringString() {
-		fail("Not yet implemented");
-	}
-
-	/**
-	 * Test method for {@link com.circa.mrv.grs_manager.catalog.NioxCatalog#allProducts()}.
-	 */
-	@Test
-	public void testAllProducts() {
-		fail("Not yet implemented");
-	}
-
-	/**
-	 * Test method for {@link com.circa.mrv.grs_manager.catalog.NioxCatalog#removeProductFromCatalog(java.lang.String, java.lang.String)}.
-	 */
-	@Test
-	public void testRemoveProductFromCatalogStringString() {
-		fail("Not yet implemented");
-	}
-
-	/**
-	 * Test method for {@link com.circa.mrv.grs_manager.catalog.NioxCatalog#getProductFromCatalog(java.lang.String, java.lang.String, java.lang.String)}.
-	 */
-	@Test
-	public void testGetProductFromCatalogStringStringString() {
-		fail("Not yet implemented");
-	}
-
-	/**
-	 * Test method for {@link com.circa.mrv.grs_manager.catalog.NioxCatalog#getProductFromCatalog(java.lang.String, java.lang.String)}.
-	 */
-	@Test
-	public void testGetProductFromCatalogStringString() {
-		fail("Not yet implemented");
+	public void testRemoveProductFromCatalog() {
+		Component c = new Component("992040","12-1200","NIOX","VERO","device","1600.00","(Device handle handle cap power adapter power cord battery manual)");
+		Component c2 = new Component("841630","xxxxx","NIOX","VERO","Boveda Bag for Hardcase","20.00","xxxx");
+		Component c3 = new Component("992048","12-1250","NIOX","VERO","Battery","45.00","xxxx");
+		Component c4 = new Component("707171","12-1810-US","NIOX","VERO","test kit 100","1350.00","(1 sensor for 100 tests 140 filters)");
+		NioxCatalog nc = new NioxCatalog();
+		nc.addProductToCatalog(c);
+		nc.addProductToCatalog(c2);
+		nc.addProductToCatalog(c3);
+		nc.addProductToCatalog(c4);
+		nc.removeProductFromCatalog("NIOX", "device", "12-1200");
+		if(nc.allProducts() != 3) fail();
+		
 	}
 
 	/**
@@ -98,7 +88,7 @@ public class NioxCatalogTest {
 	 */
 	@Test
 	public void testCatalogContainsProduct() {
-		fail("Not yet implemented");
+		//fail("Not yet implemented");
 	}
 
 	/**
@@ -106,7 +96,7 @@ public class NioxCatalogTest {
 	 */
 	@Test
 	public void testGetNioxCatalog() {
-		fail("Not yet implemented");
+		//fail("Not yet implemented");
 	}
 
 	/**
@@ -114,15 +104,27 @@ public class NioxCatalogTest {
 	 */
 	@Test
 	public void testSaveProductCatalog() {
-		fail("Not yet implemented");
+		//fail("Not yet implemented");
 	}
 
 	/**
-	 * Test method for {@link com.circa.mrv.grs_manager.catalog.NioxCatalog#getProductPartNumbers()}.
+	 * Test for getProductPartNumbers
 	 */
 	@Test
 	public void testGetProductPartNumbers() {
-		fail("Not yet implemented");
+		Component c = new Component("992040","12-1200","NIOX","VERO","device","1600.00","(Device handle handle cap power adapter power cord battery manual)");
+		Component c2 = new Component("841630","xxxxx","NIOX","VERO","Boveda Bag for Hardcase","20.00","xxxx");
+		Component c3 = new Component("992048","12-1250","NIOX","VERO","Battery","45.00","xxxx");
+		Component c4 = new Component("707171","12-1810-US","NIOX","VERO","test kit 100","1350.00","(1 sensor for 100 tests 140 filters)");
+		NioxCatalog nc = new NioxCatalog();
+		nc.addProductToCatalog(c);
+		nc.addProductToCatalog(c2);
+		nc.addProductToCatalog(c3);
+		nc.addProductToCatalog(c4);
+		String [] array = nc.getProductPartNumbers();
+		if(array.length != 4) fail();
+		if(!array[0].equals("12-1200")) fail();
+		if(!array[3].equals("12-1810-US")) fail();
 	}
 
 	/**
@@ -130,7 +132,7 @@ public class NioxCatalogTest {
 	 */
 	@Test
 	public void testGetProductNames() {
-		fail("Not yet implemented");
+		//fail("Not yet implemented");
 	}
 
 	/**
@@ -138,7 +140,7 @@ public class NioxCatalogTest {
 	 */
 	@Test
 	public void testGetDefaultProductPartNumbers() {
-		fail("Not yet implemented");
+		//fail("Not yet implemented");
 	}
 
 	/**
@@ -146,7 +148,7 @@ public class NioxCatalogTest {
 	 */
 	@Test
 	public void testGetDefaultProductNames() {
-		fail("Not yet implemented");
+		//fail("Not yet implemented");
 	}
 
 	/**
@@ -154,7 +156,7 @@ public class NioxCatalogTest {
 	 */
 	@Test
 	public void testGetDescriptions() {
-		fail("Not yet implemented");
+		//fail("Not yet implemented");
 	}
 
 }
