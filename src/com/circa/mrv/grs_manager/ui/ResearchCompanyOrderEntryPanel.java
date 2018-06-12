@@ -187,13 +187,13 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 	private JTextField txtFldOrderDeliveryDate = new JTextField(10);
 	
 	/** Text Field for Product Details product name */
-	private JComboBox<String> cmbBoxProductName;
+	private JComboBox<Object> cmbBoxProductName;
 	/** ComboBoxModel for product names */
-	private DefaultComboBoxModel<String> nameModel;
+	private DefaultComboBoxModel<Object> nameModel;
 	/** Text Field for Product Details product part number */
-	private JComboBox<String> cmbBoxProductPartNumber;
+	private JComboBox<Object> cmbBoxProductPartNumber;
 	/** ComboBoxModel for product part numbers */
-	private DefaultComboBoxModel<String> numberModel;
+	private DefaultComboBoxModel<Object> numberModel;
 	/** Text Field for Product Details product description */
 	private JTextField txtFldProductDescription = new JTextField(30);
 	/** Text Field for Product Details product quantity */
@@ -218,10 +218,6 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 	private Employee currentUser;
 	/** Catalog of all available NIOX products */
 	private NioxCatalog catalog;
-	/** Array of product part numbers */
-	private String [] part = new String[19];
-	/** Array of product names */
-	private String [] name = new String[19];
 	/** Order records */
 	private OrderRecord orderRecord;
 	
@@ -235,6 +231,7 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 		currentUser = (Employee)GRSManager.getInstance().getCurrentUser();
 		catalog = GRSManager.getInstance().getNioxCatalog();
 		orderRecord = GRSManager.getInstance().getOrderRecord();
+		//System.out.println(orderRecord.getOrderRecordList().size());
 		GroupLayout grpLayout = new GroupLayout(pnlDateAndCustomer);
 		pnlDateAndCustomer.setLayout(grpLayout);
 		grpLayout.setAutoCreateGaps(true);
@@ -249,28 +246,39 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 		 *  																			  *
 		 *																				  *
 		 **********************************************************************************/
-		
-		int i = 0;
-		while( i < catalog.allProducts() ) {
-			part[i] = catalog.getNioxCatalog()[i][0];
-			name[i] = catalog.getNioxCatalog()[i][1] + " " + catalog.getNioxCatalog()[i][2] + " " + catalog.getNioxCatalog()[i][3];
-			i++;
+		if(!orderRecord.getStudyList().isEmpty()) {
+			for(int i = 0; i < orderRecord.getStudyList().size(); i++) {
+				System.out.println(orderRecord.getStudyList().get(i));
+			}
+		} else {
+			
 		}
+			
 		try {
-			numberModel = new DefaultComboBoxModel<String>(catalog.getProductPartNumbers());
-			nameModel = new DefaultComboBoxModel<String>(catalog.getProductNames());
+			numberModel = new DefaultComboBoxModel<Object>(catalog.getProductPartNumbers());
+			nameModel = new DefaultComboBoxModel<Object>(catalog.getProductNames());
 			studyModel = new DefaultComboBoxModel<Object>(orderRecord.getStudyList().toArray());
 			siteModel = new DefaultComboBoxModel<Object>(orderRecord.getSiteList().toArray());
 		} catch (IllegalArgumentException | NullPointerException e) {
-			numberModel = new DefaultComboBoxModel<String>(NioxCatalog.getDefaultProductPartNumbers());
-			nameModel = new DefaultComboBoxModel<String>(NioxCatalog.getDefaultProductNames());
+			System.out.println("an exception was caught in order entry");
+			numberModel = new DefaultComboBoxModel<Object>(NioxCatalog.getDefaultProductPartNumbers());
+			nameModel = new DefaultComboBoxModel<Object>(NioxCatalog.getDefaultProductNames());
 			studyModel = new DefaultComboBoxModel<Object>(OrderRecord.getDefaultStudyNumbers());
 			siteModel = new DefaultComboBoxModel<Object>(OrderRecord.getDefaultStiteNumbers());
 		}
-		cmbBoxProductPartNumber = new JComboBox<String>(numberModel);
-		cmbBoxProductName = new JComboBox<String>(nameModel);
+		cmbBoxProductPartNumber = new JComboBox<Object>(numberModel);
+		cmbBoxProductPartNumber.setSelectedIndex(-1);		
+		cmbBoxProductName = new JComboBox<Object>(nameModel);
+		cmbBoxProductName.setSelectedIndex(-1);
 		cmbBoxStudyNumber = new JComboBox<Object>(studyModel);
+		cmbBoxStudyNumber.setSelectedIndex(-1);
 		cmbBoxSiteNumber = new JComboBox<Object>(siteModel);
+		cmbBoxSiteNumber.setSelectedIndex(-1);
+		
+		cmbBoxProductPartNumber.addActionListener(this);
+		cmbBoxProductName.addActionListener(this);
+		cmbBoxStudyNumber.addActionListener(this);
+		cmbBoxSiteNumber.addActionListener(this);
 		
 		
 		//DefaultComboBoxModel<String> siteModel = new DefaultComboBoxModel<String>(orderRecord.getSites());
@@ -447,7 +455,7 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 		TitledBorder borderCourseDetails = BorderFactory.createTitledBorder(lowerEtched, "Order Details");
 		pnlDateAndCustomer.setBorder(borderCourseDetails);
 		pnlDateAndCustomer.setToolTipText("Order Details");				
-		System.out.println("catalog size: " + catalog.allProducts());
+		//System.out.println("catalog size: " + catalog.allProducts());
 		c.gridx = 0;
 		c.gridy = 4;
 		c.weightx = 1;
@@ -463,18 +471,40 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 	 * Updates the catalog and schedule tables.
 	 */
 	public void updateTables() {
-		//courseRollTableModel.updateData();
+		/**
+		numberModel = new DefaultComboBoxModel<Object>(catalog.getProductPartNumbers());
+		nameModel = new DefaultComboBoxModel<Object>(catalog.getProductNames());
+		studyModel = new DefaultComboBoxModel<Object>(orderRecord.getStudyList().toArray());
+		siteModel = new DefaultComboBoxModel<Object>(orderRecord.getSiteList().toArray());
+		
+		cmbBoxStudyNumber = new JComboBox<Object>(studyModel);
+		cmbBoxStudyNumber.setSelectedIndex(-1);
+		cmbBoxSiteNumber = new JComboBox<Object>(siteModel);
+		cmbBoxSiteNumber.setSelectedIndex(-1);
+		cmbBoxProductPartNumber = new JComboBox<Object>(numberModel);
+		cmbBoxProductPartNumber.setSelectedIndex(-1);
+		cmbBoxProductName = new JComboBox<Object>(nameModel);
+		cmbBoxProductName.setSelectedIndex(-1);
+		
+		cmbBoxProductName.addActionListener(this);
+		cmbBoxProductPartNumber.addActionListener(this);
+		cmbBoxSiteNumber.addActionListener(this);
+		cmbBoxStudyNumber.addActionListener(this);
+		*/
 		productRollTableModel.updateData();
+		
+		this.validate();
+		this.repaint();
 	}
 	
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource() == cmbBoxProductPartNumber) {
-			String number = (String)cmbBoxProductPartNumber.getSelectedItem();
+		if(e.getSource() == cmbBoxStudyNumber) {
+			
 			
 		} else if (e.getSource() == cmbBoxProductName) {
-			String name = (String)cmbBoxProductName.getSelectedItem();
+			
 			
 		}
 		

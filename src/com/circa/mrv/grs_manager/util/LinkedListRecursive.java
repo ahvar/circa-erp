@@ -51,6 +51,7 @@ public class LinkedListRecursive<E> {
 	 * @throws IllegalArgumentException if the passed element already exists in the list. 
 	 */
 	public boolean add(E element){
+		//System.out.println("enter add: " + element);
 		if (element == null){
 			System.out.println("element false");
 			return false;
@@ -174,6 +175,7 @@ public class LinkedListRecursive<E> {
 	 * @return true if the element is in the list and false otherwise.
 	 */
 	public boolean contains(E element){
+		//System.out.println("enter LL contains: " + element);
 		if (front == null || size == 0 || element == null){
 			return false;
 		}
@@ -314,8 +316,13 @@ public class LinkedListRecursive<E> {
 		 * @return true if the element is in the list and false otherwise.
 		 */
 		public boolean contains(E element){
-			if(data == null || next == null)
+			//System.out.println("enter contains / data: " + data);
+			//System.out.println("enter contains / element: " +  element);
+			if(data == null)
 				return false;
+			if(next == null) {
+				if(!data.equals(element)) return false;
+			}
 			if(data.equals(element)){
 				return true;
 			}

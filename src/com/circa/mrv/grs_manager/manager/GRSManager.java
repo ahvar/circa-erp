@@ -74,8 +74,10 @@ public class GRSManager {
 	 */
 	public static GRSManager getInstance() {
 		  if (instance == null) {
+			  System.out.println("GRS is null");
 			instance = new GRSManager();
 		}
+		System.out.println("GRS is not null");
 		return instance;
 	}
 	
@@ -92,6 +94,7 @@ public class GRSManager {
 	 * @return the order record
 	 */
 	public OrderRecord getOrderRecord() {
+		System.out.println(orderRecord.getOrderRecordList().size());
 		return orderRecord;
 	}
 
@@ -205,8 +208,8 @@ public class GRSManager {
 		private static final String EMAIL = "arthur.vargas@circassia.com";
 		
 		/**
-		 * Create an adminisrator user with the user id of administrator and
-		 * password of 03ci27rca17.  Note that hard coding passwords in a 
+		 * Create an administrator user with the user id of administrator and
+		 * password of admin.  Note that hard coding passwords in a 
 		 * project is BAD AND THIS MUST BE CHANGED AFTER TESTING IS COMPLETE.
 		 */
 		public Administrator() {
@@ -383,5 +386,14 @@ public class GRSManager {
 	 */
 	public UserDirectory getUserDirectory() {
 		return userDirectory;
+	}
+	
+	/**
+	 * Adds the Order to the order record
+	 * @param order the order to add
+	 */
+	public void addOrderToRecord(Order order) {
+		
+		orderRecord.getOrderRecordList().add(order);
 	}
 }

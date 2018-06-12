@@ -76,8 +76,8 @@ public abstract class Product {
 	 * @param name the name to set
 	*/
 	public void setFamily(String family) {
-		if(family.equals("") || family == null )
-			throw new IllegalArgumentException(PRODUCT_FAMILY_ERROR);
+		if(family == null || family.equals(""))
+			productFamily = "NIOX";
 		this.productFamily = family;
 	}
 	

@@ -17,6 +17,8 @@ import java.util.Calendar;
 
 import com.circa.mrv.grs_manager.io.OrderRecordIO;
 import com.circa.mrv.grs_manager.io.ProductTitle;
+import com.circa.mrv.grs_manager.location.Location;
+import com.circa.mrv.grs_manager.location.ResearchSite;
 import com.circa.mrv.grs_manager.niox.Component;
 
 import com.circa.mrv.grs_manager.util.LinkedListRecursive;
@@ -30,7 +32,7 @@ import com.circa.mrv.grs_manager.document.Order;
  */
 public class OrderRecord {
 	/** The order record array */
-	private String [][] unformattedRecords;
+	private String [][] rArray;
 	/** An order record array with no product title columns */
 	private String [][] noPTColumns;
 	/** A list of order record titles which are products */
@@ -39,8 +41,10 @@ public class OrderRecord {
 	private LinkedListRecursive<Order> orderRecordList;
 	/** A list of studies */
 	private ArrayList<String> studyList;
-	/** A list of research sites */
+	/** A list of research sites numbers*/
 	private ArrayList<String> siteList;
+	/** A list of research site locations */
+	private ArrayList<Location> researchSiteNames;
 	/** The last column containing order data*/
 	private int lastCol;
 	/** The first column that is a product title */
@@ -80,7 +84,8 @@ public class OrderRecord {
 		orderRecordList = new LinkedListRecursive<Order>();
 		studyList = new ArrayList<String>(STUDY_LIST_SIZE);
 		siteList = new ArrayList<String>(RESEARCH_SITE_SIZE);
-		unformattedRecords = new String [800][54];
+		researchSiteNames = new ArrayList<Location>(RESEARCH_SITE_SIZE);
+		rArray = new String [800][54];
 		lastCol = 0;
 		first = 0;
 		last = 0;
@@ -102,9 +107,12 @@ public class OrderRecord {
 	 */
 	public void loadOrdersFromFile(String filename) throws IllegalArgumentException {
 		try {
-			OrderRecordIO.readOrderRecord(filename,unformattedRecords,productTitlesList,lastCol);
+			OrderRecordIO.readOrderRecord(filename,rArray,productTitlesList,lastCol);
 			writeUnFormattedToFile(RECORDS_NO_PRODUCT_TITLES);
 			printAllUnformattedToFile(RECORDS_PRODUCT_TITLES);
+			updateOrdersAndSites();
+			updateStudyList();
+			updateSiteList();
 			countOpenOrders();
 		} catch (IOException e) {
 			throw new IllegalArgumentException("Unable to read file " + filename);
@@ -120,7 +128,7 @@ public class OrderRecord {
 	public void loadTitlesFromFile(String filename) throws IllegalArgumentException {
 		
 		try {
-			lastCol = OrderRecordIO.readOrderTitles(filename, unformattedRecords, productTitlesList);
+			lastCol = OrderRecordIO.readOrderTitles(filename, rArray, productTitlesList);
 			setProductTitleRange();
 			writeTitlesToFile(ORDER_RECORD_TITLES);
 			writeProductTitlesToFile(PRODUCT_TITLES);
@@ -135,10 +143,10 @@ public class OrderRecord {
 	 */
 	public String [][] getRecord() {
 		String [][] orderRecords = new String[500][70];
-		for(int row = 1; row < unformattedRecords.length; row++) {
+		for(int row = 1; row < rArray.length; row++) {
 			for(int col = 0; col < lastCol; col++) {
-				if(!isProductTitle(col) && unformattedRecords[row][col] != null) {
-					orderRecords[row][col] = unformattedRecords[row][col];
+				if(!isProductTitle(col) && rArray[row][col] != null) {
+					orderRecords[row][col] = rArray[row][col];
 				}
 			}
 		}
@@ -150,7 +158,7 @@ public class OrderRecord {
 	 * @param record the record to set
 	 */
 	public void setRecord(String [][] record) {
-		this.unformattedRecords = record;
+		this.rArray = record;
 	}
 	
 	/**
@@ -181,20 +189,20 @@ public class OrderRecord {
 		//String line = br.readLine(); //blank
 		//line = br.readLine(); //titles
 		//String record = "";
-		String[][] shortOrderRecord = new String[unformattedRecords.length][11];
+		String[][] shortOrderRecord = new String[rArray.length][11];
 		int shortOrderRow = 0;
-		for(int row = 1; row < unformattedRecords.length; row++) {
-			shortOrderRecord[shortOrderRow][0] = unformattedRecords[row][0]; //study
-			shortOrderRecord[shortOrderRow][1] = unformattedRecords[row][1]; //site
-			shortOrderRecord[shortOrderRow][2] = unformattedRecords[row][33]; //city
-			shortOrderRecord[shortOrderRow][3] = unformattedRecords[row][34]; //country
-			shortOrderRecord[shortOrderRow][4] = unformattedRecords[row][48]; //PO Number
-			shortOrderRecord[shortOrderRow][5] = unformattedRecords[row][47]; //Note
-			shortOrderRecord[shortOrderRow][6] = unformattedRecords[row][39]; //Email
-			shortOrderRecord[shortOrderRow][7] = unformattedRecords[row][41]; //Date
-			shortOrderRecord[shortOrderRow][8] = unformattedRecords[row][35]; //State
-			shortOrderRecord[shortOrderRow][9] = unformattedRecords[row][36]; //Phone
-			shortOrderRecord[shortOrderRow][10] = unformattedRecords[row][37];//Fax
+		for(int row = 1; row < rArray.length; row++) {
+			shortOrderRecord[shortOrderRow][0] = rArray[row][0]; //study
+			shortOrderRecord[shortOrderRow][1] = rArray[row][1]; //site
+			shortOrderRecord[shortOrderRow][2] = rArray[row][33]; //city
+			shortOrderRecord[shortOrderRow][3] = rArray[row][34]; //country
+			shortOrderRecord[shortOrderRow][4] = rArray[row][48]; //PO Number
+			shortOrderRecord[shortOrderRow][5] = rArray[row][47]; //Note
+			shortOrderRecord[shortOrderRow][6] = rArray[row][39]; //Email
+			shortOrderRecord[shortOrderRow][7] = rArray[row][41]; //Date
+			shortOrderRecord[shortOrderRow][8] = rArray[row][35]; //State
+			shortOrderRecord[shortOrderRow][9] = rArray[row][36]; //Phone
+			shortOrderRecord[shortOrderRow][10] = rArray[row][37];//Fax
 			shortOrderRow++;
 		}
 		//br.close();
@@ -327,14 +335,14 @@ public class OrderRecord {
 	 */
 	private void writeUnFormattedToFile(String output) throws IOException {
 		fileWriter = new PrintStream(new File(output));
-		for(int row = 0; row < unformattedRecords.length; row++) {
+		for(int row = 0; row < rArray.length; row++) {
 			fileWriter.println();
 			for(int col = 0; col < lastCol; col++) {
 				if(isProductTitle(col)) continue;
-				if(unformattedRecords[row][col] == null)
+				if(rArray[row][col] == null)
 					fileWriter.print("no record" + ",");
 				else 
-					fileWriter.print(unformattedRecords[row][col] + ",");
+					fileWriter.print(rArray[row][col] + ",");
 			}
 		}
 	}
@@ -349,7 +357,7 @@ public class OrderRecord {
 		fileWriter = new PrintStream(output);
 		for(int col = 0; col < lastCol; col++) {
 			if(!isProductTitle(col)) {
-				fileWriter.print(unformattedRecords[0][col] + " ");
+				fileWriter.print(rArray[0][col] + " ");
 			}
 		}
 		
@@ -374,9 +382,9 @@ public class OrderRecord {
 	 */
 	private void printAllUnformattedToFile(String output) throws IOException {
 		fileWriter = new PrintStream(output);
-		for(int row = 0; row < unformattedRecords.length; row++) {
+		for(int row = 0; row < rArray.length; row++) {
 			for(int col = 0; col < lastCol; col++) 
-				fileWriter.print(unformattedRecords[row][col] + ",");
+				fileWriter.print(rArray[row][col] + ",");
 			fileWriter.print('\n');
 		}
 	}
@@ -392,12 +400,13 @@ public class OrderRecord {
 	 * 
 	 * @throws IlleglArgumentException if date strings cannot be parsed
 	 */
-	public void updateOrderList() {
-		Order o = null;
+	public void updateOrdersAndSites() {
+		Order o = null;		
+		ResearchSite rs = null;
 		// loop for rows in the record array
-		for(int row = 1; row < unformattedRecords.length; row++) {
+		for(int row = 1; row < rArray.length; row++) {
 			// rows without study numbers, site numbers, and location are skipped
-			if(unformattedRecords[row][0] == null && unformattedRecords[row][1] == null && unformattedRecords[row][2] == null)
+			if(rArray[row][0] == null && rArray[row][1] == null && rArray[row][2] == null)
 				continue;
 			
 			if(row == 1) {
@@ -409,7 +418,7 @@ public class OrderRecord {
 			// loop for the product title range to see which products were ordered
 			for(int col = first; col <= last; col++) {
 				
-				if(unformattedRecords[row][col] != null) {
+				if(rArray[row][col] != null) {
 					int prodTitle = 0;
 					String family = null;
 					String gen = null;
@@ -429,14 +438,56 @@ public class OrderRecord {
 					
 			}
 			
-			o.setStudy(unformattedRecords[row][0]);
-			o.setSite(unformattedRecords[row][1]);
-			o.setPo(unformattedRecords[row][48]);
 			try {
-				if(unformattedRecords[row][41] != null)
-					o.setCreation(getCalendarFromString(unformattedRecords[row][41]));
+				o.setStudy(rArray[row][0]);
+				o.setSite(rArray[row][1]);
+				o.setPo(rArray[row][48]);
+				o.setSiteName(rArray[row][30]);
+				o.setStreetAdd(rArray[row][31]);
+				o.setCity(rArray[row][33]);
+				o.setState(rArray[row][35]);
+				o.setCountry(rArray[row][34]);
+				o.setZip(rArray[row][32]);
+				if(rArray[row][41] != null)
+					o.setCreation(getCalendarFromString(rArray[row][41]));
+				rs = new ResearchSite(rArray[row][31]," ",rArray[row][33],rArray[row][34],rArray[row][35],rArray[row][32],Long.parseLong(rArray[row][1]),rArray[row][30],0);
+				researchSiteNames.add(rs);
 			} catch (ParseException e) {
 				throw new IllegalArgumentException(e.getMessage() + " OrderRecord.updateOrderList()");
+			} catch (NullPointerException npe) {
+				System.out.println("NPE thrown OrderRecord.updateOrdersAndSites()");
+				rs = new ResearchSite(rArray[row][31],"add2","city","state","zip","country",Long.parseLong(rArray[row][1]),rArray[row][30],0);
+				researchSiteNames.add(rs);
+			} catch (IllegalArgumentException iae) {
+				if(rArray[row][30] == null || rArray[row][30].equals("")) {
+					o.setSiteName("Clinic Name Missing");
+					rs.setName("Clinic Name Missing");
+				}
+				if(rArray[row][31] == null || rArray[row][31].equals("")) {
+					o.setStreetAdd("Street address missing");
+					rs.setAddress1("Street address missing");
+				}
+				if(rArray[row][33] == null || rArray[row][33].equals("")) {
+					o.setCity("Missing City");
+					rs.setCity("Missing City");
+				}
+				if(rArray[row][35] == null || rArray[row][35].equals("")) {
+					o.setState("XX");
+					rs.setState("XX");
+				}
+				if(rArray[row][32] == null || rArray[row][32].equals("")) {
+					o.setZip("XXXXX");
+					rs.setZip("XXXXX");
+				}
+				if(rArray[row][48] == null || rArray[row][48].equals("")) {
+					o.setPo("MISSING PO");
+				}
+				if(rArray[row][0] == null || rArray[row][0].equals("")) {
+					o.setStudy("MISSING STUDY");
+				}
+				if(rArray[row][1] == null || rArray[row][1].equals("")) {
+					o.setSite("MISSING SITE");
+				}
 			}
 			orderRecordList.add(o);
 		}
@@ -488,12 +539,12 @@ public class OrderRecord {
 		String[] studies = null;
 		try {
 		  ArrayList<String> studyList = new ArrayList<String>();
-		  studyList.add(unformattedRecords[1][0]);
-		  String study = unformattedRecords[1][0];
-		  for(int row = 2; row < unformattedRecords.length; row++) {
-			  if(!study.equals(unformattedRecords[row][0])) {
-				  studyList.add(unformattedRecords[row][0]);
-				  study = unformattedRecords[row][0];
+		  studyList.add(rArray[1][0]);
+		  String study = rArray[1][0];
+		  for(int row = 2; row < rArray.length; row++) {
+			  if(!study.equals(rArray[row][0])) {
+				  studyList.add(rArray[row][0]);
+				  study = rArray[row][0];
 			  }
 		  }
 		  studies = new String[studyList.size()];
@@ -561,7 +612,11 @@ public class OrderRecord {
 	 */
 	public void countOpenOrders() {
 		for(int i = 0; i < orderRecordList.size(); i++) {
+			try {
 			if(orderRecordList.get(i).getStatus().equals(Order.getOpen())) open++;
+			}catch(NullPointerException npe) {
+				getOrderRecordList().get(i).setStatus(Order.getShipped());
+			}
 		}
 	}
 	

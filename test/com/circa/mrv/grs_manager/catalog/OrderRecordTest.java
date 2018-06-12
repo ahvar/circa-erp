@@ -9,6 +9,8 @@ import java.io.IOException;
 
 import org.junit.Test;
 
+import com.circa.mrv.grs_manager.document.Order;
+
 /**
  * Test for OrderRecord
  * @author Arthur Vargas
@@ -92,25 +94,15 @@ public class OrderRecordTest {
 			throw new NullPointerException(npe.getMessage());
 		}
 		// order list is empty before update method is called and contains 7 orders after method completes
-		assertEquals(or.getOrderRecordList().size(),0);
-		// since order record list is empty, nothing will be added to study and site lists
-		or.updateStudyList();
-		or.updateSiteList();
-		assertEquals(or.getStudyList().size(),0);
-		assertEquals(or.getSiteList().size(),0);
-		
-		// updateOrderList / updateStudyList and then check sizes
-		// there are 7 orders within 2 studies
-		or.updateOrderList();
-		or.updateStudyList();
-		or.updateSiteList();
-		
 		assertEquals(or.getOrderRecordList().size(),6);
+		assertEquals(or.getStudyList().size(),2);
+		assertEquals(or.getSiteList().size(),6);
+		
 		if(!or.getStudyList().get(0).equals(study006155))
 			fail();
 		if(!or.getStudyList().get(1).equals(study145986))
 			fail();
-		assertEquals(or.getSiteList().size(),6);
+		
 		if(!or.getSiteList().get(1).equals(site5007))
 			fail();
 		if(!or.getSiteList().get(2).equals(site5008))
@@ -128,9 +120,6 @@ public class OrderRecordTest {
 		OrderRecord or2 = new OrderRecord();
 		or2.loadTitlesFromFile(orderRecordTitles);
 		or2.loadOrdersFromFile(moreOrderRecords);
-		or2.updateOrderList();
-		or2.updateStudyList();
-		or2.updateSiteList();
 		
 		if(!or2.getStudyList().get(0).equals(study006155))
 			fail();
@@ -149,10 +138,45 @@ public class OrderRecordTest {
 		if(!or2.getSiteList().get(92).equals("2539") || !or2.getSiteList().get(93).equals("5017") || !or2.getSiteList().get(94).equals("2211") ||
 				!or2.getSiteList().get(97).equals("2533") || !or2.getSiteList().get(98).equals("2502") || !or2.getSiteList().get(99).equals("5053")	)
 			fail();
+		
+		
+		if(!or2.getOrderRecordList().get(528).getPo().equals("17004101 OD")) fail();
+		if(!or2.getOrderRecordList().get(529).getPo().equals("17004102 OD")) fail();
+		if(!or2.getOrderRecordList().get(530).getPo().equals("17004103 OD")) fail();
+		if(!or2.getOrderRecordList().get(531).getPo().equals("17004539 OD")) fail();
+		if(!or2.getOrderRecordList().get(532).getPo().equals("18000008 OD")) fail();
+		if(!or2.getOrderRecordList().get(533).getPo().equals("18000009 OD")) fail();
+		if(!or2.getOrderRecordList().get(534).getPo().equals("18000027 OD")) fail();
+		
+		if(!or2.getOrderRecordList().get(442).getCity().equals("Tokyo")) fail();
+		if(!or2.getOrderRecordList().get(462).getCity().equals("Oklahoma City")) fail();
+		if(!or2.getOrderRecordList().get(246).getCity().equals("Jerez de La Frontera")) fail();
+		if(!or2.getOrderRecordList().get(248).getCity().equals("Salamanca, Castilla y Leon")) fail();
+		if(!or2.getOrderRecordList().get(43).getCity().equals("Milano")) fail();
+		if(!or2.getOrderRecordList().get(45).getCity().equals("Winston Salem")) fail();
+		if(!or2.getOrderRecordList().get(73).getCity().equals("Landsberg")) fail();
+		if(!or2.getOrderRecordList().get(530).getCity().equals("Tampa")) fail();
+		
+		
 
 		
+		
 	}
-
+	
+	/**
+	 * Tests updateOrderList()
+	 */
+	public void testUpdateOrderList() {
+		OrderRecord or = new OrderRecord();
+		or.loadTitlesFromFile(orderRecordTitles);
+		or.loadOrdersFromFile(moreOrderRecords);
+		try {
+		System.out.println(or.getOrderRecordList().size());
+		
+		} catch(IllegalArgumentException iae) {
+			fail();
+		}
+	}
 	/**
 	 * Tests loadTitlesFromFile
 	 */
@@ -194,19 +218,28 @@ public class OrderRecordTest {
 	}
 
 	/**
-	 * Test method for {@link com.circa.mrv.grs_manager.catalog.OrderRecord#updateOrderList()}.
-	 */
-	@Test
-	public void testUpdateOrderList() {
-		//fail("Not yet implemented");
-	}
-
-	/**
-	 * Test method for {@link com.circa.mrv.grs_manager.catalog.OrderRecord#getLastOrder()}.
+	 * Tests getLastOrder()
 	 */
 	@Test
 	public void testGetLastOrder() {
-		//fail("Not yet implemented");
+		OrderRecord or = new OrderRecord();
+		or.loadTitlesFromFile(orderRecordTitles);
+		or.loadOrdersFromFile(moreOrderRecords);
+		for(int i = 0; i < or.getOrderRecordList().size(); i++) {
+			//System.out.println(i + " " + or.getOrderRecordList().get(i).getPo());
+			//System.out.println(i + " " + or.getOrderRecordList().get(i).getNumber());
+			//System.out.println(i + " " + or.getOrderRecordList().get(i).getState());
+			//System.out.println(i + " " + or.getOrderRecordList().get(i).getCountry());
+			//System.out.println();
+		}
+		Order o = or.getLastOrder();
+		assertEquals(o.getNumber(),541);
+		//System.out.println(o.getStudy());
+		//System.out.println(o.getSite());
+		//assertEquals(o.getStudy(),"006186");
+		//assertEquals(o.getSite(),"9004");
+		//System.out.println(o.getPo());
+		//System.out.println(o.getCity() + " " + o.getCountry() + " " + o.getStatus());
 	}
 
 	/**

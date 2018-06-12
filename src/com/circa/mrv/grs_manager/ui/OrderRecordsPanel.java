@@ -397,8 +397,17 @@ public class OrderRecordsPanel  extends JPanel implements ActionListener {
 			String titles = getTitlesFileName(true);
 			String orders = getOrdersFileName(true);
 			try {
-				GRSManager.getInstance().getOrderRecord().loadTitlesFromFile(titles);
-				GRSManager.getInstance().getOrderRecord().loadOrdersFromFile(orders);
+				orderRecord.loadTitlesFromFile(titles);
+				orderRecord.loadOrdersFromFile(orders);
+				System.out.println(orderRecord.getOrderRecordList().size());
+				for(int i = 0; i < orderRecord.getOrderRecordList().size(); i++) {
+					try {
+					GRSManager.getInstance().addOrderToRecord(orderRecord.getOrderRecordList().get(i));
+					}catch(IllegalArgumentException iae) {
+						//JOptionPane.showMessageDialog(this,iae.getMessage());
+					}
+				}
+				System.out.println(GRSManager.getInstance().getOrderRecord().getOrderRecordList().size());
 				orderTableModel.updateData();
 				//tableOrder.fireTableDataChange();
 			}catch (IllegalArgumentException iae) {
@@ -615,12 +624,12 @@ public class OrderRecordsPanel  extends JPanel implements ActionListener {
 		public void updateData() {
 			
 			try {
-				data = GRSManager.getInstance().getOrderRecord().getShortOrderInfo();
+				data = orderRecord.getShortOrderInfo();
 			} catch(NullPointerException e) {
-				data = GRSManager.getInstance().getOrderRecord().getRecord();
+				data = orderRecord.getRecord();
 				System.out.println("NullPointerException in OrderRecordsPanel: " + e.getMessage());
 			} catch(IOException e) {
-				data = GRSManager.getInstance().getOrderRecord().getRecord();
+				data = orderRecord.getRecord();
 				System.out.println("IOException in OrderRecordsPanel: " + e.getMessage());
 			}
 		}

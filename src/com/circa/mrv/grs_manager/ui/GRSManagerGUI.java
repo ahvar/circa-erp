@@ -28,7 +28,6 @@ import com.circa.mrv.grs_manager.directory.ResearchCompany;
  * @author Arthur Vargas
  */
 public class GRSManagerGUI {
-	
 	/** JFrame for the GUI */
 	private static JFrame gui;
 	/** GRSManagerGUI title */	

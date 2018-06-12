@@ -10,7 +10,6 @@ import java.util.EmptyStackException;
  * top item off the stack, checking if the stack is empty, getting the number of items on the stack, and
  * setting the stack's capacity.
  * @author Arthur Vargas
- * @author Ben Ioppolo
  * @param <E> Generic type parameter
  */
 public class LinkedStack<E> implements Stack<E> {
@@ -35,7 +34,7 @@ public class LinkedStack<E> implements Stack<E> {
 	@Override
 	public void push(E element) {
 		if (stack.size() == stackCapacity){
-			throw new IllegalArgumentException("Capacity has been reached");
+			setCapacity(stackCapacity + 10);
 		}
 		stack.add(0, element);
 	}

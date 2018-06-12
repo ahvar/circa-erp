@@ -94,24 +94,21 @@ public abstract class Document {
 		this.userID = id;
 	}
 
-	/**
-	 * Generates the hashcode for Document
-	 * @result the hashcode for Document
+	/** 
+	 * Generates the hash code for Document.
 	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((creation == null) ? 0 : creation.hashCode());
 		result = prime * result + (int) (number ^ (number >>> 32));
-		result = prime * result + ((userID == null) ? 0 : userID.hashCode());
 		return result;
 	}
 
 	/**
-	 * Compares this Document for equality with the parameter object
-	 * @param obj the object for comparison with this Document
-	 * @return true if this Document is equal to the parameter object
+	 * Tests this Document with parameter object. Two documents are equal if they each have the same
+	 * unique ID.
+	 * @param obj object to test for equality
 	 */
 	@Override
 	public boolean equals(Object obj) {
@@ -122,17 +119,7 @@ public abstract class Document {
 		if (!(obj instanceof Document))
 			return false;
 		Document other = (Document) obj;
-		if (creation == null) {
-			if (other.creation != null)
-				return false;
-		} else if (!creation.equals(other.creation))
-			return false;
 		if (number != other.number)
-			return false;
-		if (userID == null) {
-			if (other.userID != null)
-				return false;
-		} else if (!userID.equals(other.userID))
 			return false;
 		return true;
 	}

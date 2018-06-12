@@ -259,15 +259,19 @@ public class NioxCatalog {
 	 */
 	public String[] getProductPartNumbers() {
 		String [] pn = null;
-		try {
-		  pn = new String[catalog.size()];
-		  for(int i = 0; i < catalog.size(); i++ ) {
-			  pn[i] = catalog.get(i).getPartNumber();
-		  }
-		} catch (NullPointerException e) {
-			throw new IllegalArgumentException();
+		if(catalog.size() == 0) 
+			pn = new String[10];
+		else {
+			try {
+				pn = new String[catalog.size()];
+				for(int i = 0; i < catalog.size(); i++ ) {
+					pn[i] = catalog.get(i).getPartNumber();
+				}
+			} catch (NullPointerException e) {	
+				return pn;
+				
+			}
 		}
-		if(pn.length == 0 || pn == null) throw new IllegalArgumentException();
 		return pn;
 	}
 	
@@ -281,6 +285,7 @@ public class NioxCatalog {
 	public String[] getProductNames() {
 		String[] names = null;
 		Component part = null;
+		if(catalog.size() == 0) names = new String[10];
 		try {
 			names = new String[catalog.size()];
 			for(int i = 0; i < catalog.size(); i++) {
@@ -288,9 +293,9 @@ public class NioxCatalog {
 				names[i] = part.getFamily() + " " + part.getGeneration() + " " + part.getDescription(); 
 			}
 		} catch (NullPointerException e) {
-			throw new IllegalArgumentException();
+			return names;
 		}
-		if (names.length == 0 || names == null) throw new IllegalArgumentException();
+		
 		return names;
 	}
 	

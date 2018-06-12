@@ -57,6 +57,10 @@ public class Order extends Document {
 	private String study;
 	/** Site number associated with this order */
 	private String site;
+	/** Site name */
+	private String siteName;
+	/** Site street address */
+	private String streetAdd;
 	/** City of the research site */
 	private String city;
 	/** State of the research site */
@@ -254,6 +258,46 @@ public class Order extends Document {
 		this.site = site;
 	}
 
+	/**
+	 * Returns the name of the healthcare facility where the research is being conducted
+	 * @return the siteName
+	 */
+	public String getSiteName() {
+		return siteName;
+	}
+
+	/**
+	 * The site name is the name of the healthcare facility where the research is conducted.
+	 * Sets the site name to the siteName parameter. Throws IllegalArgumentException if 
+	 * siteName parameter is null or empty.
+	 * 
+	 * @param siteName the siteName to set
+	 * @throws IllegalArgumentException if siteName is null or empty
+	 */
+	public void setSiteName(String siteName) {
+		if(siteName == null || siteName.equals(""))
+			throw new IllegalArgumentException();
+		this.siteName = siteName;
+	}
+
+	/**
+	 * Returns the street address of the healthcare facility where the research is conducted.
+	 * @return the streetAdd
+	 */
+	public String getStreetAdd() {
+		return streetAdd;
+	}
+
+	/**
+	 * Sets the street address of the healthcare facility where the research is conducted.
+	 * Throws IllegalArgumentException if streetAdd parameter is null or empty.
+	 * @param streetAdd the streetAdd to set
+	 */
+	public void setStreetAdd(String streetAdd) {
+		if(streetAdd == null || streetAdd.equals(""))
+			throw new IllegalArgumentException();
+		this.streetAdd = streetAdd;
+	}
 
 	/**
 	 * @return the city
@@ -390,33 +434,22 @@ public class Order extends Document {
 		return orderString;
 	}
 
-	/** 
-	 * The hashcode for Order
+	/**
+	 * Generates the hash code for Order
 	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		long temp;
-		temp = Double.doubleToLongBits(amount);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		result = prime * result + ((city == null) ? 0 : city.hashCode());
-		result = prime * result + ((country == null) ? 0 : country.hashCode());
-		result = prime * result + ((delivery == null) ? 0 : delivery.hashCode());
 		result = prime * result + ((po == null) ? 0 : po.hashCode());
 		result = prime * result + ((site == null) ? 0 : site.hashCode());
-		result = prime * result + ((state == null) ? 0 : state.hashCode());
-		result = prime * result + ((status == null) ? 0 : status.hashCode());
-		result = prime * result + ((statusDate == null) ? 0 : statusDate.hashCode());
 		result = prime * result + ((study == null) ? 0 : study.hashCode());
-		result = prime * result + (int) (trackingNum ^ (trackingNum >>> 32));
-		result = prime * result + ((zip == null) ? 0 : zip.hashCode());
 		return result;
 	}
 
 	/**
-	 * The equals method for Order
-	 * @see java.lang.Object#equals(java.lang.Object)
+	 * Tests this order for equality. Two orders are equal if they have the same PO, study id, and site id.
+	 * @param obj the object to test for equality
 	 */
 	@Override
 	public boolean equals(Object obj) {
@@ -427,23 +460,6 @@ public class Order extends Document {
 		if (!(obj instanceof Order))
 			return false;
 		Order other = (Order) obj;
-		if (Double.doubleToLongBits(amount) != Double.doubleToLongBits(other.amount))
-			return false;
-		if (city == null) {
-			if (other.city != null)
-				return false;
-		} else if (!city.equals(other.city))
-			return false;
-		if (country == null) {
-			if (other.country != null)
-				return false;
-		} else if (!country.equals(other.country))
-			return false;
-		if (delivery == null) {
-			if (other.delivery != null)
-				return false;
-		} else if (!delivery.equals(other.delivery))
-			return false;
 		if (po == null) {
 			if (other.po != null)
 				return false;
@@ -454,32 +470,10 @@ public class Order extends Document {
 				return false;
 		} else if (!site.equals(other.site))
 			return false;
-		if (state == null) {
-			if (other.state != null)
-				return false;
-		} else if (!state.equals(other.state))
-			return false;
-		if (status == null) {
-			if (other.status != null)
-				return false;
-		} else if (!status.equals(other.status))
-			return false;
-		if (statusDate == null) {
-			if (other.statusDate != null)
-				return false;
-		} else if (!statusDate.equals(other.statusDate))
-			return false;
 		if (study == null) {
 			if (other.study != null)
 				return false;
 		} else if (!study.equals(other.study))
-			return false;
-		if (trackingNum != other.trackingNum)
-			return false;
-		if (zip == null) {
-			if (other.zip != null)
-				return false;
-		} else if (!zip.equals(other.zip))
 			return false;
 		return true;
 	}
