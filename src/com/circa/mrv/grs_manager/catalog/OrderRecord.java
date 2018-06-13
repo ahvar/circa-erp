@@ -451,14 +451,14 @@ public class OrderRecord {
 				if(rArray[row][41] != null)
 					o.setCreation(getCalendarFromString(rArray[row][41]));
 				rs = new ResearchSite(rArray[row][31]," ",rArray[row][33],rArray[row][34],rArray[row][35],rArray[row][32],Long.parseLong(rArray[row][1]),rArray[row][30],0);
-				researchSiteNames.add(rs);
+				
 			} catch (ParseException e) {
 				throw new IllegalArgumentException(e.getMessage() + " OrderRecord.updateOrderList()");
 			} catch (NullPointerException npe) {
 				System.out.println("NPE thrown OrderRecord.updateOrdersAndSites()");
 				rs = new ResearchSite(rArray[row][31],"add2","city","state","zip","country",Long.parseLong(rArray[row][1]),rArray[row][30],0);
-				researchSiteNames.add(rs);
 			} catch (IllegalArgumentException iae) {
+				if(rs == null) rs = new ResearchSite("","","","","","",Long.parseLong(rArray[row][1]),"",0);
 				if(rArray[row][30] == null || rArray[row][30].equals("")) {
 					o.setSiteName("Clinic Name Missing");
 					rs.setName("Clinic Name Missing");
@@ -490,6 +490,7 @@ public class OrderRecord {
 				}
 			}
 			orderRecordList.add(o);
+			researchSiteNames.add(rs);
 		}
 		
 	}

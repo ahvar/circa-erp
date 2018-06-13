@@ -5,11 +5,17 @@ package com.circa.mrv.grs_manager.catalog;
 
 import static org.junit.Assert.*;
 
+import java.awt.BorderLayout;
+import java.awt.Container;
 import java.io.IOException;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import org.junit.Test;
 
 import com.circa.mrv.grs_manager.document.Order;
+import com.circa.mrv.grs_manager.ui.ResearchCompanyOrderEntryPanel;
 
 /**
  * Test for OrderRecord
@@ -56,6 +62,8 @@ public class OrderRecordTest {
 	private int ptCount = 22;
 	/** Column count */
 	private int columnCount = 52;
+	/** JFrame for the GUI */
+	private static JFrame gui;
 	
 	
 	/**
@@ -63,12 +71,8 @@ public class OrderRecordTest {
 	 */
 	@Test
 	public void testOrderRecord() {
-		// init empty OrderRecord
-		OrderRecord or = new OrderRecord();
-		assertEquals(or.getOrderRecordList().size(),0);
-		assertEquals(or.getFirst(),0);
-		assertEquals(or.getLast(),0);
-		assertEquals(or.getOpenOrderCount(),0);
+
+		
 	}
 
 	/**
@@ -157,16 +161,13 @@ public class OrderRecordTest {
 		if(!or2.getOrderRecordList().get(73).getCity().equals("Landsberg")) fail();
 		if(!or2.getOrderRecordList().get(530).getCity().equals("Tampa")) fail();
 		
-		
-
-		
-		
 	}
 	
 	/**
 	 * Tests updateOrderList()
 	 */
-	public void testUpdateOrderList() {
+	@Test
+	public void testUpdateOrdersAndSites() {
 		OrderRecord or = new OrderRecord();
 		or.loadTitlesFromFile(orderRecordTitles);
 		or.loadOrdersFromFile(moreOrderRecords);
@@ -177,6 +178,57 @@ public class OrderRecordTest {
 			fail();
 		}
 	}
+	
+	
+	/**
+	 * Tests updateStudyList()
+	 */
+	@Test
+	public void testUpdateStudyList() {
+		OrderRecord or = new OrderRecord();
+		or.loadTitlesFromFile(orderRecordTitles);
+		or.loadOrdersFromFile(moreOrderRecords);
+		or.updateStudyList();
+		assertEquals(or.getStudyList().get(0),"006155");
+		assertEquals(or.getStudyList().get(1),"145986");
+		assertEquals(or.getStudyList().get(2),"006156");
+		
+		assertEquals(or.getStudyList().toArray()[0],"006155");
+		assertEquals(or.getStudyList().toArray()[1],"145986");
+		assertEquals(or.getStudyList().toArray()[2],"006156");	
+	}
+	
+	/**
+	 * Tests updateSiteList()
+	 */
+	@Test
+	public void testUpdateSiteList() {
+		OrderRecord or = new OrderRecord();
+		or.loadTitlesFromFile(orderRecordTitles);
+		or.loadOrdersFromFile(moreOrderRecords);
+		or.updateSiteList();
+	
+		assertEquals(or.getSiteList().get(0),"5002");
+		assertEquals(or.getSiteList().get(1),"5007");
+		assertEquals(or.getSiteList().get(2),"5008");
+		assertEquals(or.getSiteList().get(3),"5009");
+		assertEquals(or.getSiteList().get(4),"5015");
+		assertEquals(or.getSiteList().get(5),"5018");
+		assertEquals(or.getSiteList().get(6),"5019");
+		assertEquals(or.getSiteList().get(7),"2031");
+		assertEquals(or.getSiteList().get(8),"2032");
+		assertEquals(or.getSiteList().get(9),"2351");
+		assertEquals(or.getSiteList().get(10),"2352");
+		assertEquals(or.getSiteList().get(11),"2353");
+		assertEquals(or.getSiteList().get(12),"2354");
+		
+		assertEquals(or.getSiteList().toArray()[0],"5002");
+		assertEquals(or.getSiteList().toArray()[1],"5007");
+		assertEquals(or.getSiteList().toArray()[2],"5008");	
+		
+	}
+	
+	
 	/**
 	 * Tests loadTitlesFromFile
 	 */

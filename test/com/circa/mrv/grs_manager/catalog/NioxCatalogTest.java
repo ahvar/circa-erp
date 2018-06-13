@@ -125,6 +125,29 @@ public class NioxCatalogTest {
 		if(array.length != 4) fail();
 		if(!array[0].equals("12-1200")) fail();
 		if(!array[3].equals("12-1810-US")) fail();
+		
+		NioxCatalog nc1 = new NioxCatalog();
+		nc1.loadProductsFromFile(allProducts);
+		
+		assertEquals(nc1.getProductPartNumbers()[0],"12-1200");
+		assertEquals(nc1.getProductPartNumbers()[2],"12-1810-US");
+		assertEquals(nc1.getProductPartNumbers()[4],"12-1220");
+		assertEquals(nc1.getProductPartNumbers()[6],"12-1008");
+		assertEquals(nc1.getProductPartNumbers()[21],"09-1005");
+		assertEquals(nc1.getProductPartNumbers()[20],"09-1015");
+		assertEquals(nc1.getProductPartNumbers()[19],"no value");
+		assertEquals(nc1.getProductPartNumbers()[18],"09-1300");
+		
+		assertEquals(nc1.getProductNames()[0],"NIOX VERO device");
+		assertEquals(nc1.getProductNames()[2],"NIOX VERO test kit 100");
+		assertEquals(nc1.getProductNames()[4],"NIOX VERO Power Adapter");
+		assertEquals(nc1.getProductNames()[6],"NIOX VERO Battery Lid");
+		assertEquals(nc1.getProductNames()[21],"NIOX MINO Power Supply NIOX MINO 2009");
+		assertEquals(nc1.getProductNames()[20],"NIOX MINO QC Plug NIOX Mino Unit");
+		assertEquals(nc1.getProductNames()[19],"NIOX MINO NO scrubber expiration date");
+		assertEquals(nc1.getProductNames()[18],"NIOX MINO NO scrubber 2009");
+		
+		
 	}
 
 	/**

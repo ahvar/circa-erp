@@ -12,13 +12,32 @@ import org.junit.Test;
  * @author Arthur Vargas
  */
 public class GRSManagerTest {
-
+	/** filename for order record titles */
+	private final String titles = "test-files/grs-manager-test/titles";
+	/** filename for order records */
+	private final String orders = "test-files/grs-manager-test/all-records";
+	/** filename for product records */
+	private final String products = "test-files/grs-manager-test/products";
 	/**
-	 * Test method for {@link com.circa.mrv.grs_manager.manager.GRSManager#login(java.lang.String, java.lang.String)}.
+	 * Tests login()
 	 */
 	@Test
 	public void testLogin() {
-		fail("Not yet implemented");
+		GRSManager gm = GRSManager.getInstance();
+		assertEquals(gm.getNioxCatalog().allProducts(),0);
+		assertEquals(gm.getOrderRecord().getOrderRecordList().size(),0);
+		assertEquals(gm.getCurrentUser(),null);
+		assertEquals(gm.getCompanyDirectory().getCompanyList().size(),0);
+		
+		gm.getOrderRecord().loadTitlesFromFile(titles);
+		assertEquals(gm.getOrderRecord().getProductTitles().size(),22);
+		gm.getOrderRecord().loadOrdersFromFile(orders);
+		assertEquals(gm.getOrderRecord().getOrderRecordList().size(),541);
+		gm.getNioxCatalog().loadProductsFromFile(products);
+		assertEquals(gm.getNioxCatalog().getProductPartNumbers().length,22);
+		
+		
+		
 	}
 
 	/**

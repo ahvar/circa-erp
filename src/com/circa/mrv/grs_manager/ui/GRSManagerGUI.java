@@ -70,7 +70,6 @@ public class GRSManagerGUI {
 		pnlVendor = new VendorPanel();
 		pnlResearch = new ResearchPanel();
 
-		
 		panel = new JPanel();
 		cardLayout = new CardLayout();
 		panel.setLayout(cardLayout);
@@ -209,6 +208,7 @@ public class GRSManagerGUI {
 						pnlVendor.updateTables();
 					} else if (manager.getCurrentUser() instanceof Employee && manager.getCompany() instanceof ResearchCompany) {
 						cardLayout.show(panel, RESEARCH_COMPANY_PANEL );
+						pnlResearch.updateOrderEntryPanel();
 						pnlResearch.updateTables();
 					} else {
 						cardLayout.show(panel, ADMINISTRATOR_PANEL);
@@ -509,7 +509,14 @@ public class GRSManagerGUI {
 		 * Updates tables
 		 */
 		public void updateTables() {
-			pnlOrderEntry = new ResearchCompanyOrderEntryPanel();
+			pnlOrderEntry.updateTables();
+		}
+		
+		/**
+		 * Creates OrderEntryPanel and OpenOrderPanel
+		 */
+		public void updateOrderEntryPanel() {
+			pnlOrderEntry.updateComboBoxes();
 		}
 	}
 

@@ -41,7 +41,6 @@ import com.circa.mrv.grs_manager.user.schedule.OrderSchedule;
  * @author Arthur Vargas.
  */
 public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionListener {
-	
 	/** Panel for displaying Study Details */
 	private JPanel pnlDateAndCustomer;
 	/** Label for Study Details order entry the order creation date title */
@@ -237,7 +236,6 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 		grpLayout.setAutoCreateGaps(true);
 		grpLayout.setAutoCreateContainerGaps(true);
 		
-		
 		GridBagConstraints c = new GridBagConstraints();
 		
 		/**********SET UP ORDER ENTRY PANEL CONTAINING DATE AND CUSTOMER NAME**************
@@ -246,13 +244,6 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 		 *  																			  *
 		 *																				  *
 		 **********************************************************************************/
-		if(!orderRecord.getStudyList().isEmpty()) {
-			for(int i = 0; i < orderRecord.getStudyList().size(); i++) {
-				System.out.println(orderRecord.getStudyList().get(i));
-			}
-		} else {
-			
-		}
 			
 		try {
 			numberModel = new DefaultComboBoxModel<Object>(catalog.getProductPartNumbers());
@@ -260,12 +251,13 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 			studyModel = new DefaultComboBoxModel<Object>(orderRecord.getStudyList().toArray());
 			siteModel = new DefaultComboBoxModel<Object>(orderRecord.getSiteList().toArray());
 		} catch (IllegalArgumentException | NullPointerException e) {
-			System.out.println("an exception was caught in order entry");
+			System.out.println("Order entry panel: an exception was caught in order entry");
 			numberModel = new DefaultComboBoxModel<Object>(NioxCatalog.getDefaultProductPartNumbers());
 			nameModel = new DefaultComboBoxModel<Object>(NioxCatalog.getDefaultProductNames());
 			studyModel = new DefaultComboBoxModel<Object>(OrderRecord.getDefaultStudyNumbers());
 			siteModel = new DefaultComboBoxModel<Object>(OrderRecord.getDefaultStiteNumbers());
 		}
+		
 		cmbBoxProductPartNumber = new JComboBox<Object>(numberModel);
 		cmbBoxProductPartNumber.setSelectedIndex(-1);		
 		cmbBoxProductName = new JComboBox<Object>(nameModel);
@@ -471,30 +463,51 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 	 * Updates the catalog and schedule tables.
 	 */
 	public void updateTables() {
-		/**
-		numberModel = new DefaultComboBoxModel<Object>(catalog.getProductPartNumbers());
-		nameModel = new DefaultComboBoxModel<Object>(catalog.getProductNames());
-		studyModel = new DefaultComboBoxModel<Object>(orderRecord.getStudyList().toArray());
-		siteModel = new DefaultComboBoxModel<Object>(orderRecord.getSiteList().toArray());
-		
-		cmbBoxStudyNumber = new JComboBox<Object>(studyModel);
-		cmbBoxStudyNumber.setSelectedIndex(-1);
-		cmbBoxSiteNumber = new JComboBox<Object>(siteModel);
-		cmbBoxSiteNumber.setSelectedIndex(-1);
-		cmbBoxProductPartNumber = new JComboBox<Object>(numberModel);
-		cmbBoxProductPartNumber.setSelectedIndex(-1);
-		cmbBoxProductName = new JComboBox<Object>(nameModel);
-		cmbBoxProductName.setSelectedIndex(-1);
-		
-		cmbBoxProductName.addActionListener(this);
-		cmbBoxProductPartNumber.addActionListener(this);
-		cmbBoxSiteNumber.addActionListener(this);
-		cmbBoxStudyNumber.addActionListener(this);
-		*/
 		productRollTableModel.updateData();
 		
 		this.validate();
 		this.repaint();
+	}
+	
+	/**
+	 * Updates the combo boxes for study, site, product #, product name
+	 */
+	public void updateComboBoxes() {
+		
+		DefaultComboBoxModel<Object> studies = new DefaultComboBoxModel<Object>();
+		for(int i = 0; i < GRSManager.getInstance().getOrderRecord().getOrderRecordList().size();i++) {
+			studies.addElement(GRSManager.getInstance().getOrderRecord().getOrderRecordList().get(i).getStudy());
+		}
+		cmbBoxStudyNumber.setModel(studies); 
+		cmbBoxStudyNumber.setSelectedIndex(-1);
+		cmbBoxStudyNumber.addActionListener(this);
+		
+		DefaultComboBoxModel<Object> sites = new DefaultComboBoxModel<Object>();
+		for(int i = 0; i < GRSManager.getInstance().getOrderRecord().getOrderRecordList().size();i++) {
+			sites.addElement(GRSManager.getInstance().getOrderRecord().getOrderRecordList().get(i).getSite());
+		}
+		cmbBoxSiteNumber.setModel(sites); 
+		cmbBoxSiteNumber.setSelectedIndex(-1);
+		cmbBoxSiteNumber.addActionListener(this);
+		
+		DefaultComboBoxModel<Object> parts = new DefaultComboBoxModel<Object>();
+		for(int i = 0; i < GRSManager.getInstance().getNioxCatalog().getProductPartNumbers().length; i++) {
+			parts.addElement(GRSManager.getInstance().getNioxCatalog().getProductPartNumbers()[i]);
+		}
+		cmbBoxProductPartNumber.setModel(parts); 
+		cmbBoxProductPartNumber.setSelectedIndex(-1);
+		cmbBoxProductPartNumber.addActionListener(this);
+		
+		DefaultComboBoxModel<Object> names = new DefaultComboBoxModel<Object>();
+		for(int i = 0; i < GRSManager.getInstance().getNioxCatalog().getProductNames().length; i++) {
+			names.addElement(GRSManager.getInstance().getNioxCatalog().getProductNames()[i]);
+		}
+		cmbBoxProductName.setModel(names); 
+		cmbBoxProductName.setSelectedIndex(-1);
+		cmbBoxProductName.addActionListener(this);
+		
+		pnlDateAndCustomer.validate();
+		pnlDateAndCustomer.repaint();
 	}
 	
 

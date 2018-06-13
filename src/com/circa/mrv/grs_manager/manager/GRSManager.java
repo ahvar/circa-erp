@@ -74,10 +74,10 @@ public class GRSManager {
 	 */
 	public static GRSManager getInstance() {
 		  if (instance == null) {
-			  System.out.println("GRS is null");
+			  //System.out.println("GRS is null");
 			instance = new GRSManager();
 		}
-		System.out.println("GRS is not null");
+		//System.out.println("GRS is not null");
 		return instance;
 	}
 	
@@ -94,7 +94,7 @@ public class GRSManager {
 	 * @return the order record
 	 */
 	public OrderRecord getOrderRecord() {
-		System.out.println(orderRecord.getOrderRecordList().size());
+		//System.out.println(orderRecord.getOrderRecordList().size());
 		return orderRecord;
 	}
 

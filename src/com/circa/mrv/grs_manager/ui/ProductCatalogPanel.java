@@ -348,6 +348,7 @@ public class ProductCatalogPanel extends JPanel implements ActionListener {
 			String fileName = getFileName(true);
 			try {
 				catalog.loadProductsFromFile(fileName);
+				//System.out.println(catalog.allProducts());
 				productCatalogTableModel.updateData();
 				scrollProductCatalog.revalidate();
 				scrollProductCatalog.repaint();

@@ -53,7 +53,7 @@ public class LinkedListRecursive<E> {
 	public boolean add(E element){
 		//System.out.println("enter add: " + element);
 		if (element == null){
-			System.out.println("element false");
+			//System.out.println("element false");
 			return false;
 		}
 		if(contains(element))

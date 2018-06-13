@@ -399,7 +399,7 @@ public class OrderRecordsPanel  extends JPanel implements ActionListener {
 			try {
 				orderRecord.loadTitlesFromFile(titles);
 				orderRecord.loadOrdersFromFile(orders);
-				System.out.println(orderRecord.getOrderRecordList().size());
+				//System.out.println("from order records panel. order list size: " + orderRecord.getOrderRecordList().size());
 				for(int i = 0; i < orderRecord.getOrderRecordList().size(); i++) {
 					try {
 					GRSManager.getInstance().addOrderToRecord(orderRecord.getOrderRecordList().get(i));
@@ -407,7 +407,6 @@ public class OrderRecordsPanel  extends JPanel implements ActionListener {
 						//JOptionPane.showMessageDialog(this,iae.getMessage());
 					}
 				}
-				System.out.println(GRSManager.getInstance().getOrderRecord().getOrderRecordList().size());
 				orderTableModel.updateData();
 				//tableOrder.fireTableDataChange();
 			}catch (IllegalArgumentException iae) {
