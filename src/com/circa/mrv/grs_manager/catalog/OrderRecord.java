@@ -653,5 +653,40 @@ public class OrderRecord {
 		return siteList;
 	}
 	
+	/**
+	 * Returns a String array with the name of the research site, street address, city, state, and zip code whose
+	 * study and site number are equal to the study and site parameters passed into the array.
+	 * @param study the study 
+	 * @param site the site
+	 * @return rschSite the array containing research site address data
+	 */
+	public String[] getThisResearchSite(String study, String site) {
+		String[] rschSite = new String[5];
+		for(int i = 0; i < rArray.length; i++) {
+			if(rArray[i][0] == null || rArray[i][0].equals("") || 
+				rArray[i][1] == null || rArray[i][1].equals(""))
+					continue;
+			if(rArray[i][0].equals(study) && rArray[i][1].equals(site)) {
+				rschSite[0] = rArray[i][30]; rschSite[1] = rArray[i][31];
+				rschSite[2] = rArray[i][33]; rschSite[3] = rArray[i][35];
+				rschSite[4] = rArray[i][32];
+			}
+		}
+		return rschSite;
+	}
+	
+	/**
+	 * Returns a list of sites for the study passed into parameter study
+	 * @param study the study id
+	 */
+	public Object[] getTheseStudySites(String study) {
+		ArrayList<String> sites = new ArrayList<String>();
+		for(int i = 0; i < rArray.length; i++) {
+			if(rArray[i][0] != null && !rArray[i][0].equals("") && rArray[i][0].equals(study))
+				sites.add(rArray[i][1]);
+		}
+		return sites.toArray();
+	}
+	
 			
 }

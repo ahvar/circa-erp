@@ -92,11 +92,35 @@ public class NioxCatalogTest {
 	}
 
 	/**
-	 * Test method for {@link com.circa.mrv.grs_manager.catalog.NioxCatalog#getNioxCatalog()}.
+	 * Tests getNioxCatalog()
 	 */
 	@Test
 	public void testGetNioxCatalog() {
-		//fail("Not yet implemented");
+		NioxCatalog nc = new NioxCatalog();
+		nc.loadProductsFromFile(allProducts);
+		String[][] catalog = nc.getNioxCatalog();
+		assertEquals(catalog[21][0],"09-1005");
+		assertEquals(catalog[21][2],"MINO");
+		assertEquals(catalog[21][3],"Power Supply NIOX MINO 2009");
+		assertEquals(catalog[21][4],"95.0");
+		assertEquals(catalog[20][0],"09-1015");
+		assertEquals(catalog[20][2],"MINO");
+		assertEquals(catalog[20][3],"QC Plug NIOX Mino Unit");
+		assertEquals(catalog[20][4],"10.0");
+		assertEquals(catalog[19][0],"no value");
+		assertEquals(catalog[19][2],"MINO");
+		assertEquals(catalog[19][3],"NO scrubber expiration date");
+		assertEquals(catalog[19][4],"0.0");
+		assertEquals(catalog[18][0],"09-1300");
+		assertEquals(catalog[18][2],"MINO");
+		assertEquals(catalog[18][3],"NO scrubber 2009");
+		assertEquals(catalog[18][4],"70.0");
+		assertEquals(catalog[17][0],"no value");
+		assertEquals(catalog[17][2],"MINO");
+		assertEquals(catalog[17][3],"test kit 100 expiration date");
+		assertEquals(catalog[17][4],"0.0");
+		
+		
 	}
 
 	/**

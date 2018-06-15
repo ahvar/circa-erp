@@ -99,7 +99,6 @@ public class GRSManagerGUI {
 	 * @author Arthur Vargas
 	 */
 	private class LoginPanel extends JPanel implements ActionListener {
-
 		/** ID number used for object serialization. */
 		private static final long serialVersionUID = 1L;
 		

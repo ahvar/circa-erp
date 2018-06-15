@@ -12,6 +12,14 @@ public class BillTo extends Location {
 	private String billingContact;
 	/** Bill-to Description */
 	private static final String BILL_TO = "Bill-To";
+	/** Final eRT name */
+	private static final String eRT = "eResearch Technology GmbH";
+	/** Final eRT street name */
+	private static final String eRT_STREET = "Leibnizstr. 7";
+	/** Final eRT street name 2 */
+	private static final String eRT_STREET_2 = "D97204 Hoechberg";
+	/** Final eRT country */
+	private static final String eRT_COUNTRY = "Germany";
 
 	/**
 	 * Constructs this BillTo with address information and contact name.
@@ -62,6 +70,34 @@ public class BillTo extends Location {
 	 */
 	public static String getBillTo() {
 		return BILL_TO;
+	}
+
+	/**
+	 * @return the ert
+	 */
+	public static String getErt() {
+		return eRT;
+	}
+
+	/**
+	 * @return the ertStreet
+	 */
+	public static String getErtStreet() {
+		return eRT_STREET;
+	}
+
+	/**
+	 * @return the ertStreet2
+	 */
+	public static String getErtStreet2() {
+		return eRT_STREET_2;
+	}
+
+	/**
+	 * @return the ertCountry
+	 */
+	public static String getErtCountry() {
+		return eRT_COUNTRY;
 	}
 
 	/** 

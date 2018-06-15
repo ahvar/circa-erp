@@ -7,6 +7,7 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Scanner;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
@@ -31,6 +32,7 @@ import javax.swing.table.AbstractTableModel;
 import com.circa.mrv.grs_manager.niox.Product;
 import com.circa.mrv.grs_manager.catalog.NioxCatalog;
 import com.circa.mrv.grs_manager.catalog.OrderRecord;
+import com.circa.mrv.grs_manager.location.BillTo;
 import com.circa.mrv.grs_manager.manager.GRSManager;
 import com.circa.mrv.grs_manager.user.Employee;
 import com.circa.mrv.grs_manager.user.schedule.OrderSchedule;
@@ -267,12 +269,6 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 		cmbBoxSiteNumber = new JComboBox<Object>(siteModel);
 		cmbBoxSiteNumber.setSelectedIndex(-1);
 		
-		cmbBoxProductPartNumber.addActionListener(this);
-		cmbBoxProductName.addActionListener(this);
-		cmbBoxStudyNumber.addActionListener(this);
-		cmbBoxSiteNumber.addActionListener(this);
-		
-		
 		//DefaultComboBoxModel<String> siteModel = new DefaultComboBoxModel<String>(orderRecord.getSites());
 		grpLayout.setHorizontalGroup(grpLayout.createSequentialGroup()
 			.addGroup(grpLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -475,20 +471,18 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 	public void updateComboBoxes() {
 		
 		DefaultComboBoxModel<Object> studies = new DefaultComboBoxModel<Object>();
-		for(int i = 0; i < GRSManager.getInstance().getOrderRecord().getOrderRecordList().size();i++) {
-			studies.addElement(GRSManager.getInstance().getOrderRecord().getOrderRecordList().get(i).getStudy());
+		for(int i = 0; i < GRSManager.getInstance().getOrderRecord().getStudyList().size();i++) {
+			studies.addElement(GRSManager.getInstance().getOrderRecord().getStudyList().get(i));
 		}
 		cmbBoxStudyNumber.setModel(studies); 
 		cmbBoxStudyNumber.setSelectedIndex(-1);
-		cmbBoxStudyNumber.addActionListener(this);
 		
 		DefaultComboBoxModel<Object> sites = new DefaultComboBoxModel<Object>();
-		for(int i = 0; i < GRSManager.getInstance().getOrderRecord().getOrderRecordList().size();i++) {
-			sites.addElement(GRSManager.getInstance().getOrderRecord().getOrderRecordList().get(i).getSite());
+		for(int i = 0; i < GRSManager.getInstance().getOrderRecord().getSiteList().size();i++) {
+			sites.addElement(GRSManager.getInstance().getOrderRecord().getSiteList().get(i));
 		}
 		cmbBoxSiteNumber.setModel(sites); 
 		cmbBoxSiteNumber.setSelectedIndex(-1);
-		cmbBoxSiteNumber.addActionListener(this);
 		
 		DefaultComboBoxModel<Object> parts = new DefaultComboBoxModel<Object>();
 		for(int i = 0; i < GRSManager.getInstance().getNioxCatalog().getProductPartNumbers().length; i++) {
@@ -496,7 +490,6 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 		}
 		cmbBoxProductPartNumber.setModel(parts); 
 		cmbBoxProductPartNumber.setSelectedIndex(-1);
-		cmbBoxProductPartNumber.addActionListener(this);
 		
 		DefaultComboBoxModel<Object> names = new DefaultComboBoxModel<Object>();
 		for(int i = 0; i < GRSManager.getInstance().getNioxCatalog().getProductNames().length; i++) {
@@ -504,6 +497,10 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 		}
 		cmbBoxProductName.setModel(names); 
 		cmbBoxProductName.setSelectedIndex(-1);
+
+		cmbBoxStudyNumber.addActionListener(this);
+		cmbBoxSiteNumber.addActionListener(this);
+		cmbBoxProductPartNumber.addActionListener(this);
 		cmbBoxProductName.addActionListener(this);
 		
 		pnlDateAndCustomer.validate();
@@ -514,15 +511,81 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == cmbBoxStudyNumber) {
+			String number = (String) cmbBoxStudyNumber.getItemAt(cmbBoxStudyNumber.getSelectedIndex());
+			Object[] sites = GRSManager.getInstance().getOrderRecord().getTheseStudySites(number);
+			DefaultComboBoxModel<Object> siteModel = new DefaultComboBoxModel<Object>();
+			for(int i = 0; i < sites.length; i++) {
+				siteModel.addElement(sites[i]);
+			}
+			cmbBoxSiteNumber.setModel(siteModel);
+			cmbBoxSiteNumber.addActionListener(this);
+		}
+		if(e.getSource() == cmbBoxSiteNumber) {
+			String study = (String) cmbBoxStudyNumber.getItemAt(cmbBoxStudyNumber.getSelectedIndex());
+			String site = (String) cmbBoxSiteNumber.getItemAt(cmbBoxSiteNumber.getSelectedIndex());
+			String[] address = GRSManager.getInstance().getOrderRecord().getThisResearchSite(study, site);
+			txtFldCustomerName.setText(BillTo.getErt());
+			txtFldShipToName.setText(address[0]);
+			txtFldShipToAddress.setText(address[1]);
+			txtFldShipToCity.setText(address[2]);
+			txtFldShipToState.setText(address[3]);
+			txtFldShipToZipCode.setText(address[4]);
+			txtFldBillToName.setText(BillTo.getErt());
+			txtFldBillToAddress.setText(BillTo.getErtStreet());
+			txtFldBillToAddress2.setText(BillTo.getErtStreet2());
+			txtFldBillToState.setText(BillTo.getErtCountry());
 			
-			
-		} else if (e.getSource() == cmbBoxProductName) {
-			
-			
+		}
+		if(e.getSource() == cmbBoxProductName) {
+			String name = (String) cmbBoxProductName.getItemAt(cmbBoxProductName.getSelectedIndex());
+			//System.out.println(name);
+			Scanner scan = new Scanner(name);
+			String fam = null; String gen = null; String desc = null;
+			fam = scan.next(); gen = scan.next(); 
+			while(scan.hasNext()) {
+				if(desc == null) desc = scan.next();
+				else desc = desc + " " + scan.next();
+			}
+			//System.out.println("scanned fam/gen/desc: " + fam + " " + gen + " " + desc);
+			Object[][] products = GRSManager.getInstance().getNioxCatalog().getNioxCatalog();
+			//DefaultComboBoxModel<Object> productModel = new DefaultComboBoxModel<Object>();
+			for(int i = 0; i < products.length; i++) {
+				if(products[i][1] == null || products[i][1].equals("") || products[i][2] == null || products[i][2].equals("") ||
+						products[i][3] == null || products[i][3].equals("")) continue;
+				//System.out.println("fam: " + products[i][1] + " " + "gen: " + products[i][2] + " " + products[i][3]);
+				if(products[i][1].equals(fam) && products[i][2].equals(gen) && products[i][3].equals(desc)) {
+					//System.out.println("match");
+					cmbBoxProductPartNumber.setSelectedIndex(i); break;
+				}
+			}
+			scan.close();
+			txtFldProductDescription.setText(desc);
+			//cmbBoxProductPartNumber.setModel(productModel);
+			//cmbBoxProductPartNumber.addActionListener(this);
+		} else if (e.getSource() == cmbBoxProductPartNumber) {
+			String number = (String) cmbBoxProductPartNumber.getItemAt(cmbBoxProductPartNumber.getSelectedIndex());
+			Scanner scan = new Scanner(number);
+			String numscan = scan.next();
+			Object[][] catalog = GRSManager.getInstance().getNioxCatalog().getNioxCatalog();
+			//DefaultComboBoxModel<Object> nameModel = new DefaultComboBoxModel<Object>();
+			for(int i = 0; i < catalog.length; i++) {
+				if(catalog[i][1] == null || catalog[i][1].equals("") || catalog[i][2] == null || catalog[i][2].equals("") ||
+						catalog[i][3] == null || catalog[i][3].equals("") || catalog[i][0] == null || catalog[i][0].equals("")) continue;
+				if(catalog[i][0].equals(numscan)) { 
+					cmbBoxProductName.setSelectedIndex(i); 
+					txtFldProductUnitCost.setText((String)catalog[i][4]);
+					break;
+				}
+			}
+			scan.close();
+			//cmbBoxProductName.setModel(nameModel);
+			//cmbBoxProductName.addActionListener(this);
 		}
 		
 		productRollTableModel.updateData();
 		
+		pnlDateAndCustomer.validate();
+		pnlDateAndCustomer.repaint();
 		this.validate();
 		this.repaint();
 	}
