@@ -1,8 +1,10 @@
 package com.circa.mrv.grs_manager.document;
 
+import java.lang.reflect.Array;
 import java.util.Calendar;
 
 import com.circa.mrv.grs_manager.niox.Product;
+import com.circa.mrv.grs_manager.util.LinkedListRecursive;
 import com.circa.mrv.grs_manager.util.LinkedStack;
 import com.circa.mrv.grs_manager.document.Order;
 
@@ -19,7 +21,9 @@ public class Order extends Document {
 	/** Date of last status update */
 	private Calendar statusDate;
 	/** The list of products for this order */
-	private LinkedStack<Product> product;
+	private Product[] product;
+	/** Product count */
+	private int pdcount;
 	/** Default length for product stack */
 	private final int DEFAULT_SIZE = 50;
 	/** 
@@ -81,7 +85,7 @@ public class Order extends Document {
 	 * @param creationDate the date this order was created 
 	 * @param product the products for this order
 	 */
-	public Order(long number, String userID, Calendar creationDate, Calendar deliveryDate, LinkedStack<Product> products) {
+	public Order(long number, String userID, Calendar creationDate, Calendar deliveryDate, Product[] products) {
 		this(number);
 		setUserId(userID);
 		if(creationDate == null)
@@ -89,7 +93,7 @@ public class Order extends Document {
 		else
 			setCreation(creationDate);
 		setDelieryDate(deliveryDate);
-		setProduct(product);
+		setProduct(products);
 	}
 	
 	/**
@@ -103,7 +107,7 @@ public class Order extends Document {
 	 * @param deliveryDate the delivery date for the order
 	 * @param products the list of products being ordered
 	 */
-	public Order(long number, String userID, String study, String site, String po, Calendar createdOn, Calendar deliveryDate, LinkedStack<Product> products ) {
+	public Order(long number, String userID, String study, String site, String po, Calendar createdOn, Calendar deliveryDate, Product[] products ) {
 		this(number,userID,createdOn,deliveryDate,products);
 		setPo(po);
 		setStudy(study);
@@ -116,7 +120,7 @@ public class Order extends Document {
 	 */
 	public Order(long ordNum){
 		super(ordNum);
-		product = new LinkedStack<Product>(DEFAULT_SIZE);
+		product = new Product[DEFAULT_SIZE];
 	}
 
 	/**
@@ -138,7 +142,7 @@ public class Order extends Document {
 	 * Returns the list of products in this order
 	 * @return the product
 	 */
-	public LinkedStack<Product> getProduct() {
+	public Product[] getProduct() {
 		return product;
 	}
 
@@ -147,8 +151,71 @@ public class Order extends Document {
 	 * Sets the instance variable products to the list of products passed to the parameter
 	 * @param product the product to set
 	 */
-	public void setProduct(LinkedStack<Product> product) {
+	public void setProduct(Product [] product) {
 		this.product = product;
+		pdcount = getProductCount();
+		
+	}
+	
+	/**
+	 * Adds a product to the products for this order
+	 * @param product the product to add to the Order's stack
+	 * @param qty the number of products being ordered
+	 */
+	public void addProduct(Product product, int qty) {
+		if(pdcount == this.product.length || this.product.length < (pdcount + qty)) getProductCapacity(); 
+		for(int i = 0; i < qty; i++) {
+			System.out.println(pdcount);
+			this.product[pdcount] = product; 
+			pdcount++;
+		}
+	}
+	
+	
+	/**
+	 * Doubles the length of the product capacity
+	 */
+	public void getProductCapacity() {
+		Product[] bigger = new Product[this.product.length *2];
+		for(int i = 0; i < this.product.length; i++) {
+			bigger[i] = this.product[i];
+		}
+		this.product = bigger;
+	}
+	
+	/**
+	 * Returns a 2D array of data for the current 
+	 * product stack
+	 * @return array a 2D array of string data
+	 */
+	public String[][] getProductDisplay() {
+		if(pdcount == 0) return null;
+		String [][] array = new String[pdcount][4];
+		for(int i = 0; i < pdcount; i++) {
+			//System.out.println(product[i].getPartNumber() + " " + product[i].getFamily() + " " + product[i].getDescription());
+			array[i][0] = product[i].getPartNumber();
+			array[i][1] = product[i].getFamily();
+			array[i][2] = product[i].getDescription();
+			array[i][3] = Double.toString(product[i].getPrice());
+		}
+		return array;
+	}
+	
+	/**
+	 * Returns the number of products in this order
+	 * @return count the product count on this order
+	 */
+	public int getProductCount() {
+		return pdcount;
+	}
+	
+	/**
+	 * Counts the products in the order and sets the product count instance variable.
+	 */
+	public void setProductCount() {
+		for(int i = 0; i < product.length; i++) {
+			if(product[i] != null) pdcount++;
+		}
 	}
 	
 	/**

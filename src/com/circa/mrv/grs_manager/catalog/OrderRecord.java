@@ -429,7 +429,7 @@ public class OrderRecord {
 							family = productTitlesList.get(prodTitle).getFam();
 							gen = productTitlesList.get(prodTitle).getGen();
 							desc = productTitlesList.get(prodTitle).getDescription();
-							o.getProduct().push(new Component(family,gen,desc));
+							o.addProduct(new Component(family,gen,desc),1);
 						}
 						prodTitle++;
 					}

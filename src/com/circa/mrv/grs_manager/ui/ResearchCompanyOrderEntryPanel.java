@@ -7,6 +7,7 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
 import java.util.Scanner;
 import java.util.Vector;
 
@@ -29,9 +30,11 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.AbstractTableModel;
 
+import com.circa.mrv.grs_manager.niox.Component;
 import com.circa.mrv.grs_manager.niox.Product;
 import com.circa.mrv.grs_manager.catalog.NioxCatalog;
 import com.circa.mrv.grs_manager.catalog.OrderRecord;
+import com.circa.mrv.grs_manager.document.Order;
 import com.circa.mrv.grs_manager.location.BillTo;
 import com.circa.mrv.grs_manager.manager.GRSManager;
 import com.circa.mrv.grs_manager.user.Employee;
@@ -221,6 +224,8 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 	private NioxCatalog catalog;
 	/** Order records */
 	private OrderRecord orderRecord;
+	/** The Order the customer is currently entering */
+	Order order;
 	
 	/**
 	 * Constructs the ResearchCompanyOrderSchedulePanel and sets up the GUI 
@@ -232,6 +237,16 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 		currentUser = (Employee)GRSManager.getInstance().getCurrentUser();
 		catalog = GRSManager.getInstance().getNioxCatalog();
 		orderRecord = GRSManager.getInstance().getOrderRecord();
+		try {
+		order = new Order(GRSManager.getInstance().getOrderRecord().getLastOrder().getNumber() + 1);
+		}catch(NullPointerException npe) {
+			order = new Order(1);
+		}
+		
+		submit.addActionListener(this);
+		clear.addActionListener(this);
+		add.addActionListener(this);
+		
 		//System.out.println(orderRecord.getOrderRecordList().size());
 		GroupLayout grpLayout = new GroupLayout(pnlDateAndCustomer);
 		pnlDateAndCustomer.setLayout(grpLayout);
@@ -511,6 +526,7 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == cmbBoxStudyNumber) {
+			try{
 			String number = (String) cmbBoxStudyNumber.getItemAt(cmbBoxStudyNumber.getSelectedIndex());
 			Object[] sites = GRSManager.getInstance().getOrderRecord().getTheseStudySites(number);
 			DefaultComboBoxModel<Object> siteModel = new DefaultComboBoxModel<Object>();
@@ -519,8 +535,12 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 			}
 			cmbBoxSiteNumber.setModel(siteModel);
 			cmbBoxSiteNumber.addActionListener(this);
+			}catch(NullPointerException npe) {
+				
+			}
 		}
 		if(e.getSource() == cmbBoxSiteNumber) {
+			try {
 			String study = (String) cmbBoxStudyNumber.getItemAt(cmbBoxStudyNumber.getSelectedIndex());
 			String site = (String) cmbBoxSiteNumber.getItemAt(cmbBoxSiteNumber.getSelectedIndex());
 			String[] address = GRSManager.getInstance().getOrderRecord().getThisResearchSite(study, site);
@@ -534,9 +554,13 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 			txtFldBillToAddress.setText(BillTo.getErtStreet());
 			txtFldBillToAddress2.setText(BillTo.getErtStreet2());
 			txtFldBillToState.setText(BillTo.getErtCountry());
+			}catch(NullPointerException npe) {
+				
+			}
 			
 		}
 		if(e.getSource() == cmbBoxProductName) {
+			try {
 			String name = (String) cmbBoxProductName.getItemAt(cmbBoxProductName.getSelectedIndex());
 			//System.out.println(name);
 			Scanner scan = new Scanner(name);
@@ -562,7 +586,11 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 			txtFldProductDescription.setText(desc);
 			//cmbBoxProductPartNumber.setModel(productModel);
 			//cmbBoxProductPartNumber.addActionListener(this);
+			}catch(NullPointerException npe) {
+				
+			}
 		} else if (e.getSource() == cmbBoxProductPartNumber) {
+			try {
 			String number = (String) cmbBoxProductPartNumber.getItemAt(cmbBoxProductPartNumber.getSelectedIndex());
 			Scanner scan = new Scanner(number);
 			String numscan = scan.next();
@@ -578,8 +606,63 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 				}
 			}
 			scan.close();
+			}catch(NullPointerException npe) {
+				
+			}
 			//cmbBoxProductName.setModel(nameModel);
 			//cmbBoxProductName.addActionListener(this);
+		}
+		
+		if(e.getSource() == add) {
+			int pdQty = 0;
+			if(txtFldProductQuantity.getText() == null || txtFldProductQuantity.getText().equals("")) {
+				JOptionPane.showMessageDialog(this, "Please enter a quantity");
+			} else {
+				try {
+					pdQty = Integer.parseInt(txtFldProductQuantity.getText());
+				} catch(Exception exc) { 
+					JOptionPane.showMessageDialog(this, exc.getMessage());
+					txtFldProductQuantity.setText("");
+				}
+				String pdName = (String) cmbBoxProductName.getSelectedItem();
+				Scanner scan = new Scanner(pdName);
+				String fam = scan.next(); 
+				scan.close();
+				String desc = txtFldProductDescription.getText();
+				String part = (String) cmbBoxProductPartNumber.getSelectedItem();
+				double price = Double.parseDouble(txtFldProductUnitCost.getText());
+				Component c = new Component(fam,desc,part,price);
+				order.addProduct(c,pdQty);
+				txtFldProductDescription.setText("");
+				txtFldProductQuantity.setText("");
+				txtFldProductUnitCost.setText("");
+				cmbBoxProductPartNumber.setSelectedIndex(-1);
+				cmbBoxProductName.setSelectedIndex(-1);
+				productRollTableModel.updateData();
+				scrollProductRoll.revalidate();
+				scrollProductRoll.repaint();
+				productRollTableModel.fireTableDataChanged();
+			}
+			
+			
+		} else if(e.getSource() == submit) {
+			
+			/* it is either a new site for an existing study, a new study with a new site
+			 * a new study with the same site number as another ongoing study
+			 * an existing study and site
+			 */
+			String study = (String) cmbBoxStudyNumber.getSelectedItem();
+			String site = (String) cmbBoxSiteNumber.getSelectedItem();
+			
+			
+			String shpToName = txtFldShipToName.getText();
+			String shpToAdd1 = txtFldShipToAddress.getText();
+			String shpToAdd2 = txtFldShipToAddress2.getText();
+			String shpToCity = txtFldShipToCity.getText();
+			String shpToState = txtFldShipToState.getText();
+			String shpToZip = txtFldShipToZipCode.getText();
+		} else if(e.getSource() == clear) {
+			
 		}
 		
 		productRollTableModel.updateData();
@@ -600,7 +683,7 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 		/** ID number used for object serialization. */
 		private static final long serialVersionUID = 1L;
 		/** Column names for the table */
-		private String [] columnNames = {"Part Number", "Description", "Quantity", "$$/Unit"};
+		private String [] columnNames = {"Part Number", "Family", "Description", "$$/Unit"};
 		/** Data stored in the table */
 		private Object [][] data;
 		
@@ -655,7 +738,7 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 		 * @param column location to modify the data.
 		 */
 		public void setValueAt(Object value, int row, int col) {
-			//data[row][col] = value;
+			data[row][col] = value;
 			fireTableCellUpdated(row, col);
 		}
 		
@@ -663,7 +746,12 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 		 * Updates the given model with {@link Product} information from the {@link VendorDirectory}.
 		 */
 		public void updateData() {
-			//data = currentUser.getSchedule().getScheduledCourses();
+			try{
+			data = order.getProductDisplay();
+			}catch(NullPointerException npe) {
+				
+				data = new String[50][4];
+			}
 		}
 	}
 
