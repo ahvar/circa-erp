@@ -1,0 +1,7 @@
+# class files
+*.class
+# build output
+/bin
+# .doc
+*.doc
+*.docx
