@@ -31,16 +31,16 @@ GRSManager is an order entry and tracking program that automates the work-flow a
 ![Administrator loads products into the system](project_docs/product-catalog.png)
 
 3. Click the *Order Records* button at the top right of the panel and then click *Load Order Records*. Select "unformatted_titles" and click *select*. The file chooser will close and then immediately reopen. Now select "records_text.txt" and click *select*. The table will populate with order history. 
-![Administrator loads order records into the systme](product_docs/order-records.png)
+![Administrator loads order records into the systme](project_docs/order-records.png)
 
 The system now has order records with data on research studies and locations, contact names and info, purchase order numbers, delivery dates, etc. Click the logout button to return to the login screen.
 
 ##### Entering Orders
 1. Enter the login credentials previously setup by the administrator and select *ok*. Once logged in, select a study from the combo box labeled *study*. The site combo box updates to display only the research sites associated with this study. Select a site and the text fields for shipping location, street address, city, state, and zip code pull in address information for this research site.
-![CRO employee and system user logs into the system](product_docs/rsch-employee-order-entry.png)
+![CRO employee and system user logs into the system](project_docs/rsch-employee-order-entry.png)
 
 2. There are two ways to search products. Select either the combo box labeled *Product* or the one labeled *Part Number*. If you select by product, the part-number combo box will update to display the corresponding part-number. The text field labeled *Price* will also pull in the list price for this item.
-![CRO employee selects products for this order](product_docs/rsch-employee-order-entry2.png) 
+![CRO employee selects products for this order](project_docs/rsch-employee-order-entry2.png) 
 
 3. Enter a quantity in the text field labeled *Quantity* and click the *Add* button. The table below will now display the number of products requested and combo boxes and quantity text field will reset.
 
