@@ -1,0 +1,13 @@
+com.circa.mrv.grs_manager.catalog
+com.circa.mrv.grs_manager.directory
+com.circa.mrv.grs_manager.document
+com.circa.mrv.grs_manager.io
+com.circa.mrv.grs_manager.location
+com.circa.mrv.grs_manager.manager
+com.circa.mrv.grs_manager.niox
+com.circa.mrv.grs_manager.product.list
+com.circa.mrv.grs_manager.product.validator
+com.circa.mrv.grs_manager.ui
+com.circa.mrv.grs_manager.user
+com.circa.mrv.grs_manager.user.schedule
+com.circa.mrv.grs_manager.util
