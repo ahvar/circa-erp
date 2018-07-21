@@ -50,7 +50,7 @@ public class LinkedListRecursive<E> {
 	 * @return true if the element is added to the list. false otherwise. 
 	 * @throws IllegalArgumentException if the passed element already exists in the list. 
 	 */
-	public boolean add(E element){
+	public boolean add(E element) {
 		//System.out.println("enter add: " + element);
 		if (element == null){
 			//System.out.println("element false");

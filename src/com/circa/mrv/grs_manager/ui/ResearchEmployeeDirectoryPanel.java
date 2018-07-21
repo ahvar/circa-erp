@@ -283,9 +283,7 @@ public class ResearchEmployeeDirectoryPanel extends JPanel implements ActionList
 		c.anchor = GridBagConstraints.LINE_START;
 		c.fill = GridBagConstraints.BOTH;
 		this.add(pnlResearchEmployeeForm, c);
-		
-
-		
+	
 	}
 
 	@Override
@@ -350,7 +348,8 @@ public class ResearchEmployeeDirectoryPanel extends JPanel implements ActionList
 			String repeatHashPW = "";
 			
 			if (pwString == null || repeatPWString == null || pwString.equals("") || repeatPWString.equals("")) {
-				throw new IllegalArgumentException("Invalid password");
+				JOptionPane.showMessageDialog(this,"A password is required.");
+				return;
 			}
 			try {
 				MessageDigest digest1 = MessageDigest.getInstance(HASH_ALGORITHM);
@@ -366,7 +365,8 @@ public class ResearchEmployeeDirectoryPanel extends JPanel implements ActionList
 			}
 				
 			if (!hashPW.equals(repeatHashPW)) {
-				throw new IllegalArgumentException("Passwords do not match");
+				JOptionPane.showMessageDialog(this, "Passwords do not match");
+				return;
 			}
 			
 			try {

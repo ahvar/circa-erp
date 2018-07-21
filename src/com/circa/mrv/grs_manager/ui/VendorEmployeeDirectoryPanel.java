@@ -351,7 +351,8 @@ public class VendorEmployeeDirectoryPanel extends JPanel implements ActionListen
 			String repeatHashPW = "";
 			
 			if (pwString == null || repeatPWString == null || pwString.equals("") || repeatPWString.equals("")) {
-				throw new IllegalArgumentException("Invalid password");
+				JOptionPane.showMessageDialog(this, "A password is required");
+				return;
 			}
 			
 			try {
@@ -368,7 +369,8 @@ public class VendorEmployeeDirectoryPanel extends JPanel implements ActionListen
 			}
 				
 			if (!hashPW.equals(repeatHashPW)) {
-				throw new IllegalArgumentException("Passwords do not match");
+				JOptionPane.showMessageDialog(this, "Passwords do not match");
+				return;
 			}
 			
 			try {

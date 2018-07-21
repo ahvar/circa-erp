@@ -238,7 +238,7 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 		catalog = GRSManager.getInstance().getNioxCatalog();
 		orderRecord = GRSManager.getInstance().getOrderRecord();
 		try {
-		order = new Order(GRSManager.getInstance().getOrderRecord().getLastOrder().getNumber() + 1);
+			order = new Order(GRSManager.getInstance().getOrderRecord().getLastOrder().getNumber() + 1);
 		}catch(NullPointerException npe) {
 			order = new Order(1);
 		}
@@ -268,7 +268,7 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 			studyModel = new DefaultComboBoxModel<Object>(orderRecord.getStudyList().toArray());
 			siteModel = new DefaultComboBoxModel<Object>(orderRecord.getSiteList().toArray());
 		} catch (IllegalArgumentException | NullPointerException e) {
-			System.out.println("Order entry panel: an exception was caught in order entry");
+			//System.out.println("Order entry panel: an exception was caught in order entry");
 			numberModel = new DefaultComboBoxModel<Object>(NioxCatalog.getDefaultProductPartNumbers());
 			nameModel = new DefaultComboBoxModel<Object>(NioxCatalog.getDefaultProductNames());
 			studyModel = new DefaultComboBoxModel<Object>(OrderRecord.getDefaultStudyNumbers());

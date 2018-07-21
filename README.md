@@ -22,9 +22,11 @@ GRSManager is an order entry and tracking program that automates the work-flow a
 
 ## Using GRSManager
 
-##### Setting up the System
-1. Enter the following credentials in the login screen: Login = administrator / Password = admin
- - After login enter the user information, including first/last name, username, password, and company details
+### Setting up the System
+1. Login as an administrator and add users for a vendor and a research company.
+ - Enter the following credentials in the login screen: Login = administrator / Password = admin
+ - The administrator can setup and remove users from the system. After login, the vendor employee directory will display. Enter the user information, including first/last name, username, password, and company details. If the email address is blank or the text entered is not a valid email address, a pop-up dialog will appear prompting the user to enter an apropriate address.
+ - Click the Research Company button and enter the corresponding information for a system user from the research company. In the combo box select whether this location is a ship-to or bill-to location. 
 ![Administrator sets up users of the system](project_docs/rsch-employee-directory.png)
 
 2. Load the product catalog by clicking the *Load Product Catalog* button and select "products.txt" from the file chooser. After you've loaded the products they should populate the JTable at the top of the panel.

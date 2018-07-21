@@ -58,51 +58,40 @@ public class ProductCatalogPanel extends JPanel implements ActionListener {
 	private JLabel lblPartNumber;
 	/** JLabel for price */
 	private JLabel lblPrice;
-	
-	/** JLabel for instructorId */
-	private JLabel lblInstructorId;
-	/** JLabel for enrollmentCap */
-	private JLabel lblEnrollmentCap;
-	/** Label for meeting days */
-	private JLabel lblMeetingDays = new JLabel("Meeting Days: ");
-	/** Label for start time */
-	private JLabel lblStartTime = new JLabel("Start Time: ");
-	/** Label for end time */
-	private JLabel lblEndTime = new JLabel("End Time: ");
+
 	/** JTextField for name */
 	private JTextField txtName;
 	/** JTextField for title */
 	private JTextField txtDescription;
+	/** JTextField for part-number */
+	private JTextField txtPartNumber;
 	/** JTextField for section */
-	private JTextField txtPrice;
-	/** JTextField for instructorId */
-	private JTextField txtInstructorId;
-	/** JTextField for enrollmentCap */
-	private JTextField txtEnrollmentCap;
+	//private JTextField txtPrice;
+	
 	/** Check box for Monday */
-	private JCheckBox cbMonday;
+	//private JCheckBox cbMonday;
 	/** Check box for Tuesday */
-	private JCheckBox cbTuesday;
+	//private JCheckBox cbTuesday;
 	/** Check box for Wednesday */
-	private JCheckBox cbWednesday;
+	//private JCheckBox cbWednesday;
 	/** Check box for Thursday */
-	private JCheckBox cbThursday;
+	//private JCheckBox cbThursday;
 	/** Check box for Friday */
-	private JCheckBox cbFriday;
+	//private JCheckBox cbFriday;
 	/** Check box for Arranged */
-	private JCheckBox cbArranged;
+	//private JCheckBox cbArranged;
 	/** Drop down for start hour */
-	private JComboBox<Integer> comboStartHour;
+	//private JComboBox<Integer> comboStartHour;
 	/** Drop down for start minute */
-	private JComboBox<Integer> comboStartMin;
+	//private JComboBox<Integer> comboStartMin;
 	/** Drop down for start am/pm */
-	private JComboBox<String> comboStartPeriod;
+	//private JComboBox<String> comboStartPeriod;
 	/** Drop down for end hour */
-	private JComboBox<Integer> comboEndHour;
+	//private JComboBox<Integer> comboEndHour;
 	/** Drop down for end minute */
-	private JComboBox<Integer> comboEndMin;
+	//private JComboBox<Integer> comboEndMin;
 	/** Drop down for end am/pm */
-	private JComboBox<String> comboEndPeriod;
+	//private JComboBox<String> comboEndPeriod;
 	/** Drop down for credits */
 	private JComboBox<Double> comboPrices;
 	/** Button for adding a course */
@@ -172,13 +161,12 @@ public class ProductCatalogPanel extends JPanel implements ActionListener {
 		lblDescription = new JLabel("Product Generation");
 		lblPartNumber = new JLabel("Part Number");
 		lblPrice = new JLabel("Price");
-		lblInstructorId = new JLabel("Instructor Id");
-		lblEnrollmentCap = new JLabel("Enrollment Cap");
+
 		txtName = new JTextField(20);
 		txtDescription = new JTextField(20);
-		txtPrice = new JTextField(20);
-		txtInstructorId = new JTextField(20);
-		txtEnrollmentCap = new JTextField(20);
+		txtPartNumber = new JTextField(20);
+		//txtPrice = new JTextField(20);
+
 		comboPrices = new JComboBox<Double>();
 		comboPrices.addItem(Double.valueOf(100.00));
 		comboPrices.addItem(Double.valueOf(200.00));
@@ -186,6 +174,7 @@ public class ProductCatalogPanel extends JPanel implements ActionListener {
 		comboPrices.addItem(Double.valueOf(400.99));
 		comboPrices.addItem(Double.valueOf(599.99));
 		
+		/*
 		JPanel pnlDays = new JPanel(new GridLayout(1, 15));
 		pnlDays.add(new JLabel("Mon"));
 		cbMonday = new JCheckBox();
@@ -204,9 +193,9 @@ public class ProductCatalogPanel extends JPanel implements ActionListener {
 		pnlDays.add(cbFriday);
 		pnlDays.add(new JLabel("Arg"));
 		cbArranged = new JCheckBox();
-		pnlDays.add(cbArranged);
+		pnlDays.add(cbArranged);*/
 		
-		
+		/*
 		JPanel pnlTime = new JPanel(new GridLayout(1, 2));
 		JPanel pnlStartTime = new JPanel(new GridLayout(1, 4));
 		JPanel pnlEndTime = new JPanel(new GridLayout(1, 4));
@@ -282,7 +271,7 @@ public class ProductCatalogPanel extends JPanel implements ActionListener {
 		pnlEndTime.add(comboEndPeriod);
 		
 		pnlTime.add(pnlStartTime);
-		pnlTime.add(pnlEndTime);
+		pnlTime.add(pnlEndTime);*/
 		
 		JPanel pnlProductForm = new JPanel();
 		pnlProductForm.setLayout(new GridLayout(8, 2));
@@ -291,7 +280,7 @@ public class ProductCatalogPanel extends JPanel implements ActionListener {
 		pnlProductForm.add(lblDescription);
 		pnlProductForm.add(txtDescription);
 		pnlProductForm.add(lblPartNumber);
-		pnlProductForm.add(txtPrice);
+		pnlProductForm.add(txtPartNumber);
 		pnlProductForm.add(lblPrice);
 		pnlProductForm.add(comboPrices);
 		//pnlProductForm.add(lblInstructorId);
@@ -349,10 +338,10 @@ public class ProductCatalogPanel extends JPanel implements ActionListener {
 			try {
 				catalog.loadProductsFromFile(fileName);
 				//System.out.println(catalog.allProducts());
-				productCatalogTableModel.updateData();
-				scrollProductCatalog.revalidate();
-				scrollProductCatalog.repaint();
-				productCatalogTableModel.fireTableDataChanged();
+				//productCatalogTableModel.updateData();
+				//scrollProductCatalog.revalidate();
+				//scrollProductCatalog.repaint();
+				//productCatalogTableModel.fireTableDataChanged();
 			} catch (IllegalArgumentException iae) {
 				JOptionPane.showMessageDialog(this, iae.getMessage());
 			}
@@ -365,28 +354,29 @@ public class ProductCatalogPanel extends JPanel implements ActionListener {
 			}
 		} else if (e.getSource() == btnNewProductCatalog) {
 			catalog.newNioxCatalog();
-			productCatalogTableModel.updateData();
-			scrollProductCatalog.revalidate();
-			scrollProductCatalog.repaint();
-			productCatalogTableModel.fireTableDataChanged();
+			//productCatalogTableModel.updateData();
+			//scrollProductCatalog.revalidate();
+			//scrollProductCatalog.repaint();
+			//productCatalogTableModel.fireTableDataChanged();
 		} else if (e.getSource() == btnAddProduct) {
 			String name = txtName.getText();
 			String description = txtDescription.getText();
-			String partNumber = txtPrice.getText();
-			String instructorId = txtInstructorId.getText();
-			int enrollmentCap = 0;
+			String partNumber = txtPartNumber.getText();
+			String price = "";
+			/*int enrollmentCap = 0;
 			try {
 				enrollmentCap = Integer.parseInt(txtEnrollmentCap.getText());
 			} catch (NumberFormatException nfe) {
 				JOptionPane.showMessageDialog(this, "Enrollment capacity must be a number between 10 and 250.");
-			}
-			int price = 0;
-			int creditsIdx = comboPrices.getSelectedIndex();
-			if (creditsIdx == -1) {
-				JOptionPane.showMessageDialog(this, "The weekly repeat is invalid.");
+			}*/
+			
+			int priceIdx = comboPrices.getSelectedIndex();
+			if (priceIdx == -1) {
+				JOptionPane.showMessageDialog(this, "The price is invalid.");
 				return;
 			}
-			//price = comboPrices.getItemAt(creditsIdx);
+			price = Double.toString(comboPrices.getItemAt(priceIdx));
+			/*
 			String meetingDays = "";
 			if (cbMonday.isSelected()) {
 				meetingDays += "M";
@@ -450,36 +440,32 @@ public class ProductCatalogPanel extends JPanel implements ActionListener {
 			if (comboEndPeriod.getItemAt(periodIdx).equals("PM") && endTime < 1200) {
 				endTime += 1200;
 			}
-			
+			*/
 			try {
-				if (catalog.addProductToCatalog(name, description, partNumber, price))/* instructorId, enrollmentCap, meetingDays, startTime, endTime))*/ {
-					txtName.setText("");
-					txtDescription.setText("");
-					txtPrice.setText("");
-					txtInstructorId.setText("");
-				} else {
-					JOptionPane.showMessageDialog(this, "Product already in system.");
-				}
+				catalog.addProductToCatalog(name, description, partNumber, price);
+				txtName.setText("");
+				txtDescription.setText("");
+				txtPartNumber.setText("");
+				comboPrices.setSelectedIndex(-1);	 
 			} catch (IllegalArgumentException iae) {
 				JOptionPane.showMessageDialog(this, iae.getMessage());
 			}
-			productCatalogTableModel.updateData();
 		} else if (e.getSource() == btnRemoveProduct) {
 			int row = tableProductCatalog.getSelectedRow();
 			if (row == -1) {
-				JOptionPane.showMessageDialog(this, "No course selected.");
+				JOptionPane.showMessageDialog(this, "No product selected.");
 			} else {
 				try {
 					catalog.removeProductFromCatalog(productCatalogTableModel.getValueAt(row, 0).toString(), productCatalogTableModel.getValueAt(row, 1).toString());
 				} catch (ArrayIndexOutOfBoundsException aioobe) {
-					JOptionPane.showMessageDialog(this, "No course selected.");
+					JOptionPane.showMessageDialog(this, "No product selected.");
 				}
 			}
-			productCatalogTableModel.updateData();
 		}
-		
+		productCatalogTableModel.updateData();
 		this.validate();
 		this.repaint();
+		productCatalogTableModel.fireTableDataChanged();
 	}
 	
 	/**
