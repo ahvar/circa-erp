@@ -500,6 +500,7 @@ public class GRSManagerGUI {
 			} else if (e.getSource() == btnOpenOrder) {
 				rCardLayout.show(rPanel, OPEN_ORDER_PANEL);
 			} else if (e.getSource() == btnOrderEntry) {
+				
 				rCardLayout.show(rPanel, ORDER_ENTRY_PANEL);
 			}
 		}
@@ -509,6 +510,7 @@ public class GRSManagerGUI {
 		 */
 		public void updateTables() {
 			pnlOrderEntry.updateTables();
+			pnlOpenOrder.updateTables();
 		}
 		
 		/**
@@ -516,6 +518,13 @@ public class GRSManagerGUI {
 		 */
 		public void updateOrderEntryPanel() {
 			pnlOrderEntry.updateComboBoxes();
+		}
+		
+		/**
+		 * Updates the open order report panel
+		 */
+		public void updateOpenOrderPanel() {
+			pnlOpenOrder.updateTables();
 		}
 	}
 

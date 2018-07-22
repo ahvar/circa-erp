@@ -67,6 +67,7 @@ public class UserRecordIO {
 			return null;
 		Scanner s = new Scanner(line);
         Employee e = new Employee(s.next(),s.next(),s.next(),s.next(),s.next());
+        s.close();
 		return e;
 	}
 	

@@ -593,7 +593,8 @@ public class OrderRecord {
 	 * Returns an array of the open orders
 	 */
 	public String[][] getOpenOrderArray() {
-		String [][] open = new String[this.open][7];
+		countOpenOrders();
+		String [][] open = new String[getOpenOrderCount()][7];
 		for(int i = 0; i < orderRecordList.size(); i++) {
 			if(orderRecordList.get(i).getStatus().equals(Order.getOpen())) {
 				open[i][0] = orderRecordList.get(i).getPo();

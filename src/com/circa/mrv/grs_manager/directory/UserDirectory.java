@@ -27,8 +27,7 @@ public class UserDirectory {
 	
 	/**
 	 * Constructs an empty userDirectory
-	 */ 
-	
+	*/ 
 	public UserDirectory() {
 		users = new LinkedAbstractList<User>(100);
 	}

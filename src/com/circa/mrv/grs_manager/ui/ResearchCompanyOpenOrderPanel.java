@@ -40,17 +40,6 @@ public class ResearchCompanyOpenOrderPanel extends JPanel implements ActionListe
 	/** Panel for displaying order details */
 	/** ID used for object serialization */
 	private static final long serialVersionUID = 1L;
-
-	/** Text Field for Order Entry customer details address */
-	private JTextField txtFldAddress = new JTextField(20);
-	/** Text Field for Order Entry customer details address */
-	private JTextField txtFldAddress2 = new JTextField(10);
-	/** Text Field for Order Entry customer details city */
-	private JTextField txtFldCity = new JTextField(15);
-	/** Text Field for Order Entry customer details state */
-	private JTextField txtFldState = new JTextField(4);
-	/** Text Field for Order Entry customer details zip code */
-	private JTextField txtFldZipCode = new JTextField(8);
 	
 	/** JTable for displaying the open order schedule of orders */
 	private JTable tableOpenOrderSchedule;
@@ -208,16 +197,14 @@ public class ResearchCompanyOpenOrderPanel extends JPanel implements ActionListe
 		c.fill = GridBagConstraints.BOTH;
 		add(pnlOrderDetails, c);
 	*/
-		updateTable();
+		updateTables();
 	}
 	
 	/**
 	 * Updates the orders in the OpenOrderScheduleTableModel.
 	 */
-	public void updateTable() {
-		//courseRollTableModel.updateData();
+	public void updateTables() {
 		openOrderTableModel.updateData();
-		//initFacultySchedule();
 	}
 
 	@Override
@@ -300,7 +287,6 @@ public class ResearchCompanyOpenOrderPanel extends JPanel implements ActionListe
 		 */
 		public void updateData() {			
 			data = orderRecord.getOpenOrderArray();
-			//facultyScheduleTableModel.fireTableDataChanged();
 			ResearchCompanyOpenOrderPanel.this.repaint();
 			ResearchCompanyOpenOrderPanel.this.validate();
 		}	

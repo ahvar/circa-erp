@@ -165,7 +165,7 @@ public class Order extends Document {
 	public void addProduct(Product product, int qty) {
 		if(pdcount == this.product.length || this.product.length < (pdcount + qty)) getProductCapacity(); 
 		for(int i = 0; i < qty; i++) {
-			System.out.println(pdcount);
+			//System.out.println(pdcount);
 			this.product[pdcount] = product; 
 			pdcount++;
 		}

@@ -475,7 +475,6 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 	 */
 	public void updateTables() {
 		productRollTableModel.updateData();
-		
 		this.validate();
 		this.repaint();
 	}
@@ -489,7 +488,8 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 		for(int i = 0; i < GRSManager.getInstance().getOrderRecord().getStudyList().size();i++) {
 			studies.addElement(GRSManager.getInstance().getOrderRecord().getStudyList().get(i));
 		}
-		cmbBoxStudyNumber.setModel(studies); 
+		cmbBoxStudyNumber.setModel(studies);
+		cmbBoxStudyNumber.setEditable(true);
 		cmbBoxStudyNumber.setSelectedIndex(-1);
 		
 		DefaultComboBoxModel<Object> sites = new DefaultComboBoxModel<Object>();
@@ -497,6 +497,7 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 			sites.addElement(GRSManager.getInstance().getOrderRecord().getSiteList().get(i));
 		}
 		cmbBoxSiteNumber.setModel(sites); 
+		cmbBoxSiteNumber.setEditable(true);
 		cmbBoxSiteNumber.setSelectedIndex(-1);
 		
 		DefaultComboBoxModel<Object> parts = new DefaultComboBoxModel<Object>();
@@ -522,12 +523,15 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 		pnlDateAndCustomer.repaint();
 	}
 	
-
+	/**
+	 * Performs actions when any component with an action listener is selected.
+	 * @param e ActionEvent representing the user action
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == cmbBoxStudyNumber) {
 			try{
-			String number = (String) cmbBoxStudyNumber.getItemAt(cmbBoxStudyNumber.getSelectedIndex());
+			String number = (String) cmbBoxStudyNumber.getEditor().getItem();
 			Object[] sites = GRSManager.getInstance().getOrderRecord().getTheseStudySites(number);
 			DefaultComboBoxModel<Object> siteModel = new DefaultComboBoxModel<Object>();
 			for(int i = 0; i < sites.length; i++) {
@@ -536,13 +540,13 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 			cmbBoxSiteNumber.setModel(siteModel);
 			cmbBoxSiteNumber.addActionListener(this);
 			}catch(NullPointerException npe) {
-				
+				System.out.println(npe.getMessage());
 			}
 		}
 		if(e.getSource() == cmbBoxSiteNumber) {
 			try {
-			String study = (String) cmbBoxStudyNumber.getItemAt(cmbBoxStudyNumber.getSelectedIndex());
-			String site = (String) cmbBoxSiteNumber.getItemAt(cmbBoxSiteNumber.getSelectedIndex());
+			String study = (String) cmbBoxStudyNumber.getEditor().getItem();
+			String site = (String) cmbBoxSiteNumber.getEditor().getItem();
 			String[] address = GRSManager.getInstance().getOrderRecord().getThisResearchSite(study, site);
 			txtFldCustomerName.setText(BillTo.getErt());
 			txtFldShipToName.setText(address[0]);
@@ -642,31 +646,64 @@ public class ResearchCompanyOrderEntryPanel extends JPanel implements ActionList
 				scrollProductRoll.revalidate();
 				scrollProductRoll.repaint();
 				productRollTableModel.fireTableDataChanged();
-			}
-			
-			
+			}	
 		} else if(e.getSource() == submit) {
-			
-			/* it is either a new site for an existing study, a new study with a new site
-			 * a new study with the same site number as another ongoing study
-			 * an existing study and site
-			 */
-			String study = (String) cmbBoxStudyNumber.getSelectedItem();
-			String site = (String) cmbBoxSiteNumber.getSelectedItem();
-			
-			
+			try {
+			String study = (String) cmbBoxStudyNumber.getEditor().getItem();
+			String site = (String) cmbBoxSiteNumber.getEditor().getItem();
 			String shpToName = txtFldShipToName.getText();
 			String shpToAdd1 = txtFldShipToAddress.getText();
 			String shpToAdd2 = txtFldShipToAddress2.getText();
 			String shpToCity = txtFldShipToCity.getText();
 			String shpToState = txtFldShipToState.getText();
 			String shpToZip = txtFldShipToZipCode.getText();
-		} else if(e.getSource() == clear) {
 			
+			order.setStudy(study);
+			order.setSite(site);
+			order.setSiteName(shpToName);
+			order.setStreetAdd(shpToAdd1);
+			order.setCity(shpToCity);
+			order.setState(shpToState);
+			order.setZip(shpToZip);
+			order.setStatus(Order.getOpen());
+			orderRecord.getOrderRecordList().add(order);
+			
+			cmbBoxStudyNumber.setSelectedIndex(-1);
+			cmbBoxSiteNumber.setSelectedIndex(-1);
+			
+			txtFldCustomerName.setText("");
+			txtFldShipToName.setText("");
+			txtFldShipToAddress.setText("");
+			txtFldShipToAddress2.setText("");
+			txtFldShipToCity.setText("");
+			txtFldShipToState.setText("");
+			txtFldShipToZipCode.setText("");
+			txtFldBillToName.setText("");
+			txtFldBillToAddress.setText("");
+			txtFldBillToAddress2.setText("");
+			txtFldBillToState.setText("");
+			}catch(NullPointerException npe) {
+				JOptionPane.showMessageDialog(this, "Input the study, site, and address information");
+			}catch(IllegalArgumentException iae) {
+				JOptionPane.showMessageDialog(this, iae.getMessage());
+			}
+		} else if(e.getSource() == clear) {
+			cmbBoxStudyNumber.setSelectedIndex(-1);
+			cmbBoxSiteNumber.setSelectedIndex(-1);
+			txtFldCustomerName.setText("");
+			txtFldShipToName.setText("");
+			txtFldShipToAddress.setText("");
+			txtFldShipToAddress2.setText("");
+			txtFldShipToCity.setText("");
+			txtFldShipToState.setText("");
+			txtFldShipToZipCode.setText("");
+			txtFldBillToName.setText("");
+			txtFldBillToAddress.setText("");
+			txtFldBillToAddress2.setText("");
+			txtFldBillToState.setText("");
 		}
 		
 		productRollTableModel.updateData();
-		
 		pnlDateAndCustomer.validate();
 		pnlDateAndCustomer.repaint();
 		this.validate();
